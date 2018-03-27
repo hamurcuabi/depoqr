@@ -51,7 +51,6 @@ public class AnaSayfa extends AppCompatActivity {
     public static final String BarcodeCodeEnter = "barcodecodeenter";
     public static final String SevkiyatForwadingID = "forwadingid";
     public static final String SevkiyatDepoID = "depoid";
-    public int emre,baksimdicalisacak;
     static private final int MY_REQUEST_CODE = 707;
     ConnectionClass connectionClass;
     EditText edtuserid, edtpass;
