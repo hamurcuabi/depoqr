@@ -184,7 +184,8 @@ public class Sevkiyat extends AppCompatActivity {
 
         @Override
         protected void onPreExecute() {
-
+              spndepo.setAdapter(null);
+              depolars.clear();
         }
 
         @Override
@@ -484,7 +485,10 @@ public class Sevkiyat extends AppCompatActivity {
         @Override
         protected void onPostExecute(String r) {
             if (z.equals("Başarılı")) {
+                sevkiyetNo.setText("");
                 Toast.makeText(getApplicationContext(), "Sevkiyat Tamamlandı!", Toast.LENGTH_SHORT).show();
+                SevkiyetList sevkiyetList = new SevkiyetList();
+                sevkiyetList.execute("");
             }
             else Toast.makeText(getApplicationContext(), "Hata!", Toast.LENGTH_SHORT).show();
         }
