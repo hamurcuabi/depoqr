@@ -1,0 +1,63 @@
+<resources>
+    <string name="app_name">DepoQR</string>
+    <string name="title_activity_main2">Main2Activity</string>
+
+    <string name="title_section1">Section 1</string>
+    <string name="title_section2">Section 2</string>
+    <string name="title_section3">Section 3</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_example">Example action</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="open">Open</string>
+    <string name="close">Close</string>
+    <string name="title_activity_main_nav">MainNav</string>
+    <string name="hello_world">Hello world!</string>
+
+    <string name="navigation_item_1">Home</string>
+    <string name="navigation_item_2">Events</string>
+    <string name="starred_string">Starred</string>
+    <string name="inbox_string">Inbox</string>
+    <string name="sent_mail_string">Sent mail</string>
+    <string name="draft_string">Drafts</string>
+    <string name="subheader">Subheader</string>
+    <string name="trash_string">Trash</string>
+    <string name="all_mail_string">All mails</string>
+    <string name="spam_string">Spams</string>
+    <string name="closeDrawer">Navigation View</string>
+    <string name="openDrawer">Navigation View Closed</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="qr">QR</string>
+    <string name="bqr">Barcode</string>
+    <string name="mal_kabul">MAL KABULÜ</string>
+    <string name="sevk_yat">SEVKİYAT</string>
+    <string name="plas_yer_sati">PLASİYER SATIŞ</string>
+    <string name="r_n_tranfer">ÜRÜN TRANSFERİ</string>
+    <string name="rememberme">Beni Hatırla</string>
+    <string-array name="deposec">
+        <item>Depo Seçiniz</item>
+    </string-array>
+    <string-array name="sevkiyatNo">
+        <item>Sevkiyat Seçiniz</item>
+    </string-array>
+    <string-array name="filtre">
+        <item>KOD FİLTRELE</item>
+        <item>Kategori FİLTRELE</item>
+        <item>AD FİLTRELE</item>
+
+
+    </string-array>
+    <string-array name="PORB">
+        <item>PALET(P)</item>
+        <item>BARKOD(B)</item>
+    </string-array>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="normal_sat">Normal Satış</string>
+    <string name="barkod_sat">Barkod Satış</string>
+
+</resources>

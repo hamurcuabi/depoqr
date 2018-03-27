@@ -1,0 +1,227 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/appbackcolor"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/layout2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:background="#E0F7FA"
+        android:orientation="vertical"
+        android:padding="2dp"
+        android:weightSum="2">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/edtNameinfo"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_weight="1"
+                android:enabled="false"
+                android:focusable="false"
+                android:hint="ÜRÜN ADI"
+                android:padding="10dp"
+                android:textColor="#000000"
+                android:textColorHint="#000000"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+
+            <EditText
+                android:id="@+id/edtKodinfo"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_weight="1"
+                android:enabled="false"
+                android:focusable="false"
+                android:hint="ÜRÜN KODU"
+                android:padding="10dp"
+                android:textColor="#000000"
+                android:textColorHint="#000000"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="3">
+
+            <EditText
+                android:id="@+id/edtMiktarinfo"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_weight="2"
+                android:focusable="false"
+                android:hint="ÜRÜN MİKTARI GİRİNİZ..."
+                android:inputType="numberDecimal"
+                android:nextFocusDown="@+id/edtAgirlikinfo"
+                android:padding="10dp"
+                android:textColor="#000000"
+                android:textColorHint="@android:color/holo_red_dark"
+                android:textSize="15sp"
+                android:textStyle="bold|italic" />
+
+            <TextView
+                android:id="@+id/typeunit"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/deneme3"
+                android:textAlignment="center"
+                android:textColor="#ffffff"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
+                android:src="@drawable/ok" />
+            />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/lnrsecondtype"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:visibility="invisible"
+            android:weightSum="3">
+
+            <EditText
+                android:id="@+id/edtAgirlikinfo"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_weight="2"
+                android:focusable="false"
+                android:hint="ÜRÜN MİKTARI GİRİNİZ..."
+                android:imeOptions="actionDone"
+                android:inputType="numberDecimal"
+                android:padding="10dp"
+                android:textColor="#000000"
+                android:textColorHint="@android:color/holo_red_dark"
+                android:textSize="15sp"
+                android:textStyle="bold|italic" />
+
+            <Spinner
+
+                android:id="@+id/spinnertypes"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/deneme3"
+                android:textAlignment="center" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
+                android:src="@drawable/downn" />
+            />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:orientation="horizontal"
+            android:weightSum="3">
+
+            <Button
+                android:id="@+id/btnadd"
+                style="@style/mybuttons"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="2dp"
+                android:layout_marginTop="10dp"
+                android:layout_weight="1"
+                android:background="@drawable/deneme"
+                android:padding="7dp"
+                android:text=" ÜRÜNÜ EKLE"
+                android:textSize="20sp" />
+
+            <Button
+                android:id="@+id/btnpalet"
+                style="@style/mybuttons"
+                android:layout_width="0dp"
+
+                android:layout_height="wrap_content"
+                android:layout_margin="2dp"
+                android:layout_marginTop="10dp"
+                android:layout_weight="1"
+                android:background="@drawable/deneme"
+                android:padding="7dp"
+                android:text="PALETİ BAS"
+                android:textSize="20sp" />
+
+            <Button
+                android:id="@+id/btndeleteinfo"
+                style="@style/mybuttons"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="2dp"
+                android:layout_marginTop="10dp"
+                android:layout_weight="1"
+                android:background="@drawable/deneme"
+                android:padding="7dp"
+                android:text="ÜRÜNÜ  SİL"
+
+                android:textSize="20sp" />
+        </LinearLayout>
+
+        <EditText
+
+            android:id="@+id/edtPalet"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="6dp"
+            android:layout_weight="1"
+            android:background="@drawable/deneme3"
+            android:enabled="false"
+            android:paddingTop="5dp"
+            android:text="PALET İÇERİĞİ"
+            android:textAlignment="center"
+            android:textColor="#ffffff"
+            android:textColorHint="#ffffff"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <ProgressBar
+            android:id="@+id/pbbar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textColor="#ffffff" />
+
+
+        <ListView
+            android:id="@+id/lstproductsinfo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:divider="#808080"
+            android:dividerHeight="1dp"
+            android:padding="5dp">
+
+        </ListView>
+    </LinearLayout>
+</RelativeLayout>

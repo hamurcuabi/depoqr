@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools" xmlns:android="urn:oasis:names:tc:xliff:document:1.2">
+
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="android:imeOptions">actionNext</item>
+        <item name="android:windowExitTransition" tools:targetApi="lollipop">@transition/exit</item>
+        <item name="android:windowContentTransitions" tools:targetApi="lollipop">true</item>
+        <item name="colorControlHighlight">#ea057f</item>
+        <item name="colorButtonNormal">#F28F24</item>
+
+
+
+
+    </style>
+
+    <style name="Splash" parent="Theme.AppCompat.DayNight.NoActionBar" />
+
+
+    <style name="AppTheme.CustomTheme">
+
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowCloseOnTouchOutside">true</item>
+
+
+    </style>
+
+    <style name="mybuttons">
+
+        <item name="android:background">#006064</item>
+        <item name="android:color">#ffffff</item>
+    </style>
+
+    <style name="PopupMenu" parent="@android:style/Widget.PopupMenu">
+        <item name="android:popupBackground">@android:color/white</item>
+    </style>
+
+
+</resources>

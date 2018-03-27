@@ -1,0 +1,103 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/zyonetim"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="12dp">
+
+
+
+    <ImageView
+        android:id="@+id/imagsplash"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+
+        />
+
+    <LinearLayout
+        android:id="@+id/layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/zyonetim"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="12dp">
+
+
+
+        <EditText
+            android:id="@+id/edtuserid"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/deneme2"
+            android:drawableLeft="@drawable/mainuser"
+            android:hint="KULLANICI ADI"
+            android:imeOptions="actionNext"
+            android:inputType="text"
+            android:padding="12dp"
+            android:textColor="#000000"
+            android:textColorHint="#000000"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+
+        <EditText
+            android:id="@+id/edtpass"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/deneme2"
+            android:drawableLeft="@drawable/mainpass"
+            android:hint="ŞİFRE"
+            android:imeOptions="actionDone"
+            android:inputType="textPassword"
+            android:padding="12dp"
+            android:textColor="#000000"
+            android:textColorHint="#000000"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            >
+            <CheckBox
+                android:id="@+id/rme"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="false"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/rememberme"/>
+
+
+        </LinearLayout>
+
+
+        <Button
+
+            android:id="@+id/btnlogin"
+            style="@style/mybuttons"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/deneme"
+            android:padding="12dp"
+            android:text="GİRİŞ"
+            android:textAlignment="center"
+            android:textSize="20sp" />
+
+
+    </LinearLayout>
+    <include
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        layout="@layout/loading"
+        >
+
+    </include>
+</RelativeLayout>

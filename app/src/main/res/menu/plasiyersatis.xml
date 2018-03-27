@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:compat="http://schemas.android.com/tools">
+
+    <item
+        android:id="@+id/anasayfa"
+        android:icon="@drawable/anasayfa"
+        android:orderInCategory="1"
+        android:title="Ana Sayfa"
+        app:showAsAction="ifRoom">
+
+    </item>
+    <item
+        android:id="@+id/geri"
+        android:icon="@drawable/turnback"
+        android:orderInCategory="2"
+        android:title="Geri"
+        app:showAsAction="ifRoom">
+
+    </item>
+
+
+
+</menu>

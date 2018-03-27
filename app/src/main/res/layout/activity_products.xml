@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/appbackcolor"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:background="#E0F7FA"
+        android:orientation="vertical"
+        android:padding="2dp">
+
+
+        <EditText
+            android:id="@+id/edtproname"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:background="#ffffff"
+            android:focusable="false"
+            android:hint="ÜRÜN ADI YAZINIZ..."
+            android:padding="10dp"
+            android:textColor="#000000"
+            android:textColorHint="@android:color/holo_red_dark"
+            android:textSize="20sp"
+            android:textStyle="bold|italic"
+
+            />
+
+
+        <ProgressBar
+            android:id="@+id/pbbar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center" />
+
+        <Button
+            android:id="@+id/btnpalet"
+            style="@style/mybuttons"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:text="DEVAM"
+            android:textColor="#000000"
+            android:textSize="20sp"
+            android:visibility="gone" />
+
+        <Spinner
+            android:id="@+id/spn"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@drawable/deneme3"
+            android:entries="@array/filtre"
+            android:padding="5dp" />
+
+        <ListView
+            android:id="@+id/lstproducts"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:divider="#808080"
+            android:dividerHeight="1dp"
+            android:padding="2dp">
+
+        </ListView>
+    </LinearLayout>
+</RelativeLayout>

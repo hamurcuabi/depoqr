@@ -1,0 +1,247 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/appbackcolor"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:background="#E0F7FA"
+        android:orientation="vertical"
+        android:padding="2dp"
+        android:weightSum="3">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:padding="10dp">
+
+                <AutoCompleteTextView
+                    android:id="@+id/edtsevkiyatno2"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="12dp"
+                    android:layout_weight="1"
+                    android:entries="@array/deposec"
+                    android:hint="SEVKİYAT NO "
+                    android:imeOptions="actionDone"
+                    android:maxLines="1"
+                    android:padding="5dp"
+                    android:popupBackground="@color/zyonetim"
+                    android:singleLine="true"
+                    android:textColor="#000000"
+                    android:textColorHint="@android:color/holo_red_dark"
+                    android:textSize="14sp"
+                    android:textStyle="bold|italic" />
+
+                <ImageView
+                    android:id="@+id/btn_drop2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.5"
+                    android:clickable="true"
+                    android:contentDescription="TODO"
+                    android:focusable="true"
+                    android:padding="5dp"
+                    android:src="@drawable/ic_action_dropdown" />
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/btnsevkiyat"
+                style="@style/mybuttons"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_weight="1"
+                android:background="@drawable/deneme3"
+                android:drawableRight="@drawable/action_search"
+                android:padding="10dp"
+                android:text="KODU ARA"
+                android:textSize="20sp" />
+
+            <EditText
+
+                android:id="@+id/edtKodinfo"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:enabled="false"
+                android:focusable="false"
+                android:hint="0"
+                android:padding="10dp"
+                android:textColor="#000000"
+                android:textColorHint="#000000"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:visibility="gone" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <TextView
+                android:id="@+id/sevkiyetPlaka"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="PLAKA"
+                android:textColor="#000000"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:padding="10dp"/>
+
+            <Spinner
+                android:id="@+id/spnDepo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:layout_weight="1"
+                android:background="@drawable/deneme"
+                android:entries="@array/deposec"
+                android:padding="5dp"
+                android:popupBackground="@color/colorPrimary"
+                android:textAlignment="center">
+
+            </Spinner>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+
+            <Button
+                android:id="@+id/btnstart"
+                style="@style/mybuttons"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_weight="1"
+                android:background="@drawable/deneme3"
+                android:padding="10dp"
+                android:text="SEVKİYATA BAŞLA"
+                android:textSize="20sp" />
+
+            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:background="@color/colorPrimary"
+                android:orientation="horizontal"
+                android:padding="5dp">
+
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:layout_weight="1"
+                    android:text="Ü. Kodu"
+                    android:textColor="#FFFFFF"
+                    android:textSize="13sp" />
+
+
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:layout_weight="1"
+                    android:text="Ü. Adı"
+                    android:textColor="#FFFFFF"
+                    android:textSize="13sp" />
+
+
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:layout_weight="1"
+                    android:text="Y.Emri Mıktar"
+                    android:textColor="#FFFFFF"
+                    android:textSize="11sp" />
+
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:layout_weight="1"
+                    android:text="Y. Mıktarı"
+                    android:textColor="#FFFFFF"
+                    android:textSize="13sp" />
+
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:layout_weight="1"
+                    android:text="Birim"
+                    android:textColor="#FFFFFF"
+                    android:textSize="13sp" />
+
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_above="@+id/ontbtn"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <ProgressBar
+                    android:id="@+id/pbbar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:textColor="#ffffff"
+                    android:visibility="gone" />
+
+                <ListView
+                    android:id="@+id/lstproductsinfo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:divider="#808080"
+                    android:dividerHeight="1dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ontbtn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true">
+
+                <Button
+                    android:id="@+id/btn_tamamla2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginTop="20dp"
+                    android:background="@drawable/deneme"
+                    android:drawableEnd="@drawable/ic_action_arrow"
+                    android:drawableRight="@drawable/ic_action_arrow"
+                    android:padding="10dp"
+                    android:text="Tamamla"
+                    android:textAlignment="center"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+        </RelativeLayout>
+    </LinearLayout>
+</RelativeLayout>

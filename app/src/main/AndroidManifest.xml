@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.emrehmrc.depoqr">
+
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/appico"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.AppCompat">
+        <activity
+            android:name=".SplashScreen"
+            android:label="@string/app_name"
+            android:theme="@style/Splash">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".Products" />
+        <activity android:name=".CodeReader" />
+        <activity android:name=".CodeReaderForSevkiyat" />
+        <activity android:name=".ProductInfo" />
+        <activity android:name=".NavBar" />
+        <activity android:name=".SliderMenu" />
+        <activity android:name=".PaletEtiket" />
+        <activity
+            android:name=".Popup"
+            android:theme="@style/AppTheme.CustomTheme" />
+        <activity android:name=".ProductsinPalet" />
+        <activity android:name=".ProductEtiket" />
+        <activity android:name=".MalKabul" />
+        <activity android:name=".MalKabulOku" />
+        <activity android:name=".DepoTransfer" />
+        <activity android:name=".DepoTransferMalDegisim" />
+        <activity android:name=".CodeReaderForDepoTransfer" />
+        <activity
+            android:name=".EtiketTercih"
+            android:theme="@style/AppTheme.CustomTheme" />
+        <activity
+            android:name=".BarcodeEnterPop"
+            android:theme="@style/AppTheme.CustomTheme" />
+        <activity android:name=".AnaSayfa" />
+        <activity android:name=".Sevkiyat" />
+        <activity
+            android:name=".UyariBildirim"
+            android:theme="@style/AppTheme.CustomTheme" />
+        <activity
+            android:name=".SevkiyatSecondStep"
+            android:windowSoftInputMode="adjustPan">
+
+
+        </activity>
+        <activity
+            android:name=".PlasiyerSatis"
+            android:windowSoftInputMode="adjustPan">
+
+        </activity>
+        <activity
+            android:name=".PlasiyerSatisSec"
+            android:windowSoftInputMode="adjustPan">
+
+        </activity>
+        <activity
+            android:name=".PlasiyerSatisThree"
+            android:windowSoftInputMode="adjustPan">
+
+        </activity>
+        <activity
+            android:name=".GrupBarkod"
+            android:windowSoftInputMode="adjustPan">
+
+        </activity>
+    </application>
+
+</manifest>

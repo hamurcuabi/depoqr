@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/appbackcolor"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/layoutdepo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#E0F7FA"
+        android:orientation="vertical"
+        android:weightSum="8"
+       >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="3"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="2dp">
+
+            <TextView
+
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="6dp"
+                android:layout_weight="1"
+                android:background="@drawable/deneme3"
+                android:padding="10dp"
+                android:text="ANA DEPO LİSTESİ"
+                android:textAlignment="center"
+                android:textColor="#ffffff"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:visibility="gone" />
+
+            <EditText
+                android:textColorHint="@color/white"
+                android:id="@+id/edtana"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="6dp"
+                android:layout_weight="1"
+                android:background="@drawable/deneme3"
+                android:drawableRight="@drawable/action_search"
+                android:focusable="false"
+                android:hint="ANA DEPO LİSTESİ"
+                android:padding="10dp"
+                android:textAlignment="center"
+                android:textColor="#ffffff"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+
+
+            <ListView
+                android:id="@+id/lstdepoana"
+                android:layout_width="match_parent"
+                android:layout_height="130dp"
+                android:layout_marginTop="5dp"
+                android:layout_weight="2"
+                android:divider="#808080"
+                android:dividerHeight="1dp"
+                android:padding="2dp"
+                android:listSelector="@android:color/holo_red_dark">
+
+            </ListView>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@color/listesatir1"
+            android:orientation="horizontal"
+            android:padding="2dp">
+
+            <TextView
+
+                android:id="@+id/anadepoadi"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:padding="10dp"
+                android:text="ANA DEPO SEÇİNİZ"
+                android:textAlignment="center"
+                android:textColor="@android:color/holo_red_dark"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <ImageView
+
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/exchange" />
+
+            <TextView
+                android:id="@+id/hedefdepoadi"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:padding="10dp"
+                android:text="HEDEF DEPO SEÇİNİZ"
+                android:textAlignment="center"
+                android:textColor="@android:color/holo_red_dark"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <ProgressBar
+            android:id="@+id/pbbar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="gone" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="3"
+            android:orientation="vertical"
+            android:padding="2dp">
+
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="6dp"
+                android:layout_weight="1"
+                android:background="@drawable/deneme3"
+                android:padding="10dp"
+                android:text="HEDEF DEPO LİSTESİ"
+                android:textAlignment="center"
+                android:textColor="#ffffff"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:visibility="gone" />
+
+            <EditText
+                android:textColorHint="@color/white"
+                android:focusable="false"
+                android:id="@+id/edthedef"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="6dp"
+                android:layout_weight="1"
+                android:background="@drawable/deneme3"
+                android:drawableRight="@drawable/action_search"
+                android:hint="HEDEF DEPO LİSTESİ"
+                android:padding="10dp"
+                android:textAlignment="center"
+                android:textColor="#ffffff"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+
+            <ListView
+
+                android:id="@+id/lstdepohedef"
+                android:layout_width="match_parent"
+                android:layout_height="130dp"
+                android:layout_marginTop="5dp"
+                android:layout_weight="2"
+                android:divider="#808080"
+                android:dividerHeight="1dp"
+                android:padding="2dp"
+                android:listSelector="@android:color/holo_red_dark">
+
+            </ListView>
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:padding="2dp">
+
+            <Button
+
+                android:drawableRight="@drawable/nexti"
+                android:layout_margin="6dp"
+                android:id="@+id/btnok"
+                style="@style/mybuttons"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:layout_weight="1"
+                android:background="@drawable/deneme"
+                android:text="DEVAM ET"
+                android:textSize="18sp"
+
+                />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+</RelativeLayout>
