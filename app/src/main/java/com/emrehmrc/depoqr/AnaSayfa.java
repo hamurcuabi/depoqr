@@ -51,7 +51,7 @@ public class AnaSayfa extends AppCompatActivity {
     public static final String BarcodeCodeEnter = "barcodecodeenter";
     public static final String SevkiyatForwadingID = "forwadingid";
     public static final String SevkiyatDepoID = "depoid";
-    public int emre;
+    public int emre,baksimdicalisacak;
     static private final int MY_REQUEST_CODE = 707;
     ConnectionClass connectionClass;
     EditText edtuserid, edtpass;
@@ -79,10 +79,8 @@ public class AnaSayfa extends AppCompatActivity {
         scale = AnimationUtils.loadAnimation(this, R.anim.fade_out);
 
         sharedpreferences = getApplicationContext().getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
-
         loginPreferences = getSharedPreferences("loginPrefs", MODE_PRIVATE);
         loginPrefsEditor = loginPreferences.edit();
-
         saveLogin = loginPreferences.getBoolean("saveLogin", false);
 
         ab = getSupportActionBar();
