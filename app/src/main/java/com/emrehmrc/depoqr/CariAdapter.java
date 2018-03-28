@@ -1,4 +1,5 @@
 package com.emrehmrc.depoqr;
+
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -15,7 +16,6 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 
-
 /**
  * Created by cenah on 2/23/2018.
  */
@@ -27,12 +27,10 @@ public class CariAdapter extends BaseAdapter implements Filterable {
     private LayoutInflater inflater;
     ValueFilter valueFilter;
 
-    public CariAdapter(@NonNull Context context,@NonNull ArrayList<ModelCari> objectss) {
-        this.context =context;
+    public CariAdapter(@NonNull Context context, @NonNull ArrayList<ModelCari> objectss) {
+        this.context = context;
         mStringFilterList = objectss;
         this.beanList = objectss;
-
-
     }
 
     @Override
@@ -59,12 +57,11 @@ public class CariAdapter extends BaseAdapter implements Filterable {
         if (convertView == null) {
             convertView = inflater.inflate(R.layout.adapter_view_layout, null);
         }
-        TextView txName =(TextView) convertView.findViewById(R.id.inputad);
-        TextView txKod =(TextView) convertView.findViewById(R.id.inputkod);
+        TextView txName = (TextView) convertView.findViewById(R.id.inputad);
+        TextView txKod = (TextView) convertView.findViewById(R.id.inputkod);
         ModelCari bean = beanList.get(position);
         String name = bean.getCariadi();
         String kod = bean.getCarikod();
-
         txName.setText(name);
         txKod.setText(kod);
         return convertView;
@@ -101,7 +98,7 @@ public class CariAdapter extends BaseAdapter implements Filterable {
 
                         ModelCari bean = new ModelCari(mStringFilterList.get(i)
                                 .getCariadi(), mStringFilterList.get(i)
-                                .getCarikod(),mStringFilterList.get(i).getCariId());
+                                .getCarikod(), mStringFilterList.get(i).getCariId());
                         filterList.add(bean);
                     }
                 }
@@ -117,8 +114,7 @@ public class CariAdapter extends BaseAdapter implements Filterable {
         }
 
         @Override
-        protected void publishResults(CharSequence constraint,
-                                      FilterResults results) {
+        protected void publishResults(CharSequence constraint, FilterResults results) {
             beanList = (ArrayList<ModelCari>) results.values;
             notifyDataSetChanged();
         }

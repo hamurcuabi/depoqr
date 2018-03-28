@@ -22,6 +22,9 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.Date;
+
 import static com.emrehmrc.depoqr.AnaSayfa.MyPREFERENCES;
 
 public class PlasiyerList extends AppCompatActivity {
@@ -36,7 +39,7 @@ public class PlasiyerList extends AppCompatActivity {
     TextView tx_toplam;
     Button btn_satisbasla;
     ProgressBar progressBar;
-
+    ArrayList<PlasiyerListModel> plasiyerArray;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,7 +54,7 @@ public class PlasiyerList extends AppCompatActivity {
         ab.setTitle("Plasiyer Satiş");
         ab.setBackgroundDrawable(getResources().getDrawable(R.drawable.arkaplan));
         progressBar = (ProgressBar) findViewById(R.id.pbbarP);
-
+        plasiyerArray = new ArrayList<PlasiyerListModel>();
         btn_satisbasla = (Button) findViewById(R.id.btn_satisbasla);
         tx_toplam = (TextView) findViewById(R.id.tx_toplam);
         cariArama = (EditText) findViewById(R.id.CariArama);
@@ -87,8 +90,6 @@ public class PlasiyerList extends AppCompatActivity {
     }
 
 
-
-
     public class FillList extends AsyncTask<String,String,String>{
 
         @Override
@@ -105,4 +106,72 @@ public class PlasiyerList extends AppCompatActivity {
             return null;
         }
     }
+
+    public static class PlasiyerListModel{
+        String id;
+        String cariTarih;
+        String cariAdi;
+        float toplamTutar;
+        float kdv;
+        float genelTutar;
+
+        public PlasiyerListModel(String id, String cariTarih, String cariAdi, float toplamTutar, float kdv, float genelTutar){
+            this.id = id;
+            this.cariAdi = cariAdi;
+            this.cariTarih = cariTarih;
+            this.toplamTutar = toplamTutar;
+            this.kdv = kdv;
+            this.genelTutar = genelTutar;
+
+        }
+
+        public String getId() {
+            return id;
+        }
+
+        public void setId(String id) {
+            this.id = id;
+        }
+        public String getCariTarih() {
+            return cariTarih;
+        }
+
+        public void setCariTarih(String cariTarih) {
+            this.cariTarih = cariTarih;
+        }
+
+        public String getCariAdi() {
+            return cariAdi;
+        }
+
+        public void setCariAdi(String cariAdi) {
+            this.cariAdi = cariAdi;
+        }
+
+        public float getToplamTutar() {
+            return toplamTutar;
+        }
+
+        public void setToplamTutar(float toplamTutar) {
+            this.toplamTutar = toplamTutar;
+        }
+
+        public float getKdv() {
+            return kdv;
+        }
+
+        public void setKdv(float kdv) {
+            this.kdv = kdv;
+        }
+
+        public float getGenelTutar() {
+            return genelTutar;
+        }
+
+        public void setGenelTutar(float genelTutar) {
+            this.genelTutar = genelTutar;
+        }
+    }
+
+
 }
