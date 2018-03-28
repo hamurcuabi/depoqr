@@ -14,6 +14,8 @@ import android.os.Vibrator;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -55,14 +57,32 @@ public class GrupBarkod extends AppCompatActivity {
     ListView lst_grup;
     ArrayList<String> BarkodArray = new ArrayList<>();
     ArrayList<GrupBarkod.Depolar> depolars = new ArrayList<>();
-    String anabarkod,secilendepoId;
+    String anabarkod, secilendepoId;
     Spinner spndepo;
+
+    RecyclerView recyclerView;
+    DependedBarcodesAdaptor adaptor;
+    ArrayList<DependedBarcodes> datalist;
+    DependedBarcodes dependedBarcodes;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_grupbarkod);
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
+
+        datalist = new ArrayList<DependedBarcodes>();
+        recyclerView = (RecyclerView) findViewById(R.id.recyclerview);
+        adaptor = new DependedBarcodesAdaptor(getApplicationContext(), datalist);
+        recyclerView.setAdapter(adaptor);
+
+
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
+        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        recyclerView.setLayoutManager(linearLayoutManager);
+
+
         sharedPreferences = getApplicationContext().getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
         memberid = sharedPreferences.getString("ID", null);
         comid = sharedPreferences.getString("Companiesid", null);
@@ -77,25 +97,22 @@ public class GrupBarkod extends AppCompatActivity {
         fillBarkod.execute("");
 
 
-
         btn_koduara.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 anabarkod = tx_anabarkod.getText().toString();
-                if(anabarkod.isEmpty()){
-                    Toast.makeText(getApplicationContext(),"Barkod Giriniz..",Toast.LENGTH_SHORT).show();
-                }
-                else{
-                    if(BarkodArray.contains(anabarkod)){
-                     CheckifExist checkifExist = new CheckifExist();
-                     checkifExist.execute("");
-                    }
-                    else Toast.makeText(getApplicationContext(),"Barkod Bulunamadı..",Toast.LENGTH_SHORT).show();
+                if (anabarkod.isEmpty()) {
+                    Toast.makeText(getApplicationContext(), "Barkod Giriniz..", Toast.LENGTH_SHORT).show();
+                } else {
+                    if (BarkodArray.contains(anabarkod)) {
+                        CheckifExist checkifExist = new CheckifExist();
+                        checkifExist.execute("");
+                    } else
+                        Toast.makeText(getApplicationContext(), "Barkod Bulunamadı..", Toast.LENGTH_SHORT).show();
 
                 }
             }
         });
-
 
 
     }
@@ -151,7 +168,7 @@ public class GrupBarkod extends AppCompatActivity {
                 if (con == null) {
                     z = "Error in connection with SQL server";
                 } else {
-                    String query = "Select BARCODEID,BARCODENO from VW_WAREHOUSESTOCKMOVEMENT where COMPANIESID='"+comid+"' group by BARCODEID,BARCODENO having SUM(WDIRECTION * FIRSTAMOUNT) != 0 or SUM(WDIRECTION * SECONDAMOUNT) != 0\n";
+                    String query = "Select BARCODEID,BARCODENO from VW_WAREHOUSESTOCKMOVEMENT where COMPANIESID='" + comid + "' group by BARCODEID,BARCODENO having SUM(WDIRECTION * FIRSTAMOUNT) != 0 or SUM(WDIRECTION * SECONDAMOUNT) != 0\n";
                     PreparedStatement ps = con.prepareStatement(query);
                     ResultSet rs = ps.executeQuery();
                     while (rs.next()) {
@@ -166,22 +183,23 @@ public class GrupBarkod extends AppCompatActivity {
             return z;
         }
     }
-    public class CheckifExist extends AsyncTask<String, String, String>{
+
+    public class CheckifExist extends AsyncTask<String, String, String> {
 
         String z = "";
         Boolean test = true;
 
         @Override
         protected void onPostExecute(String r) {
-            if(test){
-                Toast.makeText(getApplicationContext(),"Ana Barkod Boş..",Toast.LENGTH_SHORT).show();
+            if (test) {
+                Toast.makeText(getApplicationContext(), "Ana Barkod Boş..", Toast.LENGTH_SHORT).show();
                 FillDepo fillDepo = new FillDepo();
                 fillDepo.execute("");
-            }
-            else{
+            } else {
 
             }
         }
+
         @Override
         protected String doInBackground(String... strings) {
             try {
@@ -189,17 +207,25 @@ public class GrupBarkod extends AppCompatActivity {
                 if (con == null) {
                     z = "Error in connection with SQL server";
                 } else {
-                    String query = "Select * from GROUPBARCODE where PARENTID = '"+anabarkod+"'";
+                    String query = "Select * from GROUPBARCODE where PARENTID = '" + anabarkod + "'";
                     PreparedStatement ps = con.prepareStatement(query);
                     ResultSet rs = ps.executeQuery();
-                    if (rs.next()) {
+                    while (rs.next()) {
                         test = false;
-                    }else{
-                        test = true;
+
+                       dependedBarcodes=new DependedBarcodes();
+
+                       dependedBarcodes.setCheck(true);
+                        dependedBarcodes.setName(rs.getString("PRODUCTNAME"));
+
+
+
                     }
-                    z = "Başarılı";
                 }
+                z = "Başarılı";
+
             } catch (Exception ex) {
+                test = true;
                 z = "Veri Çekme Hatası";
 
             }
@@ -207,6 +233,7 @@ public class GrupBarkod extends AppCompatActivity {
 
         }
     }
+
     @SuppressLint("NewApi")
     public class FillDepo extends AsyncTask<String, String, String> {
         String z = "";
@@ -272,6 +299,7 @@ public class GrupBarkod extends AppCompatActivity {
             return z;
         }
     }
+
     private class Depolar {
         private String depoadi;
         private String depono;
@@ -285,6 +313,7 @@ public class GrupBarkod extends AppCompatActivity {
             this.depono = depono;
 
         }
+
         public String getDepoadi() {
             return depoadi;
         }
@@ -307,7 +336,6 @@ public class GrupBarkod extends AppCompatActivity {
             return depoadi;
         }
     }
-
 
 
 }
