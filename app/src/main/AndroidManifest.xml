@@ -58,41 +58,27 @@
             android:theme="@style/AppTheme.CustomTheme" />
         <activity
             android:name=".SevkiyatSecondStep"
-            android:windowSoftInputMode="adjustPan">
-
-
-        </activity>
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".PlasiyerSatis"
-            android:windowSoftInputMode="adjustPan">
-
-        </activity>
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".PlasiyerSatisSec"
-            android:windowSoftInputMode="adjustPan">
-
-        </activity>
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".PlasiyerSatisThree"
-            android:windowSoftInputMode="adjustPan">
-
-        </activity>
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".GrupBarkod"
-            android:windowSoftInputMode="adjustPan">
-
-        </activity>
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".PlasiyerList"
-            android:windowSoftInputMode="adjustPan">
-
-        </activity>
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".PlasiyerProduct"
-            android:windowSoftInputMode="adjustPan">
-
-        </activity>
-
+            android:windowSoftInputMode="adjustPan" />
+        <activity android:name=".Iade" />
+        <activity android:name=".IadeOku"></activity>
     </application>
 
 </manifest>

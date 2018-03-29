@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/appbackcolor"
+    android:orientation="vertical">
+
+    <LinearLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:background="#E0F7FA"
+        android:orientation="vertical"
+        android:padding="2dp">
+
+        <EditText
+
+            android:imeOptions="actionDone"
+            android:id="@+id/edtDepoSearch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="12dp"
+            android:background="@drawable/deneme3"
+            android:drawableRight="@drawable/action_search"
+            android:hint="DEPO LİSTESİ"
+            android:padding="10dp"
+            android:textAlignment="center"
+            android:textColor="#ffffff"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:focusable="false"
+
+            />
+
+        <include
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            layout="@layout/loading"
+            >
+
+        </include>
+
+
+        <ListView
+            android:id="@+id/lstdepo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:divider="#808080"
+            android:dividerHeight="1dp"
+            android:padding="2dp">
+
+        </ListView>
+    </LinearLayout>
+</RelativeLayout>
