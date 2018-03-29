@@ -224,7 +224,7 @@ public class SliderMenu extends AppCompatActivity implements NavigationView.OnNa
             @Override
             public void onAnimationEnd(Animation animation) {
 
-                i = new Intent(SliderMenu.this, PlasiyerSatis.class);
+                i = new Intent(SliderMenu.this, PlasiyerList.class);
                 startActivity(i);
             }
 

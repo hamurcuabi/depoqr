@@ -12,16 +12,22 @@ import android.os.Vibrator;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -40,6 +46,8 @@ public class PlasiyerList extends AppCompatActivity {
     Button btn_satisbasla;
     ProgressBar progressBar;
     ArrayList<PlasiyerListModel> plasiyerArray;
+    private PlasiyerListAdapter adapter;
+    float toplam;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,7 +66,7 @@ public class PlasiyerList extends AppCompatActivity {
         btn_satisbasla = (Button) findViewById(R.id.btn_satisbasla);
         tx_toplam = (TextView) findViewById(R.id.tx_toplam);
         cariArama = (EditText) findViewById(R.id.CariArama);
-
+        lst_Cari = (ListView) findViewById(R.id.lst_Cari);
         FillList fillList = new FillList();
         fillList.execute("");
 
@@ -91,7 +99,7 @@ public class PlasiyerList extends AppCompatActivity {
 
 
     public class FillList extends AsyncTask<String,String,String>{
-
+         String w =  "";
         @Override
         protected void onPreExecute() {
             progressBar.setVisibility(View.VISIBLE);
@@ -100,10 +108,58 @@ public class PlasiyerList extends AppCompatActivity {
         @Override
         protected void onPostExecute(String s) {
             progressBar.setVisibility(View.GONE);
+            adapter = new PlasiyerListAdapter(getApplicationContext(),plasiyerArray);
+            lst_Cari.setAdapter(adapter);
+            tx_toplam.setText(""+toplam);
+            lst_Cari.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    PlasiyerList.PlasiyerListModel plasiyerListModel;
+                    plasiyerListModel = (PlasiyerListModel) lst_Cari.getItemAtPosition(position);
+
+                }
+            });
+            cariArama.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    adapter.getFilter().filter(s.toString());
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+
+                }
+            });
+
         }
         @Override
         protected String doInBackground(String... strings) {
-            return null;
+            try {
+                Connection con = connectionClass.CONN();
+                if (con == null) {
+                    w = "Error in connection with SQL server";
+                } else {
+                    String query = "SELECT * FROM VW_WAREHOUSEPRODUCT ";
+                    PreparedStatement ps = con.prepareStatement(query);
+                    ResultSet rs = ps.executeQuery();
+
+                    while (rs.next()) {
+                        toplam+= rs.getFloat("SECONDUNITAMOUNT");
+                        plasiyerArray.add(new PlasiyerListModel(rs.getString("NAME"), rs.getString("FULLNAME"), rs.getString("FULLNAME"),
+                                rs.getFloat("SECONDUNITAMOUNT"),rs.getFloat("SECONDUNITAMOUNT"),rs.getFloat("SECONDUNITAMOUNT")));
+                    }
+                    w = "Başarılı";
+                }
+            } catch (Exception ex) {
+                w = "Veri Çekme Hatası";
+
+            }
+            return w;
         }
     }
 

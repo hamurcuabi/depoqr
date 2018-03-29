@@ -42,10 +42,10 @@
                 android:maxLines="1"
                 android:padding="5dp"
                 android:singleLine="true"
-                android:textAlignment="center"
                 android:textSize="17sp"
                 android:textStyle="bold"
-                android:hint="Cari Adı.."/>
+                android:hint="Cari Adı.."
+                android:textColorHint="@color/error" />
 
         </LinearLayout>
 
@@ -111,7 +111,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_above="@+id/ontbtn"
-                android:orientation="horizontal"
+                android:orientation="vertical"
                 android:weightSum="2">
 
                 <ProgressBar
