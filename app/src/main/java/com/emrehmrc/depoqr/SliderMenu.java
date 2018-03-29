@@ -303,7 +303,7 @@ public class SliderMenu extends AppCompatActivity implements NavigationView.OnNa
                 break;
             case R.id.nav_menu4://iade
 
-                i = new Intent(SliderMenu.this, SliderMenu.class);
+                i = new Intent(SliderMenu.this, Iade.class);
                 bundle = ActivityOptions.makeSceneTransitionAnimation(SliderMenu.this).toBundle();
                 startActivity(i, bundle);
                 break;
