@@ -63,6 +63,7 @@ public class PlasiyerSatis extends AppCompatActivity {
         connectionClass = new ConnectionClass();
         ab = getSupportActionBar();
         ab.setTitle("Plasiyer Satiş");
+        ab.setSubtitle("Cari Seçimi");
         ab.setBackgroundDrawable(getResources().getDrawable(R.drawable.arkaplan));
         depo = (Spinner) findViewById(R.id.depoSec);
         secilen = (TextView) findViewById(R.id.secilen);
@@ -74,12 +75,12 @@ public class PlasiyerSatis extends AppCompatActivity {
         moveto2.setEnabled(false);
         moveto.setEnabled(false);
 
-        FillList filldepo = new FillList();
-        filldepo.execute("");
+       /* FillList filldepo = new FillList();
+        filldepo.execute("");*/
         FillList2 fillcari = new FillList2();
         fillcari.execute("");
 
-        moveto.setOnClickListener(new View.OnClickListener() {
+      /*  moveto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(PlasiyerSatis.this, PlasiyerSatisSec.class);
@@ -91,16 +92,17 @@ public class PlasiyerSatis extends AppCompatActivity {
                 startActivity(intent);
 
             }
-        });
+        });*/
         moveto2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(PlasiyerSatis.this, PlasiyerSatisThree.class);
+                Intent intent = new Intent(PlasiyerSatis.this, PlasiyerProduct.class);
                 intent.putExtra("secilenad", secilenad);
                 intent.putExtra("secilenkod", secilenkod);
-                intent.putExtra("secilendepo", secilendepo);
-                intent.putExtra("secilendepoId", secilendepoId);
+                //intent.putExtra("secilendepo", secilendepo);
+               //intent.putExtra("secilendepoId", secilendepoId);
                 intent.putExtra("secilenCariId", secilenCariId);
+                intent.putExtra("disable", secilenCariId);
                 startActivity(intent);
 
             }
@@ -119,11 +121,10 @@ public class PlasiyerSatis extends AppCompatActivity {
         int id = item.getItemId();
 
         if (id == R.id.anasayfa) {
-
-            Intent i = new Intent(PlasiyerSatis.this, SliderMenu.class);
-            bundle = ActivityOptions.makeSceneTransitionAnimation(PlasiyerSatis.this)
-                    .toBundle();
             finish();
+            Intent i = new Intent(PlasiyerSatis.this, SliderMenu.class);
+            bundle = ActivityOptions.makeSceneTransitionAnimation(PlasiyerSatis.this).toBundle();
+            startActivity(i);
         } else if (id == R.id.geri) {
             finish();
             onBackPressed();
@@ -140,7 +141,7 @@ public class PlasiyerSatis extends AppCompatActivity {
 
 
     @SuppressLint("NewApi")
-    public class FillList extends AsyncTask<String, String, String> {
+  /*  public class FillList extends AsyncTask<String, String, String> {
         String z = "";
         ArrayList<Depolar> depolars = new ArrayList<>();
 
@@ -203,9 +204,9 @@ public class PlasiyerSatis extends AppCompatActivity {
             }
             return z;
         }
-    }
+    }*/
 
-    private class Depolar {
+  /*  private class Depolar {
         private String depoadi;
         private String depono;
 
@@ -240,7 +241,7 @@ public class PlasiyerSatis extends AppCompatActivity {
         }
 
 
-    }
+    }*/
 
     public class FillList2 extends AsyncTask<String, String, String> {
         String w = "";

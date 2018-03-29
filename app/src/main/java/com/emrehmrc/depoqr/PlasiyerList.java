@@ -43,7 +43,7 @@ public class PlasiyerList extends AppCompatActivity {
     EditText cariArama;
     ListView lst_Cari;
     TextView tx_toplam;
-    Button btn_satisbasla;
+    Button btn_satisbasla,btn_yenisatis;
     ProgressBar progressBar;
     ArrayList<PlasiyerListModel> plasiyerArray;
     private PlasiyerListAdapter adapter;
@@ -64,12 +64,29 @@ public class PlasiyerList extends AppCompatActivity {
         progressBar = (ProgressBar) findViewById(R.id.pbbarP);
         plasiyerArray = new ArrayList<PlasiyerListModel>();
         btn_satisbasla = (Button) findViewById(R.id.btn_satisbasla);
+        btn_yenisatis = (Button) findViewById(R.id.btn_yeniSatis);
+        btn_satisbasla.setEnabled(false);
         tx_toplam = (TextView) findViewById(R.id.tx_toplam);
         cariArama = (EditText) findViewById(R.id.CariArama);
         lst_Cari = (ListView) findViewById(R.id.lst_Cari);
         FillList fillList = new FillList();
         fillList.execute("");
-
+        btn_yenisatis.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(PlasiyerList.this, PlasiyerSatis.class);
+                startActivity(intent);
+            }
+        });
+        btn_satisbasla.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String disable = "disable";
+                Intent intent = new Intent(PlasiyerList.this, PlasiyerProduct.class);
+                intent.putExtra("disable", disable);
+                startActivity(intent);
+            }
+        });
 
     }
 
@@ -84,10 +101,11 @@ public class PlasiyerList extends AppCompatActivity {
         int id = item.getItemId();
 
         if (id == R.id.anasayfa) {
-
+            finish();
             Intent i = new Intent(PlasiyerList.this, SliderMenu.class);
             bundle = ActivityOptions.makeSceneTransitionAnimation(PlasiyerList.this).toBundle();
-            finish();
+            startActivity(i);
+
         } else if (id == R.id.geri) {
             finish();
             onBackPressed();
@@ -96,7 +114,10 @@ public class PlasiyerList extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
-
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+    }
 
     public class FillList extends AsyncTask<String,String,String>{
          String w =  "";
@@ -116,7 +137,7 @@ public class PlasiyerList extends AppCompatActivity {
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     PlasiyerList.PlasiyerListModel plasiyerListModel;
                     plasiyerListModel = (PlasiyerListModel) lst_Cari.getItemAtPosition(position);
-
+                    btn_satisbasla.setEnabled(true);
                 }
             });
             cariArama.addTextChangedListener(new TextWatcher() {

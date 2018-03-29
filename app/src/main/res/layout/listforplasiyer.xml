@@ -28,7 +28,7 @@
         android:textSize="14sp"
         android:textColor="#ffffff"
         android:id="@+id/fkod"
-        android:text="Kod"
+        android:text="Cari Kodu"
         android:paddingStart="5dp"
         android:paddingLeft="5dp"
         tools:ignore="RtlSymmetry" />
@@ -47,7 +47,7 @@
         android:textSize="14sp"
         android:textColor="#ffffff"
         android:id="@+id/fadi"
-        android:text="Adi"
+        android:text="Cari Adı"
 
         android:paddingLeft="5dp" android:paddingStart="5dp"
         tools:ignore="RtlSymmetry" />

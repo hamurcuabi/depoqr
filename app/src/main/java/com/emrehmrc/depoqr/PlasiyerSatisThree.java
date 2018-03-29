@@ -80,11 +80,12 @@ public class PlasiyerSatisThree extends AppCompatActivity {
         int id = item.getItemId();
 
         if (id == R.id.anasayfa) {
-
-            Intent i = new Intent(PlasiyerSatisThree.this, SliderMenu.class);
-            bundle = ActivityOptions.makeSceneTransitionAnimation(PlasiyerSatisThree.this)
-                    .toBundle();
             finish();
+            Intent i = new Intent(PlasiyerSatisThree.this, SliderMenu.class);
+            bundle = ActivityOptions.makeSceneTransitionAnimation(PlasiyerSatisThree.this).toBundle();
+            startActivity(i);
+
+
         } else if (id == R.id.geri) {
             finish();
             onBackPressed();
@@ -93,7 +94,10 @@ public class PlasiyerSatisThree extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
-
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+    }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 

@@ -69,7 +69,7 @@ public class PlasiyerSatisSec extends AppCompatActivity {
         connectionClass = new ConnectionClass();
         ab = getSupportActionBar();
         ab.setTitle("Plasiyer Satiş");
-        ab.setSubtitle("Sec Page");
+        ab.setSubtitle("Satiş");
         ab.setBackgroundDrawable(getResources().getDrawable(R.drawable.arkaplan));
         tx_cariadi = (TextView) findViewById(R.id.gelenad);
         tx_depono = (TextView) findViewById(R.id.gelendepo);
@@ -112,10 +112,10 @@ public class PlasiyerSatisSec extends AppCompatActivity {
         int id = item.getItemId();
 
         if (id == R.id.anasayfa) {
-
+            finish();
             Intent i = new Intent(PlasiyerSatisSec.this, SliderMenu.class);
             bundle = ActivityOptions.makeSceneTransitionAnimation(PlasiyerSatisSec.this).toBundle();
-            finish();
+            startActivity(i);
         } else if (id == R.id.geri) {
             finish();
             onBackPressed();
@@ -124,7 +124,10 @@ public class PlasiyerSatisSec extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
-
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+    }
     @SuppressLint("NewApi")
     public class FillList extends AsyncTask<String, String, String> {
         String z = "";
