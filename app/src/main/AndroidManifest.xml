@@ -82,6 +82,17 @@
             android:windowSoftInputMode="adjustPan">
 
         </activity>
+        <activity
+            android:name=".PlasiyerList"
+            android:windowSoftInputMode="adjustPan">
+
+        </activity>
+        <activity
+            android:name=".PlasiyerProduct"
+            android:windowSoftInputMode="adjustPan">
+
+        </activity>
+
     </application>
 
 </manifest>
