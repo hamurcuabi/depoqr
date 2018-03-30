@@ -50,11 +50,11 @@ public class PlasiyerSatisThree extends AppCompatActivity {
         ab.setTitle("Plasiyer Satiş");
         ab.setSubtitle("Barkod Satiş");
         ab.setBackgroundDrawable(getResources().getDrawable(R.drawable.arkaplan));
-        incomingAd = incomingIntent.getStringExtra("secilenad");
-        incomingKod = incomingIntent.getStringExtra("secilenkod");
-        incomingDepo = incomingIntent.getStringExtra("secilendepo");
-        incomingDepoId = incomingIntent.getStringExtra("secilendepoId");
-        incomingCariId = incomingIntent.getStringExtra("secilenCariId");
+        incomingAd = sharedPreferences.getString("plasiyerCariAd", null);
+        incomingKod = sharedPreferences.getString("plasiyerCariKod", null);
+        incomingCariId = sharedPreferences.getString("plasiyerCariId", null);
+        incomingDepo = sharedPreferences.getString("plasiyerDepoAd", null);
+        incomingDepoId = sharedPreferences.getString("plasiyerDepoId", null);
         gelenad = (TextView) findViewById(R.id.gelenad2);
         gelendepo = (TextView) findViewById(R.id.gelendepo2);
         gelendepo.setText(incomingDepo);

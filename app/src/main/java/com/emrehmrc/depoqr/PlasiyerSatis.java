@@ -97,12 +97,17 @@ public class PlasiyerSatis extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(PlasiyerSatis.this, PlasiyerProduct.class);
-                intent.putExtra("secilenad", secilenad);
+                /*intent.putExtra("secilenad", secilenad);
                 intent.putExtra("secilenkod", secilenkod);
                 //intent.putExtra("secilendepo", secilendepo);
                //intent.putExtra("secilendepoId", secilendepoId);
                 intent.putExtra("secilenCariId", secilenCariId);
-                intent.putExtra("disable", secilenCariId);
+                */intent.putExtra("disable", "undisable");
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putString("plasiyerCariAd", secilenad);
+                editor.putString("plasiyerCariKod", secilenkod);
+                editor.putString("plasiyerCariId", secilenCariId);
+                editor.commit();
                 startActivity(intent);
 
             }

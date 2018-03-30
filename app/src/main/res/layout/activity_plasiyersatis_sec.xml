@@ -8,6 +8,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_above="@+id/btn_satis"
         android:background="@color/appbackcolor"
         android:orientation="vertical">
 
@@ -60,52 +61,81 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/appbackcolor"
-            android:orientation="horizontal"
+            android:orientation="vertical"
             android:paddingLeft="5dp"
             android:paddingRight="5dp"
             android:paddingTop="5dp">
 
-            <EditText
-                android:id="@+id/tx_urunKodu"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginEnd="5dp"
-                android:layout_marginRight="5dp"
-                android:layout_weight="1"
-                android:background="@drawable/deneme3"
-                android:entries="@array/deposec"
-                android:hint="ÜRÜN KODU"
-                android:imeOptions="actionDone"
-                android:maxLines="1"
-                android:padding="5dp"
-                android:singleLine="true"
-                android:textColor="#ffffff"
-                android:textSize="20sp" />
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingBottom="5dp"
+                android:weightSum="1">
 
-            <AutoCompleteTextView
-                android:id="@+id/tx_urunAdi"
+                <AutoCompleteTextView
+                    android:id="@+id/tx_urunAdi"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.3"
+                    android:background="@drawable/deneme3"
+                    android:entries="@array/sevkiyatNo"
+                    android:hint="ÜRÜN ADI"
+                    android:imeOptions="actionDone"
+                    android:maxLines="1"
+                    android:padding="5dp"
+                    android:popupBackground="@color/zyonetim"
+                    android:singleLine="true"
+                    android:textColor="#ffffff"
+                    android:textSize="20sp" />
+
+                <ImageView
+                    android:id="@+id/btn_drop"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:clickable="true"
+                    android:contentDescription="TODO"
+                    android:focusable="true"
+                    android:src="@drawable/ic_action_arrowall" />
+
+            </LinearLayout>
+
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="@drawable/deneme3"
-                android:entries="@array/sevkiyatNo"
-                android:hint="ÜRÜN ADI"
-                android:imeOptions="actionDone"
-                android:maxLines="1"
-                android:padding="5dp"
-                android:popupBackground="@color/zyonetim"
-                android:singleLine="true"
-                android:textColor="#ffffff"
-                android:textSize="20sp" />
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:orientation="horizontal">
 
-            <ImageView
-                android:id="@+id/btn_drop"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:clickable="true"
-                android:contentDescription="TODO"
-                android:focusable="true"
-                android:src="@drawable/ic_action_arrowall" />
+                <EditText
+                    android:id="@+id/tx_urunKodu"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_weight="1"
+                    android:entries="@array/deposec"
+                    android:hint="ÜRÜN KODU GIRINIZ.."
+                    android:imeOptions="actionDone"
+                    android:maxLines="1"
+                    android:padding="5dp"
+                    android:singleLine="true"
+                    android:textColor="#000000"
+                    android:textColorHint="#000000"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
+
+                <Button
+                    android:id="@+id/btn_gir"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@drawable/deneme"
+                    android:padding="5dp"
+                    android:text="ÜRÜN Ara"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
 
         </LinearLayout>
 
@@ -130,27 +160,37 @@
             android:paddingTop="5dp">
 
             <EditText
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_weight="0.9"
-                android:background="@drawable/deneme3"
-                android:hint="Sip. Mıktari"
+                android:hint="Sipariş Mıktari Giriniz.."
                 android:imeOptions="actionDone"
                 android:inputType="number|phone"
                 android:maxLines="1"
                 android:padding="5dp"
                 android:singleLine="true"
-                android:textSize="20sp" />
+                android:textColorHint="@android:color/holo_red_dark"
+                android:textSize="20sp"
+                android:textColor="@android:color/holo_red_dark"/>
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:paddingTop="5dp">
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
+                android:layout_weight="1.3"
                 android:maxLines="1"
                 android:padding="5dp"
                 android:singleLine="true"
                 android:text="Birim:"
-                android:textAlignment="center"
                 android:textColor="#000000"
                 android:textSize="20sp"
                 android:textStyle="bold" />
@@ -163,9 +203,8 @@
                 android:maxLines="1"
                 android:padding="5dp"
                 android:singleLine="true"
-                android:textColor="@color/error"
-                android:textSize="20sp"
-                android:textStyle="bold" />
+                android:textColor="@android:color/holo_red_dark"
+                android:textSize="20sp" />
 
             <TextView
                 android:id="@+id/tx_typeName"
@@ -175,7 +214,7 @@
                 android:maxLines="1"
                 android:padding="5dp"
                 android:singleLine="true"
-                android:textColor="@color/error"
+                android:textColor="@android:color/holo_red_dark"
                 android:textSize="20sp"
                 android:textStyle="bold" />
         </LinearLayout>
@@ -208,9 +247,8 @@
                 android:maxLines="1"
                 android:padding="5dp"
                 android:singleLine="true"
-                android:textColor="@color/error"
-                android:textSize="20sp"
-                android:textStyle="bold" />
+                android:textColor="@android:color/holo_red_dark"
+                android:textSize="20sp" />
 
             <TextView
                 android:id="@+id/tx_moneyTeype"
@@ -220,7 +258,7 @@
                 android:maxLines="1"
                 android:padding="5dp"
                 android:singleLine="true"
-                android:textColor="@color/error"
+                android:textColor="@android:color/holo_red_dark"
                 android:textSize="20sp"
                 android:textStyle="bold" />
         </LinearLayout>
@@ -253,9 +291,8 @@
                 android:maxLines="1"
                 android:padding="5dp"
                 android:singleLine="true"
-                android:textColor="@color/error"
-                android:textSize="20sp"
-                android:textStyle="bold" />
+                android:textColor="@android:color/holo_red_dark"
+                android:textSize="20sp" />
 
         </LinearLayout>
 
@@ -276,7 +313,7 @@
                 android:text="KDV Dahil"
                 android:textColor="#000000"
                 android:textSize="20sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"/>
 
             <TextView
                 android:id="@+id/tx_iskdv"
@@ -288,25 +325,28 @@
                 android:maxLines="1"
                 android:padding="5dp"
                 android:singleLine="true"
-                android:textColor="@color/error"
+                android:textColor="@android:color/holo_red_dark"
                 android:textSize="20sp"
                 android:textStyle="bold" />
         </LinearLayout>
 
-        <Button
-            android:id="@+id/btn_satis"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
-            android:layout_marginTop="20dp"
-            android:background="@drawable/deneme"
-            android:drawableEnd="@drawable/ic_action_arrow"
-            android:drawableRight="@drawable/ic_action_arrow"
-            android:padding="10dp"
-            android:text="Onay"
-            android:textSize="20sp"
-            android:textStyle="bold" />
 
     </LinearLayout>
+
+    <Button
+        android:id="@+id/btn_satis"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/deneme"
+        android:drawableEnd="@drawable/ic_action_arrow"
+        android:drawableRight="@drawable/ic_action_arrow"
+        android:padding="10dp"
+        android:text="Onay"
+        android:textSize="20sp"
+        android:textStyle="bold" />
 </RelativeLayout>

@@ -59,16 +59,21 @@ public class PlasiyerProduct extends AppCompatActivity {
         depo = (Spinner) findViewById(R.id.depoSec);
         btn_barkodSatis = (Button) findViewById(R.id.btn_barkodSatis);
         btn_direkSatis = (Button) findViewById(R.id.btn_direkSatis);
+        relativeLayout3 = (LinearLayout) findViewById(R.id.relativeLayout3);
+        lastGG = (LinearLayout) findViewById(R.id.lastGG);
+
         memberid = sharedPreferences.getString("ID", null);
         comid = sharedPreferences.getString("Companiesid", null);
         Intent incomingIntent = getIntent();
-        relativeLayout3 = (LinearLayout) findViewById(R.id.relativeLayout3);
-        lastGG = (LinearLayout) findViewById(R.id.lastGG);
-        incomingCariAd = incomingIntent.getStringExtra("secilenad");
-        incomingCariKod = incomingIntent.getStringExtra("secilenkod");
-        incomingCariId = incomingIntent.getStringExtra("secilenCariId");
+
+
+        incomingCariAd = sharedPreferences.getString("plasiyerCariAd", null);
+        incomingCariKod = sharedPreferences.getString("plasiyerCariKod", null);
+        incomingCariId = sharedPreferences.getString("plasiyerCariId", null);
         disable = incomingIntent.getStringExtra("disable");
         cariAdi.setText(incomingCariAd);
+
+
         if(disable.equals("disable")){
             relativeLayout3.setVisibility(View.GONE);
             lastGG.setVisibility(View.GONE);
@@ -86,6 +91,7 @@ public class PlasiyerProduct extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(PlasiyerProduct.this, PlasiyerSatisThree.class);
+
                 startActivity(intent);
             }
         });
@@ -149,11 +155,13 @@ public class PlasiyerProduct extends AppCompatActivity {
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                     ((TextView) parent.getChildAt(0)).setGravity(Gravity.CENTER);
                     ((TextView) parent.getChildAt(0)).setTextColor(getResources().getColor(R.color.white));
-                    // Depolar depolar = (Depolar) depo.getItemAtPosition(position);
-                    Depolar depolar1 = new Depolar();
+                    Depolar depolar1;
                     depolar1 = (Depolar) depo.getItemAtPosition(position);
-                    secilendepo = depolar1.getDepoadi();
-                    secilendepoId = depolar1.getDepono();
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putString("plasiyerDepoAd", depolar1.getDepoadi());
+                    editor.putString("plasiyerDepoId", depolar1.getDepono());
+                    editor.commit();
+
                 }
 
                 @Override
