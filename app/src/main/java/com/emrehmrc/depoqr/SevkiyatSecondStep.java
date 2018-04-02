@@ -566,17 +566,6 @@ public class SevkiyatSecondStep extends AppCompatActivity {
             Bundle bundle = ActivityOptions.makeSceneTransitionAnimation(SevkiyatSecondStep.this).toBundle();
             finish();
         } else if (id == R.id.geri) {
-            // Intent intent = new Intent();
-            //intent.putStringArrayListExtra("list", tamamlaArray);
-            // finish();
-            // onBackPressed();
-            // String selam = "hahahaha";
-            // tamamlaArray.add("bir");
-            //tamamlaArray.add("iki");
-            //   Intent i = new Intent(SevkiyatSecondStep.this,Sevkiyat.class);
-            //   i.putStringArrayListExtra("list", tamamlaArray);
-            // setResult(Activity.RESULT_OK,i);
-            // finish();
             finish();
             onBackPressed();
 
