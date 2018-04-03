@@ -60,6 +60,7 @@ public class PlasiyerList extends AppCompatActivity {
         connectionClass = new ConnectionClass();
         ab = getSupportActionBar();
         ab.setTitle("Plasiyer Satiş");
+        ab.setSubtitle("Satiş Listesi");
         ab.setBackgroundDrawable(getResources().getDrawable(R.drawable.arkaplan));
         progressBar = (ProgressBar) findViewById(R.id.pbbarP);
         plasiyerArray = new ArrayList<PlasiyerListModel>();
