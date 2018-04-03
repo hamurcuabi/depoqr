@@ -78,6 +78,7 @@ public class MalKabulOku extends AppCompatActivity {
     String incomingDepoAd;
     TextView gelenDeop;
     ArrayList<String> findPArray = new ArrayList<>();
+    List<Map<String, String>> prolist = new ArrayList<Map<String, String>>();
 
     @RequiresApi(api = Build.VERSION_CODES.CUPCAKE)
     @Override
@@ -87,7 +88,7 @@ public class MalKabulOku extends AppCompatActivity {
         gelenDeop = (TextView) findViewById(R.id.gelenDepo);
         Intent incomingIntent = getIntent();
         incomingDepoAd = incomingIntent.getStringExtra("secilenDepo");
-        gelenDeop.setText("Depo: "+ incomingDepoAd);
+        gelenDeop.setText("Depo: " + incomingDepoAd);
 
         arraysize = 0;
         connectionClass = new ConnectionClass();
@@ -284,10 +285,12 @@ public class MalKabulOku extends AppCompatActivity {
                 } else {
                     if (PorB2.equals("P")) {
                         query3 = "Select * from VW_SENTFORWADINGLIST where PALETBARCODES='" + codeidfake + "'";
-                    } if (PorB2.equals("B")) {
+                    }
+                    if (PorB2.equals("B")) {
                         query3 = "Select * from VW_SENTFORWADINGLIST where BARCODENO='" + codeidfake + "'" + " )";
 
-                    }if (PorB2.equals("G")){
+                    }
+                    if (PorB2.equals("G")) {
                         uid2 = UUID.fromString(codeid);
                         query3 = "Select * from VW_SENTFORWADINGLIST where BARCODEID='" + uid2 + "' or PALETID='" + uid2 + "'";
                     }
@@ -345,7 +348,8 @@ public class MalKabulOku extends AppCompatActivity {
                 if (PorB2.equals("B")) {
                     q = "Select * from VW_PALETBARCODE where PRODUCTBARCODE = '" + codeidfake + "'  and COMPANIESID='" + Companiesid + "'";
                     fillList.execute(q);
-                } if (PorB2.equals("G")) {
+                }
+                if (PorB2.equals("G")) {
                     uid2 = UUID.fromString(codeid);
                     q = "Select * from VW_PALETBARCODE where (BARCODEID = '" + uid2 + "'  or PALETID='" + uid2 + "')  and COMPANIESID='" + Companiesid + "'";
                     fillList.execute(q);
@@ -754,6 +758,7 @@ public class MalKabulOku extends AppCompatActivity {
         protected void onPreExecute() {
             pbbar.setVisibility(View.VISIBLE);
         }
+
         @SuppressLint("SetTextI18n")
         @Override
         protected void onPostExecute(String r) {
@@ -763,8 +768,7 @@ public class MalKabulOku extends AppCompatActivity {
             if (isSuccess) {
                 Toast.makeText(MalKabulOku.this, "AKTARILDI", Toast.LENGTH_SHORT).show();
                 edtName.setText("TOPLAM ÜRÜN SAYISI: " + 0);
-            }
-            else Toast.makeText(MalKabulOku.this, "HATA OLUŞTU", Toast.LENGTH_SHORT).show();
+            } else Toast.makeText(MalKabulOku.this, "HATA OLUŞTU", Toast.LENGTH_SHORT).show();
         }
 
         @Override
@@ -806,7 +810,7 @@ public class MalKabulOku extends AppCompatActivity {
     public class FillList extends AsyncTask<String, String, String> {
         String z = "";
         Boolean isSuccess = false;
-        List<Map<String, String>> prolist = new ArrayList<Map<String, String>>();
+
 
         @Override
         protected void onPreExecute() {
@@ -878,15 +882,19 @@ public class MalKabulOku extends AppCompatActivity {
                         datanum.put("E", rs.getString("BARCODEID"));
                         datanum.put("F", rs.getString("PALETID"));
                         datanum.put("G", rs.getString("PRODUCTBARCODE"));
-                        arraysize++;
-                        sayma++;
-                        prolist.add(datanum);
-                        if (datanum.get("D").equals("0.00 null")) {
-                            datanum.put("D", "");
-                            isSuccess = true;
-                            stype = "";
-                        }
+                        if (!prolist.contains(datanum)) {
+                            if (datanum.get("D").equals("0.00 null")) {
+                                datanum.put("D", "");
+                            }
+                            if (!prolist.contains(datanum)) {
+                                arraysize++;
+                                sayma++;
+                                prolist.add(datanum);
+                                isSuccess = true;
+                                stype = "";
+                            }
 
+                        }
 
                     }
 
@@ -935,7 +943,7 @@ public class MalKabulOku extends AppCompatActivity {
                 if (con == null) {
                     z = "Error in connection with SQL server";
                 } else {
-                    for (int i = 0; i < findPArray.size() ; i++) {
+                    for (int i = 0; i < findPArray.size(); i++) {
                         String query = "Delete  from WAREHOUSEPRODUCT where  (BARCODEID='" + findPArray.get(i) + "')";
                         PreparedStatement preparedStatement = con.prepareStatement(query);
                         preparedStatement.executeUpdate();

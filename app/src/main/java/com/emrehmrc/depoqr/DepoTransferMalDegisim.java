@@ -63,7 +63,7 @@ public class DepoTransferMalDegisim extends AppCompatActivity {
     String hedefdepoid, anadepoid;
     int arraysize;
     String query;
-    String firstype, secondtype;
+
     String Companiesid, memberid;
     int ilkgiris = 0;
     Map<String, String> datanum;
@@ -355,8 +355,7 @@ public class DepoTransferMalDegisim extends AppCompatActivity {
                         paletsil = (String) map4.get("F");
                         barcodesil = (String) map4.get("E");
                         UUID uid = UUID.randomUUID();
-                        String query2 = "insert into WAREHOUSETRANSFER" +
-                                " values ('" + uid + "','" + memberid + "','" + barcodesil + "','" + paletsil + "','" + anadepoid + "','" + hedefdepoid + "',(Select SUM(WDIRECTION * FIRSTAMOUNT)  AS FIRSTAMOUNT from VW_WAREHOUSESTOCKMOVEMENT where (DESTINATIONWAREHOUSEID = '" + anadepoid + "' or SOURCEWAREHOUSEID = '" + anadepoid + "') and BARCODEID = '" + barcodesil + "' group by BARCODEID,BARCODENO,PALETBARCODES,PRODUCTNAME,PALETID,PRODUCTID,PRODUCTCODE,FIRSTUNITNAME,SECONDUNITNAME having SUM(WDIRECTION * FIRSTAMOUNT) != 0 or  SUM(WDIRECTION * SECONDAMOUNT) != 0),(Select SUM(WDIRECTION * SECONDAMOUNT)  AS SECONDAMOUNT from VW_WAREHOUSESTOCKMOVEMENT where (DESTINATIONWAREHOUSEID = '" + anadepoid + "' or SOURCEWAREHOUSEID = '" + anadepoid + "') and BARCODEID = '" + barcodesil + "' group by BARCODEID,BARCODENO,PALETBARCODES,PRODUCTNAME,PALETID,PRODUCTID,PRODUCTCODE,FIRSTUNITNAME,SECONDUNITNAME having SUM(WDIRECTION * FIRSTAMOUNT) != 0 or  SUM(WDIRECTION * SECONDAMOUNT) != 0),GETDATE())";
+                        String query2 = "insert into WAREHOUSETRANSFER" + " values ('" + uid + "','" + memberid + "','" + barcodesil + "','" + paletsil + "','" + anadepoid + "','" + hedefdepoid + "',(Select SUM(WDIRECTION * FIRSTAMOUNT)  AS FIRSTAMOUNT from VW_WAREHOUSESTOCKMOVEMENT where (DESTINATIONWAREHOUSEID = '" + anadepoid + "' or SOURCEWAREHOUSEID = '" + anadepoid + "') and BARCODEID = '" + barcodesil + "' group by BARCODEID,BARCODENO,PALETBARCODES,PRODUCTNAME,PALETID,PRODUCTID,PRODUCTCODE,FIRSTUNITNAME,SECONDUNITNAME having SUM(WDIRECTION * FIRSTAMOUNT) != 0 or  SUM(WDIRECTION * SECONDAMOUNT) != 0),(Select SUM(WDIRECTION * SECONDAMOUNT)  AS SECONDAMOUNT from VW_WAREHOUSESTOCKMOVEMENT where (DESTINATIONWAREHOUSEID = '" + anadepoid + "' or SOURCEWAREHOUSEID = '" + anadepoid + "') and BARCODEID = '" + barcodesil + "' group by BARCODEID,BARCODENO,PALETBARCODES,PRODUCTNAME,PALETID,PRODUCTID,PRODUCTCODE,FIRSTUNITNAME,SECONDUNITNAME having SUM(WDIRECTION * FIRSTAMOUNT) != 0 or  SUM(WDIRECTION * SECONDAMOUNT) != 0),GETDATE())";
                         PreparedStatement preparedStatement = con.prepareStatement(query2);
                         preparedStatement.executeUpdate();
                         z = "Palet Oluştu!";
@@ -386,8 +385,7 @@ public class DepoTransferMalDegisim extends AppCompatActivity {
 
             arraysize = 0;
             pbbar.setVisibility(View.VISIBLE);
-            FillType fillType = new FillType();
-            fillType.execute("");
+
         }
 
         @Override
@@ -405,13 +403,10 @@ public class DepoTransferMalDegisim extends AppCompatActivity {
 
             lstBarcode.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
-                public void onItemClick(AdapterView<?> arg0, View arg1,
-                                        int arg2, long arg3) {
+                public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
                     HashMap<String, Object> obj = (HashMap<String, Object>) ADA.getItem(arg2);
                     String code = (String) obj.get("A");
                     String name = (String) obj.get("B");
-                    String amount = (String) obj.get("C");
-                    String weight = (String) obj.get("D");
                     barcodeid = (String) obj.get("E");
                     paletid = (String) obj.get("F");
                     edtKod.setText(code);
@@ -434,16 +429,26 @@ public class DepoTransferMalDegisim extends AppCompatActivity {
                         datanum = new HashMap<String, String>();
                         datanum.put("A", rs.getString("PRODUCTCODE"));
                         datanum.put("B", rs.getString("PRODUCTNAME"));
-                        datanum.put("C", rs.getString("FIRSTAMOUNT") + " " + rs.getString("FIRSTUNITNAME"));
-                        datanum.put("D", rs.getString("SECONDAMOUNT") + " " + rs.getString("SECONDUNITNAME"));
+                        if (rs.getString("FIRSTUNITNAME") != null) {
+                            datanum.put("C", rs.getString("FIRSTAMOUNT") + " " + rs.getString("FIRSTUNITNAME"));
+                        } else {
+                            datanum.put("C", rs.getString("FIRSTAMOUNT"));
+                        }
+                        if (rs.getString("SECONDUNITNAME") != null) {
+                            datanum.put("D", rs.getString("SECONDAMOUNT") + " " + rs.getString("SECONDUNITNAME"));
+                        } else {
+                            datanum.put("D", rs.getString("SECONDAMOUNT"));
+                        }
                         datanum.put("E", rs.getString("BARCODEID"));
                         datanum.put("F", rs.getString("PALETID"));
                         datanum.put("G", rs.getString("PALETBARCODES"));
                         Float firstamountCheck = rs.getFloat("FIRSTAMOUNT");
                         if (firstamountCheck > 0) {
-                            arraysize++;
-                            prolist.add(datanum);
-                            isSuccess = true;
+                            if (!prolist.contains(datanum)) {
+                                arraysize++;
+                                prolist.add(datanum);
+                                isSuccess = true;
+                            }
                         }
                     }
                     z = "Eklendi!";
@@ -457,55 +462,5 @@ public class DepoTransferMalDegisim extends AppCompatActivity {
         }
     }
 
-
-    @RequiresApi(api = Build.VERSION_CODES.CUPCAKE)
-    public class FillType extends AsyncTask<String, String, String> {
-        String z = "";
-        List<Map<String, String>> prolist = new ArrayList<Map<String, String>>();
-
-        @Override
-        protected void onPreExecute() {
-
-            pbbar.setVisibility(View.VISIBLE);
-        }
-
-        @Override
-        protected void onPostExecute(String r) {
-
-            pbbar.setVisibility(View.GONE);
-        }
-
-
-        @Override
-        protected String doInBackground(String... params) {
-
-            try {
-                Connection con = connectionClass.CONN();
-                if (con == null) {
-                    z = "Error in connection with SQL server";
-                } else {
-                    query = "Select FIRSTUNITNAME,SECONDUNITNAME from VW_BARCODE where ID='" + codeid + "'";
-                    PreparedStatement ps = con.prepareStatement(query);
-                    ResultSet rs = ps.executeQuery();
-
-
-                    while (rs.next()) {
-                        firstype = rs.getString("FIRSTUNITNAME");
-                        secondtype = rs.getString("SECONDUNITNAME");
-
-                    }
-                    if (firstype.equals(null)) firstype = "";
-                    if (secondtype.equals(null)) secondtype = "";
-                    z = "Eklendi!";
-
-                }
-            } catch (Exception ex) {
-                z = "Veri Çekme Hatası";
-
-            }
-
-            return z;
-        }
-    }
 
 }

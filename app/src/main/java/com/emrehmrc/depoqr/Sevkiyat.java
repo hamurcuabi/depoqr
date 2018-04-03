@@ -63,6 +63,8 @@ public class Sevkiyat extends AppCompatActivity {
     ImageView dropDown;
     TextView sevkiyetPlaka;
     ArrayList<Depolar> depolars = new ArrayList<>();
+    ArrayList<String> maxArray = new ArrayList<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -117,29 +119,42 @@ public class Sevkiyat extends AppCompatActivity {
         tamamla.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               if(depolars.isEmpty()){
-                   Toast.makeText(getApplicationContext(), "Sevkiyat Seçiniz!", Toast.LENGTH_SHORT).show();
-               }
-               else{
-                   AlertDialog.Builder builder2 = new AlertDialog.Builder(Sevkiyat.this);
-                   builder2.setTitle("UYARI!");
-                   builder2.setMessage("Sevkiyatı tamamlamak istediğinizden emin misiniz?");
-                   builder2.setNegativeButton("EVET", new DialogInterface.OnClickListener() {
-                       public void onClick(DialogInterface dialog, int id) {
-                           TamamlaC tamamlaC = new TamamlaC();
-                           tamamlaC.execute("");
-                       }
-                   });
+                if (depolars.isEmpty()) {
+                    if (sevkiyetNo.getText().toString().isEmpty()) {
+                        Toast.makeText(getApplicationContext(), "Sevkiyat Seçiniz!", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    if (!maxArray.isEmpty()) {
+                        String tempString = "";
+                        for (int i = 0; i < maxArray.size(); i++) {
+                            if (i == 0) {
+                                tempString = tempString + maxArray.get(i);
+                            } else tempString = tempString + ", " + maxArray.get(i);
 
-                   builder2.setPositiveButton("HAYIR", new DialogInterface.OnClickListener() {
-                       public void onClick(DialogInterface dialog, int id) {
+                        }
+                        Intent intent = new Intent(getBaseContext(), UyariBildirim.class);
+                        intent.putExtra("UYARI", "BU Ürünlerin Miktari Aştınız: " + tempString);
+                        startActivity(intent);
+                    }
+                    AlertDialog.Builder builder2 = new AlertDialog.Builder(Sevkiyat.this);
+                    builder2.setTitle("UYARI!");
+                    builder2.setMessage("Sevkiyatı tamamlamak istediğinizden emin misiniz?");
+                    builder2.setNegativeButton("EVET", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            TamamlaC tamamlaC = new TamamlaC();
+                            tamamlaC.execute("");
+                        }
+                    });
 
-                       }
-                   });
+                    builder2.setPositiveButton("HAYIR", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
 
-                   builder2.show();
+                        }
+                    });
 
-               }
+                    builder2.show();
+
+                }
             }
         });
         dropDown.setOnClickListener(new View.OnClickListener() {
@@ -185,8 +200,8 @@ public class Sevkiyat extends AppCompatActivity {
 
         @Override
         protected void onPreExecute() {
-              spndepo.setAdapter(null);
-              depolars.clear();
+            spndepo.setAdapter(null);
+            depolars.clear();
         }
 
         @Override
@@ -402,6 +417,7 @@ public class Sevkiyat extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(String r) {
+            maxArray.clear();
             String[] from = {"A", "B", "C", "E", "T"};
             int[] views = {R.id.pcode, R.id.pname, R.id.pfirst, R.id.psecond, R.id.pType};
             ADA = new SpecialAdapter(Sevkiyat.this, prolist, R.layout.lstsevkiyat, from, views);
@@ -414,18 +430,29 @@ public class Sevkiyat extends AppCompatActivity {
             });
 
             //Değişiklik yapılacak
-            for(int i=0;i<prolist.size();i++){
+            for (int i = 0; i < prolist.size(); i++) {
 
-                Map<String, Object> map2 = (Map<String, Object>) lstProduct.getItemAtPosition(0);
-                float  e = Float.parseFloat((String) map2.get("E"));
-                float  f= Float.parseFloat((String) map2.get("F"));
-                if(e>f){
-
-                    lstProduct.getChildAt(i).setBackgroundColor(Color.parseColor("#E0F7FA"));
+                Map<String, Object> map2 = (Map<String, Object>) lstProduct.getItemAtPosition(i);
+                float c = Float.parseFloat((String) map2.get("C"));
+                float e = Float.parseFloat((String) map2.get("E"));
+                String maxName = (String) map2.get("B");
+                if (e > c) {
+                    // lstProduct.setBackgroundColor(0xFF00FF00);
+                    //Toast.makeText(getApplicationContext(), "Miktari Aştınız!", Toast.LENGTH_LONG).show();
+                    maxArray.add(maxName);
                 }
 
             }
+            if (!maxArray.isEmpty()) {
+                String tempString = "";
+                for (int i = 0; i < maxArray.size(); i++) {
+                    if (i == 0) {
+                        tempString = tempString + maxArray.get(i);
+                    } else tempString = tempString + ", " + maxArray.get(i);
 
+                }
+                Toast.makeText(getApplicationContext(), "Miktari Aştınız!", Toast.LENGTH_LONG).show();
+            }
 
         }
 
@@ -505,8 +532,7 @@ public class Sevkiyat extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "Sevkiyat Tamamlandı!", Toast.LENGTH_SHORT).show();
                 SevkiyetList sevkiyetList = new SevkiyetList();
                 sevkiyetList.execute("");
-            }
-            else Toast.makeText(getApplicationContext(), "Hata!", Toast.LENGTH_SHORT).show();
+            } else Toast.makeText(getApplicationContext(), "Hata!", Toast.LENGTH_SHORT).show();
         }
 
         @Override
@@ -516,7 +542,7 @@ public class Sevkiyat extends AppCompatActivity {
                 if (con == null) {
                     z = "Error in connection with SQL server";
                 } else {
-                    String q = "update VW_FORWARDINGPLAN set STATU = '1' where ID ='" + fordid + "' and COMPANIESID ='"+compId+"'";
+                    String q = "update VW_FORWARDINGPLAN set STATU = '1' where ID ='" + fordid + "' and COMPANIESID ='" + compId + "'";
                     PreparedStatement ps = con.prepareStatement(q);
                     ps.executeUpdate();
                     z = "Başarılı";

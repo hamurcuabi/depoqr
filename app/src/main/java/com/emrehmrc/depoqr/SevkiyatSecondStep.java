@@ -65,11 +65,14 @@ public class SevkiyatSecondStep extends AppCompatActivity {
     String sevkdepoid;
     ProgressBar progressBar;
     String PorB;
+    String PorB2;
+    int way = 0;
     String control = "";
     ArrayList<String> emptyArray = new ArrayList<>();
     ArrayList<String> emptyArray2 = new ArrayList<>();
     UUID uuid;
     int i = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -160,6 +163,7 @@ public class SevkiyatSecondStep extends AppCompatActivity {
             public void onClick(View v) {
                 datalist.clear();
                 recyclerView.setAdapter(null);
+                way = 0;
                 if (PorB.equals("P")) {
 
                     FillProducts fillProducts = new FillProducts();
@@ -169,9 +173,6 @@ public class SevkiyatSecondStep extends AppCompatActivity {
                             "SUM(WDIRECTION * FIRSTAMOUNT)  AS FIRSTAMOUNT, \n" +
                             "SUM(WDIRECTION * SECONDAMOUNT) AS SECONDAMOUNT \n" +
                             "from VW_WAREHOUSESTOCKMOVEMENT where PRODUCTID IN (Select PRODUCTID from VW_FORWARDINGPRODUCTPLAN where FORWARDINGID ='" + sevkNo + "') and \n" +
-                            "(DESTINATIONWAREHOUSEID = \n" +
-                            "'" + sevkdepoid + "' \n" +
-                            "or SOURCEWAREHOUSEID = '" + sevkdepoid + "') and\n" +
                             "PALETBARCODES = '" + edtCode.getText().toString() + "'\n" +
                             "group by BARCODEID,BARCODENO,PALETBARCODES,PRODUCTNAME,PALETID,PRODUCTID," +
                             "PRODUCTCODE," +
@@ -188,9 +189,6 @@ public class SevkiyatSecondStep extends AppCompatActivity {
                             "SUM(WDIRECTION * FIRSTAMOUNT)  AS FIRSTAMOUNT, \n" +
                             "SUM(WDIRECTION * SECONDAMOUNT) AS SECONDAMOUNT \n" +
                             "from VW_WAREHOUSESTOCKMOVEMENT where PRODUCTID IN (Select PRODUCTID from VW_FORWARDINGPRODUCTPLAN where FORWARDINGID ='" + sevkNo + "') and \n" +
-                            "(DESTINATIONWAREHOUSEID = \n" +
-                            "'" + sevkdepoid + "' \n" +
-                            "or SOURCEWAREHOUSEID = '" + sevkdepoid + "') and\n" +
                             "BARCODENO = '" + edtCode.getText().toString() + "'\n" +
                             "group by BARCODEID,BARCODENO,PALETBARCODES,PRODUCTNAME,PALETID,PRODUCTID," +
                             "PRODUCTCODE," +
@@ -246,6 +244,201 @@ public class SevkiyatSecondStep extends AppCompatActivity {
             progressBar.setVisibility(View.GONE);
 
             if (!empty) {
+                if (way == 0) {
+                    if (PorB.equals("P")) {
+
+                        FillProductsSec fillProducts = new FillProductsSec();
+                        String g2 = "Select BARCODEID,BARCODENO,PRODUCTNAME,PALETID,PALETBARCODES,PRODUCTID," +
+                                "PRODUCTCODE, " +
+                                "FIRSTUNITNAME,SECONDUNITNAME,\n" +
+                                "SUM(WDIRECTION * FIRSTAMOUNT)  AS FIRSTAMOUNT, \n" +
+                                "SUM(WDIRECTION * SECONDAMOUNT) AS SECONDAMOUNT \n" +
+                                "from VW_WAREHOUSESTOCKMOVEMENT where PRODUCTID IN (Select PRODUCTID from VW_FORWARDINGPRODUCTPLAN where FORWARDINGID ='" + sevkNo + "') and \n" +
+                                "(DESTINATIONWAREHOUSEID = \n" +
+                                "'" + sevkdepoid + "' \n" +
+                                "or SOURCEWAREHOUSEID = '" + sevkdepoid + "') and\n" +
+                                "PALETBARCODES = '" + edtCode.getText().toString() + "'\n" +
+                                "group by BARCODEID,BARCODENO,PALETBARCODES,PRODUCTNAME,PALETID,PRODUCTID," +
+                                "PRODUCTCODE," +
+                                "FIRSTUNITNAME,SECONDUNITNAME\n" +
+                                "having SUM(WDIRECTION * FIRSTAMOUNT) != 0 or \n" +
+                                "SUM(WDIRECTION * SECONDAMOUNT) != 0";
+                        fillProducts.execute(g2);
+
+
+                    } else if (PorB.equals("B")) {
+                        FillProductsSec fillProducts = new FillProductsSec();
+                        String g2 = "Select BARCODEID,BARCODENO,PRODUCTNAME,PALETID,PALETBARCODES,PRODUCTID," +
+                                "PRODUCTCODE, " +
+                                "FIRSTUNITNAME,SECONDUNITNAME,\n" +
+                                "SUM(WDIRECTION * FIRSTAMOUNT)  AS FIRSTAMOUNT, \n" +
+                                "SUM(WDIRECTION * SECONDAMOUNT) AS SECONDAMOUNT \n" +
+                                "from VW_WAREHOUSESTOCKMOVEMENT where PRODUCTID IN (Select PRODUCTID from VW_FORWARDINGPRODUCTPLAN where FORWARDINGID ='" + sevkNo + "') and \n" +
+                                "(DESTINATIONWAREHOUSEID = \n" +
+                                "'" + sevkdepoid + "' \n" +
+                                "or SOURCEWAREHOUSEID = '" + sevkdepoid + "') and\n" +
+                                "BARCODENO = '" + edtCode.getText().toString() + "'\n" +
+                                "group by BARCODEID,BARCODENO,PALETBARCODES,PRODUCTNAME,PALETID,PRODUCTID," +
+                                "PRODUCTCODE," +
+                                "FIRSTUNITNAME,SECONDUNITNAME\n" +
+                                "having SUM(WDIRECTION * FIRSTAMOUNT) != 0 or \n" +
+                                "SUM(WDIRECTION * SECONDAMOUNT) != 0";
+                        fillProducts.execute(g2);
+
+
+                    }
+                }
+
+                if (way == 1) {
+                    if (PorB2.equals("P")) {
+                        FillProductsSec fillProducts = new FillProductsSec();
+                        String query = "Select BARCODEID,BARCODENO,PRODUCTNAME,PALETID,PALETBARCODES,PRODUCTID," +
+                                "PRODUCTCODE, " +
+                                "FIRSTUNITNAME,SECONDUNITNAME,\n" +
+                                "SUM(WDIRECTION * FIRSTAMOUNT)  AS FIRSTAMOUNT, \n" +
+                                "SUM(WDIRECTION * SECONDAMOUNT) AS SECONDAMOUNT \n" +
+                                "from VW_WAREHOUSESTOCKMOVEMENT where PRODUCTID IN (Select PRODUCTID from VW_FORWARDINGPRODUCTPLAN where FORWARDINGID ='" + sevkNo + "') and \n" +
+                                "(DESTINATIONWAREHOUSEID = \n" +
+                                "'" + sevkdepoid + "' \n" +
+                                "or SOURCEWAREHOUSEID = '" + sevkdepoid + "') and\n" +
+                                "PALETBARCODES = '" + codeid + "'\n" +
+                                "group by BARCODEID,BARCODENO,PALETBARCODES,PRODUCTNAME,PALETID,PRODUCTID," +
+                                "PRODUCTCODE," +
+                                "FIRSTUNITNAME,SECONDUNITNAME\n" +
+                                "having SUM(WDIRECTION * FIRSTAMOUNT) != 0 or \n" +
+                                "SUM(WDIRECTION * SECONDAMOUNT) != 0";
+                        fillProducts.execute(query);
+
+                    } else if (PorB2.equals("B")) {
+                        FillProductsSec fillProducts = new FillProductsSec();
+                        String query = "Select BARCODEID,BARCODENO,PRODUCTNAME,PALETID,PALETBARCODES,PRODUCTID," +
+                                "PRODUCTCODE, " +
+                                "FIRSTUNITNAME,SECONDUNITNAME,\n" +
+                                "SUM(WDIRECTION * FIRSTAMOUNT)  AS FIRSTAMOUNT, \n" +
+                                "SUM(WDIRECTION * SECONDAMOUNT) AS SECONDAMOUNT \n" +
+                                "from VW_WAREHOUSESTOCKMOVEMENT where PRODUCTID IN (Select PRODUCTID from VW_FORWARDINGPRODUCTPLAN where FORWARDINGID ='" + sevkNo + "') and \n" +
+                                "(DESTINATIONWAREHOUSEID = \n" +
+                                "'" + sevkdepoid + "' \n" +
+                                "or SOURCEWAREHOUSEID = '" + sevkdepoid + "') and\n" +
+                                "BARCODENO = '" + codeid + "'\n" +
+                                "group by BARCODEID,BARCODENO,PALETBARCODES,PRODUCTNAME,PALETID,PRODUCTID," +
+                                "PRODUCTCODE," +
+                                "FIRSTUNITNAME,SECONDUNITNAME\n" +
+                                "having SUM(WDIRECTION * FIRSTAMOUNT) != 0 or \n" +
+                                "SUM(WDIRECTION * SECONDAMOUNT) != 0";
+                        fillProducts.execute(query);
+
+
+                    } else {
+                        FillProductsSec fillProducts = new FillProductsSec();
+                        String query = "Select BARCODEID,BARCODENO,PRODUCTNAME,PALETID,PALETBARCODES,PRODUCTID," +
+                                "PRODUCTCODE, " +
+                                "FIRSTUNITNAME,SECONDUNITNAME,\n" +
+                                "SUM(WDIRECTION * FIRSTAMOUNT)  AS FIRSTAMOUNT, \n" +
+                                "SUM(WDIRECTION * SECONDAMOUNT) AS SECONDAMOUNT \n" +
+                                "from VW_WAREHOUSESTOCKMOVEMENT where PRODUCTID IN (Select PRODUCTID from VW_FORWARDINGPRODUCTPLAN where FORWARDINGID ='" + sevkNo + "') and \n" +
+                                "(DESTINATIONWAREHOUSEID = \n" +
+                                "'" + sevkdepoid + "' \n" +
+                                "or SOURCEWAREHOUSEID = '" + sevkdepoid + "') and\n" +
+                                "(PALETID='" + uuid + "' or BARCODEID='" + uuid + "')\n" +
+                                "group by BARCODEID,BARCODENO,PALETBARCODES,PRODUCTNAME,PALETID,PRODUCTID," +
+                                "PRODUCTCODE," +
+                                "FIRSTUNITNAME,SECONDUNITNAME\n" +
+                                "having SUM(WDIRECTION * FIRSTAMOUNT) != 0 or \n" +
+                                "SUM(WDIRECTION * SECONDAMOUNT) != 0";
+                        fillProducts.execute(query);
+
+                    }
+
+                }
+
+            }
+             else {
+                if (way == 0) {
+                    if (PorB.equals("P")) {
+
+                        FillProductsThre fillProducts = new FillProductsThre();
+                        String g2 = "select * from VW_SENTFORWADINGLIST where FORWARDINGID='"+sevkNo+"' and COMPANIESID='"+companiesid+"' and WAREHOUSEID='"+sevkdepoid+"' PALETID IN (select PALETID from VW_WAREHOUSEPRODUCT where PALETBARCODES = '"+edtCode.getText().toString()+"')";
+                        fillProducts.execute(g2);
+
+
+                    } else if (PorB.equals("B")) {
+                        FillProductsThre fillProducts = new FillProductsThre();
+                        String g2 = "select * from VW_SENTFORWADINGLIST where FORWARDINGID='"+sevkNo+"' and COMPANIESID='"+companiesid+"' and WAREHOUSEID='"+sevkdepoid+"' and BARCODENO='"+edtCode.getText().toString()+"'";
+                        fillProducts.execute(g2);
+
+
+                    }
+                }
+
+                if (way == 1) {
+                    if (PorB2.equals("P")) {
+                        FillProductsThre fillProducts = new FillProductsThre();
+                        String query = "select * from VW_SENTFORWADINGLIST where FORWARDINGID='"+sevkNo+"' and COMPANIESID='"+companiesid+"' and WAREHOUSEID='"+sevkdepoid+"' and PALETID IN (select PALETID from VW_WAREHOUSEPRODUCT where PALETBARCODES = '"+codeid+"')";
+                        fillProducts.execute(query);
+
+                    } else if (PorB2.equals("B")) {
+                        FillProductsThre fillProducts = new FillProductsThre();
+                        String query = "select * from VW_SENTFORWADINGLIST where FORWARDINGID='"+sevkNo+"' and COMPANIESID='"+companiesid+"' and WAREHOUSEID='"+sevkdepoid+"'  and BARCODENO='"+codeid+"'";
+                        fillProducts.execute(query);
+
+
+                    } else {
+                        FillProductsThre fillProducts = new FillProductsThre();
+                        String query = "select * from VW_SENTFORWADINGLIST where FORWARDINGID='"+sevkNo+"' and COMPANIESID='"+companiesid+"' and WAREHOUSEID='"+sevkdepoid+"' and (BARCODEID ='"+uuid+"' or PALETID='"+uuid+"')";
+                        fillProducts.execute(query);
+
+                    }
+                }
+
+            }
+
+        }
+
+
+        @Override
+        protected String doInBackground(String... params) {
+
+            try {
+                Connection con = connectionClass.CONN();
+                if (con == null) {
+                    z = "Error in connection with SQL server";
+                } else {
+                    PreparedStatement ps = con.prepareStatement(params[0]);
+                    ResultSet rs = ps.executeQuery();
+
+                    if (rs.next()) {
+                        empty = false;
+                    } else {
+                        empty = true;
+                    }
+                    z = "Başarılı";
+                }
+            } catch (Exception ex) {
+                z = "Veri Çekme Hatası";
+                ex.printStackTrace();
+
+            }
+            return z;
+        }
+    }
+
+    @SuppressLint("NewApi")
+    public class FillProductsSec extends AsyncTask<String, String, String> {
+        String z = "";
+
+        @Override
+        protected void onPreExecute() {
+
+            empty = true;
+            progressBar.setVisibility(View.VISIBLE);
+        }
+
+        @Override
+        protected void onPostExecute(String r) {
+            progressBar.setVisibility(View.GONE);
+            if (!empty) {
+
                 toneG.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD, 200);
                 emreAdaptor = new EmreAdaptor(getApplicationContext(), datalist);
                 recyclerView.setAdapter(emreAdaptor);
@@ -256,7 +449,7 @@ public class SevkiyatSecondStep extends AppCompatActivity {
             } else {
                 toneG.startTone(ToneGenerator.TONE_CDMA_CALL_SIGNAL_ISDN_PING_RING, 200);
                 Intent intent = new Intent(getBaseContext(), UyariBildirim.class);
-                intent.putExtra("UYARI", "SEVKİYAT BULUNAMADI!");
+                intent.putExtra("UYARI", "YANLIS NUMARA!");
                 startActivity(intent);
             }
 
@@ -307,8 +500,83 @@ public class SevkiyatSecondStep extends AppCompatActivity {
             }
             return z;
         }
-    }
 
+    }
+    public class FillProductsThre extends AsyncTask<String, String, String> {
+        String z = "";
+        @Override
+        protected void onPreExecute() {
+
+            empty = true;
+            progressBar.setVisibility(View.VISIBLE);
+        }
+
+        @Override
+        protected void onPostExecute(String r) {
+            progressBar.setVisibility(View.GONE);
+            if (!empty) {
+
+                toneG.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD, 200);
+                emreAdaptor = new EmreAdaptor(getApplicationContext(), datalist);
+                recyclerView.setAdapter(emreAdaptor);
+                LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
+                linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+                recyclerView.setLayoutManager(linearLayoutManager);
+            }
+            else{
+                toneG.startTone(ToneGenerator.TONE_CDMA_CALL_SIGNAL_ISDN_PING_RING, 200);
+                Intent intent = new Intent(getBaseContext(), UyariBildirim.class);
+                intent.putExtra("UYARI", "DEPODA BULUNAMADI!");
+                startActivity(intent);
+            }
+        }
+
+
+        @Override
+        protected String doInBackground(String... params) {
+
+            try {
+                Connection con = connectionClass.CONN();
+                if (con == null) {
+                    z = "Error in connection with SQL server";
+                } else {
+                    PreparedStatement ps = con.prepareStatement(params[0]);
+                    ResultSet rs = ps.executeQuery();
+
+                    while (rs.next()) {
+                        gecici = new SevkiyatÜrünleriRecyclerView();
+                        boolean same = false;
+                        gecici.setChecked(true);
+                        gecici.setName(rs.getString("PRODUCTNAME"));
+                        gecici.setFirstUnit(rs.getString("FIRSTUNITNAME"));
+                        gecici.setSecondUnit(rs.getString("SECONDUNITNAME"));
+                        gecici.setFirstamount(Float.parseFloat(rs.getString("FIRSTAMOUNT")));
+                        gecici.setSecondamount(Float.parseFloat(rs.getString("SECONDAMOUNT")));
+                        gecici.setPaletid(rs.getString("PALETID"));
+                        gecici.setUniqCode(rs.getString("BARCODENO"));
+                        gecici.setProductid(rs.getString("PRODUCTID"));
+                        gecici.setBarcodeid(rs.getString("BARCODEID"));
+                        gecici.setUyari1("");
+                        gecici.setUyari2("");
+                        for (int j = 0; j < datalist.size(); j++) {
+                            if (datalist.get(j).getBarcodeid().equals(gecici.getBarcodeid())) {
+                                same = true;
+                                break;
+                            }
+                        }
+                        if (!same) datalist.add(gecici);
+                        empty = false;
+                    }
+                    z = "Başarılı";
+                }
+            } catch (Exception ex) {
+                z = "Veri Çekme Hatası";
+                ex.printStackTrace();
+
+            }
+            return z;
+        }
+    }
     @SuppressLint("NewApi")
     public class SendProducts extends AsyncTask<String, String, String> {
         String z = "";
@@ -353,7 +621,8 @@ public class SevkiyatSecondStep extends AppCompatActivity {
                             datalist.remove(i);
                             PreparedStatement preparedStatement = con.prepareStatement(query);
                             preparedStatement.executeUpdate();
-                        } else i++; hata = false;
+                        } else i++;
+                        hata = false;
                     }
 
 
@@ -390,7 +659,7 @@ public class SevkiyatSecondStep extends AppCompatActivity {
             if (deneme)
                 Toast.makeText(getApplicationContext(), "AKTARILACAK ÜRÜN YOK!", Toast.LENGTH_SHORT).show();
             else Toast.makeText(getApplicationContext(), "AKTARILDI!", Toast.LENGTH_SHORT).show();
-           // if (hata) Toast.makeText(getApplicationContext(), "HATA!", Toast.LENGTH_SHORT).show();
+            // if (hata) Toast.makeText(getApplicationContext(), "HATA!", Toast.LENGTH_SHORT).show();
         }
 
         @Override
@@ -419,7 +688,7 @@ public class SevkiyatSecondStep extends AppCompatActivity {
                                     preparedStatement.executeUpdate();
                                     datalist.remove(i);
                                     deneme = false;
-                                }else i++;
+                                } else i++;
                             } else i++;
                         }
                     }
@@ -583,24 +852,24 @@ public class SevkiyatSecondStep extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         if (requestCode == 1) {
-
+            way = 1;
             if (resultCode == Activity.RESULT_OK) {
                 codeid = data.getStringExtra("codeid");
 
 
                 try {
                     uuid = UUID.fromString(codeid);
-                    PorB = "fdsfds";
+                    PorB2 = "fdsfds";
 
                 } catch (Exception ex) {
-                    PorB = codeid.substring(0, 1);
+                    PorB2 = codeid.substring(0, 1);
                     codeid = codeid.substring(1, codeid.length());
 
 
                 }
                 datalist.clear();
                 recyclerView.setAdapter(null);
-                if (PorB.equals("P")) {
+                if (PorB2.equals("P")) {
                     FillProducts fillProducts = new FillProducts();
                     String query = "Select BARCODEID,BARCODENO,PRODUCTNAME,PALETID,PALETBARCODES,PRODUCTID," +
                             "PRODUCTCODE, " +
@@ -608,9 +877,6 @@ public class SevkiyatSecondStep extends AppCompatActivity {
                             "SUM(WDIRECTION * FIRSTAMOUNT)  AS FIRSTAMOUNT, \n" +
                             "SUM(WDIRECTION * SECONDAMOUNT) AS SECONDAMOUNT \n" +
                             "from VW_WAREHOUSESTOCKMOVEMENT where PRODUCTID IN (Select PRODUCTID from VW_FORWARDINGPRODUCTPLAN where FORWARDINGID ='" + sevkNo + "') and \n" +
-                            "(DESTINATIONWAREHOUSEID = \n" +
-                            "'" + sevkdepoid + "' \n" +
-                            "or SOURCEWAREHOUSEID = '" + sevkdepoid + "') and\n" +
                             "PALETBARCODES = '" + codeid + "'\n" +
                             "group by BARCODEID,BARCODENO,PALETBARCODES,PRODUCTNAME,PALETID,PRODUCTID," +
                             "PRODUCTCODE," +
@@ -619,7 +885,7 @@ public class SevkiyatSecondStep extends AppCompatActivity {
                             "SUM(WDIRECTION * SECONDAMOUNT) != 0";
                     fillProducts.execute(query);
 
-                } else if (PorB.equals("B")) {
+                } else if (PorB2.equals("B")) {
                     FillProducts fillProducts = new FillProducts();
                     String query = "Select BARCODEID,BARCODENO,PRODUCTNAME,PALETID,PALETBARCODES,PRODUCTID," +
                             "PRODUCTCODE, " +
@@ -627,9 +893,6 @@ public class SevkiyatSecondStep extends AppCompatActivity {
                             "SUM(WDIRECTION * FIRSTAMOUNT)  AS FIRSTAMOUNT, \n" +
                             "SUM(WDIRECTION * SECONDAMOUNT) AS SECONDAMOUNT \n" +
                             "from VW_WAREHOUSESTOCKMOVEMENT where PRODUCTID IN (Select PRODUCTID from VW_FORWARDINGPRODUCTPLAN where FORWARDINGID ='" + sevkNo + "') and \n" +
-                            "(DESTINATIONWAREHOUSEID = \n" +
-                            "'" + sevkdepoid + "' \n" +
-                            "or SOURCEWAREHOUSEID = '" + sevkdepoid + "') and\n" +
                             "BARCODENO = '" + codeid + "'\n" +
                             "group by BARCODEID,BARCODENO,PALETBARCODES,PRODUCTNAME,PALETID,PRODUCTID," +
                             "PRODUCTCODE," +
@@ -648,9 +911,6 @@ public class SevkiyatSecondStep extends AppCompatActivity {
                             "SUM(WDIRECTION * FIRSTAMOUNT)  AS FIRSTAMOUNT, \n" +
                             "SUM(WDIRECTION * SECONDAMOUNT) AS SECONDAMOUNT \n" +
                             "from VW_WAREHOUSESTOCKMOVEMENT where PRODUCTID IN (Select PRODUCTID from VW_FORWARDINGPRODUCTPLAN where FORWARDINGID ='" + sevkNo + "') and \n" +
-                            "(DESTINATIONWAREHOUSEID = \n" +
-                            "'" + sevkdepoid + "' \n" +
-                            "or SOURCEWAREHOUSEID = '" + sevkdepoid + "') and\n" +
                             "(PALETID='" + uuid + "' or BARCODEID='" + uuid + "')\n" +
                             "group by BARCODEID,BARCODENO,PALETBARCODES,PRODUCTNAME,PALETID,PRODUCTID," +
                             "PRODUCTCODE," +
