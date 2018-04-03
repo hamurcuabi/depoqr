@@ -244,7 +244,8 @@ public class DepoTransferMalDegisim extends AppCompatActivity {
 
             } catch (Exception e) {
                 e.printStackTrace();
-                Toast.makeText(DepoTransferMalDegisim.this, "HATA OLUŞTU", Toast.LENGTH_SHORT).show();
+                Toast.makeText(DepoTransferMalDegisim.this, "HATA OLUŞTU!", Toast.LENGTH_SHORT)
+                        .show();
             }
         } else
             Toast.makeText(DepoTransferMalDegisim.this, "LİSTEDE ÜRÜN BULUNAMADI :(", Toast.LENGTH_SHORT)
