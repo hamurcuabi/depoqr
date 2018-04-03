@@ -40,6 +40,9 @@
     <string-array name="deposec">
         <item>Depo Seçiniz</item>
     </string-array>
+    <string-array name="grupsec">
+        <item>Grup Seçiniz</item>
+    </string-array>
     <string-array name="sevkiyatNo">
         <item>Sevkiyat Seçiniz</item>
     </string-array>

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/appbackcolor">
@@ -8,281 +7,114 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:weightSum="5">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/colorPrimary">
+            android:orientation="vertical"
+            android:paddingTop="5dp">
 
-            <TextView
+            <Spinner
+                android:id="@+id/spn_grup"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="ANA BARKOD"
+                android:layout_margin="5dp"
+                android:background="@drawable/deneme3"
+                android:entries="@array/grupsec"
+                android:padding="5dp"
+                android:popupBackground="@color/zyonetim"
                 android:textAlignment="center"
-                android:textSize="20sp"
-                android:textStyle="bold" />
+                android:textSize="20sp" />
+
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:paddingTop="5dp">
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:background="@color/colorPrimary">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingEnd="5dp"
-                android:paddingRight="5dp">
-
-                <AutoCompleteTextView
-                    android:id="@+id/tx_anabarkod"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="5dp"
-                    android:layout_weight="1"
-                    android:entries="@array/deposec"
-                    android:hint="ANA BARKOD GIRINIZ."
-                    android:imeOptions="actionDone"
-                    android:maxLines="1"
-                    android:popupBackground="@color/zyonetim"
-                    android:singleLine="true"
-                    android:textColor="#000000"
-                    android:textColorHint="@android:color/holo_red_dark"
-                    android:textSize="14sp"
-                    android:textStyle="bold"
-                    android:inputType="numberDecimal"/>
-
-                <Button
-                    android:id="@+id/btn_kodara"
-                    style="@style/mybuttons"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="@drawable/deneme3"
-                    android:drawableEnd="@drawable/action_search"
-                    android:drawableRight="@drawable/action_search"
-                    android:padding="5dp"
-                    android:text="KODU ARA"
-                    android:textSize="20sp" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:orientation="horizontal"
-                android:paddingLeft="5dp"
-                tools:ignore="RtlSymmetry">
-
-                <Button
-                    android:id="@+id/btn_qrAna"
-                    style="@style/mybuttons"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:background="@drawable/deneme"
-                    android:drawableEnd="@drawable/action_search"
-                    android:drawableRight="@drawable/action_search"
-                    android:padding="5dp"
-                    android:text="QR OKUT"
-                    android:textSize="20sp" />
-
-                <Spinner
-                    android:id="@+id/spn_depo"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_margin="5dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/deneme"
-                    android:entries="@array/deposec"
-                    android:padding="5dp"
-                    android:popupBackground="@color/colorPrimary"
-                    android:textAlignment="center"
-                    android:textSize="20sp" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:background="@color/colorPrimary">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="BAĞLI BARKODLAR"
-                    android:textAlignment="center"
-                    android:textSize="20sp"
-                    android:textStyle="bold" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:orientation="horizontal"
-                android:paddingLeft="5dp">
-
-                <Spinner
-                    android:id="@+id/spn_PB"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/deneme"
-                    android:entries="@array/PORB"
-                    android:padding="5dp"
-                    android:popupBackground="@color/zyonetim" />
-
-                <EditText
-                    android:id="@+id/tx_bagli"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:layout_weight="1"
-                    android:hint="ÜRÜN KODUNU GİRİNİZ."
-                    android:imeOptions="actionDone"
-                    android:inputType="numberDecimal"
-                    android:padding="5dp"
-                    android:textColor="#000000"
-                    android:textColorHint="@android:color/holo_red_dark"
-                    android:textSize="13sp"
-                    android:textStyle="bold" />
-
-                <ImageView
-                    android:id="@+id/btn_ekle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:src="@drawable/ic_action_add" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="5dp"
-                android:orientation="vertical">
-
-                <Button
-                    android:id="@+id/btn_qrBagli"
-                    style="@style/mybuttons"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="5dp"
-                    android:background="@drawable/deneme"
-                    android:drawableEnd="@drawable/action_search"
-                    android:drawableRight="@drawable/action_search"
-                    android:padding="5dp"
-                    android:text="QR OKUT"
-                    android:textSize="20sp" />
-
-                <LinearLayout
-                    android:id="@+id/header"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:background="@color/colorPrimary"
-                    android:orientation="horizontal"
-                    android:paddingBottom="3dip"
-                    android:paddingTop="3dip"
-                    android:weightSum="2">
-
-                    <TextView
-                        android:id="@+id/fkod"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_weight="1"
-                        android:paddingLeft="5dp"
-                        android:paddingStart="5dp"
-                        android:text="Kodu"
-                        android:textAlignment="center"
-                        android:textColor="#ffffff"
-                        android:textSize="14sp"
-                        android:typeface="sans"
-                        tools:ignore="RtlSymmetry" />
-
-                    <View
-                        android:layout_width="1dp"
-                        android:layout_height="fill_parent"
-                        android:background="#ffffff" />
-
-                    <TextView
-                        android:id="@+id/fadi"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_weight="1"
-                        android:paddingLeft="5dp"
-                        android:paddingStart="5dp"
-                        android:text="Adı"
-                        android:textAlignment="center"
-                        android:textColor="#ffffff"
-                        android:textSize="14sp"
-                        android:typeface="sans"
-                        tools:ignore="RtlSymmetry" />
-                </LinearLayout>
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="horizontal"
-                        android:weightSum="2"
-                        android:layout_above="@+id/ontbtn">
-
-                        <ProgressBar
-                            android:id="@+id/pbbar"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:textColor="#ffffff"
-                            android:visibility="gone" />
-
-                        <android.support.v7.widget.RecyclerView
-                            android:id="@+id/recyclerview"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent">
-
-                        </android.support.v7.widget.RecyclerView>
-
-                    </LinearLayout>
-                    <LinearLayout
-                        android:id="@+id/ontbtn"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentBottom="true">
-
-                        <Button
-                            android:id="@+id/btn_tamamlaG"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="5dp"
-                            android:layout_marginLeft="5dp"
-                            android:layout_marginRight="5dp"
-                            android:layout_marginTop="20dp"
-                            android:background="@drawable/deneme"
-                            android:drawableEnd="@drawable/ic_action_arrow"
-                            android:drawableRight="@drawable/ic_action_arrow"
-                            android:padding="10dp"
-                            android:text="Tamamla"
-                            android:textAlignment="center"
-                            android:textSize="20sp"
-                            android:textStyle="bold" />
-                    </LinearLayout>
-
-                </RelativeLayout>
-            </LinearLayout>
         </LinearLayout>
-    </LinearLayout>
 
-</RelativeLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:orientation="horizontal"
+            android:paddingLeft="5dp">
+
+
+            <EditText
+                android:id="@+id/edtKodEnter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_weight="1"
+                android:hint="ÜRÜN KODUNU GİRİNİZ."
+                android:imeOptions="actionDone"
+                android:inputType="numberDecimal"
+                android:padding="5dp"
+                android:textColor="#000000"
+                android:textColorHint="@android:color/holo_red_dark"
+                android:textSize="13sp"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:id="@+id/btnEkle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:src="@drawable/ic_action_add" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/btn_qrokut"
+                style="@style/mybuttons"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:background="@drawable/deneme"
+                android:drawableEnd="@drawable/action_search"
+                android:drawableRight="@drawable/action_search"
+                android:padding="5dp"
+                android:text="QR OKUT"
+                android:textSize="20sp" />
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:padding="5dp">
+
+            <ProgressBar
+                android:id="@+id/pbbarS"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:textColor="#ffffff"
+                android:visibility="gone" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recyclerview"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+            </android.support.v7.widget.RecyclerView>
+        </LinearLayout>
+
+
+    </LinearLayout>
+</LinearLayout>
+

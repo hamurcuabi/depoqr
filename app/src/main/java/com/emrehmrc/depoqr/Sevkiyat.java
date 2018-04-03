@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -197,6 +198,7 @@ public class Sevkiyat extends AppCompatActivity {
             spndepo.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
                     Depolar depolar = (Depolar) spndepo.getItemAtPosition(position);
                     ((TextView) parent.getChildAt(0)).setGravity(Gravity.CENTER);
                     SharedPreferences.Editor editor = sharedpreferences.edit();
@@ -410,6 +412,19 @@ public class Sevkiyat extends AppCompatActivity {
                     HashMap<String, Object> obj = (HashMap<String, Object>) ADA.getItem(position);
                 }
             });
+
+//Değişiklik yapılacak
+            for(int i=0;i<prolist.size();i++){
+
+                Map<String, Object> map2 = (Map<String, Object>) lstProduct.getItemAtPosition(0);
+                float  e = Float.parseFloat((String) map2.get("E"));
+                float  f= Float.parseFloat((String) map2.get("F"));
+                if(e>f){
+                    lstProduct.setBackgroundColor(Color.parseColor("#E0F7FA"));
+                }
+
+            }
+
 
         }
 

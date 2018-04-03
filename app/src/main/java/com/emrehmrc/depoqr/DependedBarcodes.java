@@ -1,5 +1,7 @@
 package com.emrehmrc.depoqr;
 
+import java.util.ArrayList;
+
 /**
  * Created by Emre Hmrc on 28.03.2018.
  */
@@ -10,7 +12,22 @@ public class DependedBarcodes {
     private String Code;
     private Boolean IsCheck;
 
+    public static ArrayList<DependedBarcodes> getData() {
 
+        ArrayList<DependedBarcodes> datalist = new ArrayList<DependedBarcodes>();
+        DependedBarcodes gecici = new DependedBarcodes();
+
+        for (int i = 0; i < 5; i++) {
+
+            gecici.setName("fsdfsdfds");
+            gecici.setCode("fdsfdsfdsgdsgds");
+            gecici.setCheck(true);
+            datalist.add(gecici);
+        }
+        return datalist;
+
+
+    }
     public String getName() {
         return Name;
     }

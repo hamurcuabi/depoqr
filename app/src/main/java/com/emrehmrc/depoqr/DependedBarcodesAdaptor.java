@@ -34,7 +34,7 @@ public class DependedBarcodesAdaptor extends RecyclerView.Adapter<DependedBarcod
     }
 
     @Override
-    public void onBindViewHolder(MyViewHolder holder, final int position) {
+    public void onBindViewHolder(final MyViewHolder holder, final int position) {
 
         DependedBarcodes clicked = datalist.get(position);
         holder.setData(clicked, position);
@@ -50,7 +50,7 @@ public class DependedBarcodesAdaptor extends RecyclerView.Adapter<DependedBarcod
 
     @Override
     public int getItemCount() {
-        return 0;
+        return datalist.size();
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {

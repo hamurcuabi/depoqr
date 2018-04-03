@@ -86,8 +86,6 @@ public class SevkiyatSecondStep extends AppCompatActivity {
 
 
         datalist = new ArrayList<SevkiyatÜrünleriRecyclerView>();
-
-
         toneG = new ToneGenerator(AudioManager.STREAM_ALARM, 100);
 
         connectionClass = new ConnectionClass();
@@ -136,6 +134,7 @@ public class SevkiyatSecondStep extends AppCompatActivity {
 
         });
         recyclerView = (RecyclerView) findViewById(R.id.recyclerview);
+
         checkBoxAll = (CheckBox) findViewById(R.id.checkBoxall);
         checkBoxAll.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
