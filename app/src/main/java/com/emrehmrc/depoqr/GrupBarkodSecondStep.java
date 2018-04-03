@@ -183,11 +183,15 @@ public class GrupBarkodSecondStep extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(String r) {
-            if (!hata)
-                Toast.makeText(getApplicationContext(), aktarılan + " ÜRÜN AKTARILDI!", Toast
-                        .LENGTH_SHORT)
-                        .show();
-            finish();
+            if (!hata){
+                Toast.makeText(getApplicationContext(),aktarılan+" ÜRÜN AKTARILDI",Toast
+                        .LENGTH_SHORT).show();
+                finish();
+
+
+            }
+
+
         }
 
         @Override

@@ -130,6 +130,7 @@ public class GrupBarkod extends AppCompatActivity {
                     bundle.putSerializable("MyClass",datalist);
                     i.putExtras(bundle);
                     startActivity(i);
+                    finish();
 
                 }
 
