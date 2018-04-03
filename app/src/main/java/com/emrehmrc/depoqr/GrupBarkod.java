@@ -96,7 +96,7 @@ public class GrupBarkod extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                FillProducts fillProducts=new FillProducts();
+                FillProducts fillProducts = new FillProducts();
                 fillProducts.execute("");
             }
         });
@@ -153,6 +153,18 @@ public class GrupBarkod extends AppCompatActivity {
         @Override
         protected void onPostExecute(String r) {
 
+            for (int i = 0; i < datalist.size() - 1; i++) {
+
+                for (int j = i + 1; j < datalist.size(); j++) {
+                    if (datalist.get(i).getCode().equals(datalist.get(j).getCode()) ) {
+                        datalist.remove(j);
+                    }
+
+
+                }
+            }
+
+
             if (!isEmpty) {
                 toneG.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD, 200);
                 adaptor = new DependedBarcodesAdaptor(getApplicationContext(), datalist);
@@ -181,7 +193,7 @@ public class GrupBarkod extends AppCompatActivity {
                     z = "Error in connection with SQL server";
                 } else {
                     String query = "SELECT * from VW_GRUPPRODUCT where CHILDBARCODENO='" + edtKod
-                            .getText().toString() + "' and PARENTPRODUCTID='"+secilenGrubId+ "'";
+                            .getText().toString() + "' and PARENTPRODUCTID='" + secilenGrubId + "'";
                     PreparedStatement ps = con.prepareStatement(query);
                     ResultSet rs = ps.executeQuery();
 
@@ -193,7 +205,7 @@ public class GrupBarkod extends AppCompatActivity {
                         dependedBarcodes.setName(rs.getString("CHILDNAME"));
                         datalist.add(dependedBarcodes);
 
-                        isEmpty=false;
+                        isEmpty = false;
 
                     }
 

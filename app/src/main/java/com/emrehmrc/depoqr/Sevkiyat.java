@@ -413,14 +413,15 @@ public class Sevkiyat extends AppCompatActivity {
                 }
             });
 
-//Değişiklik yapılacak
+            //Değişiklik yapılacak
             for(int i=0;i<prolist.size();i++){
 
                 Map<String, Object> map2 = (Map<String, Object>) lstProduct.getItemAtPosition(0);
                 float  e = Float.parseFloat((String) map2.get("E"));
                 float  f= Float.parseFloat((String) map2.get("F"));
                 if(e>f){
-                    lstProduct.setBackgroundColor(Color.parseColor("#E0F7FA"));
+
+                    lstProduct.getChildAt(i).setBackgroundColor(Color.parseColor("#E0F7FA"));
                 }
 
             }
