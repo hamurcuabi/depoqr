@@ -17,7 +17,7 @@ import com.google.zxing.Result;
 
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
 
-public class CodeReader extends AppCompatActivity {
+public class CodeReaderGrupBarcode extends AppCompatActivity {
 
 
     public ZXingScannerView scannerView;
@@ -39,7 +39,7 @@ public class CodeReader extends AppCompatActivity {
         ab.setTitle("KOD OKUT");
         //ab.setSubtitle("Alt Bşalık");
         ab.setBackgroundDrawable(getResources().getDrawable(R.drawable.arkaplan));
-        scannerView = new ZXingScannerView(CodeReader.this);
+        scannerView = new ZXingScannerView(CodeReaderGrupBarcode.this);
         scannerView.setResultHandler(new Zxing());
         setContentView(scannerView);
         scannerView.startCamera();
@@ -59,7 +59,7 @@ public class CodeReader extends AppCompatActivity {
 
         if (id == R.id.anasayfa) {
             finish();
-            Intent i = new Intent(CodeReader.this, SliderMenu.class);
+            Intent i = new Intent(CodeReaderGrupBarcode.this, GrupBarkod.class);
             startActivity(i);
 
         } else if (id == R.id.geri) {
@@ -93,7 +93,7 @@ public class CodeReader extends AppCompatActivity {
             scannerView.resumeCameraPreview(this);
             //  setContentView(R.layout.activity_codereader);
 
-            Intent i = new Intent(CodeReader.this, MalKabulOku.class);
+            Intent i = new Intent(CodeReaderGrupBarcode.this, GrupBarkod.class);
             i.putExtra("codeid", codeid);
             setResult(Activity.RESULT_OK, i);
             //   Toast.makeText(CodeReader.this,codeid,Toast.LENGTH_SHORT).show();
@@ -105,3 +105,4 @@ public class CodeReader extends AppCompatActivity {
 
     }
 }
+

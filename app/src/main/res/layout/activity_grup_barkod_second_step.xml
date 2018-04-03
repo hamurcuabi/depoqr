@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/appbackcolor"
+    android:orientation="horizontal">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:layout_above="@+id/lnrbtnabove">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingTop="5dp">
+
+                <Spinner
+                    android:id="@+id/spn_depo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5dp"
+                    android:background="@drawable/deneme3"
+                    android:entries="@array/deposec"
+                    android:padding="5dp"
+                    android:popupBackground="@color/colorPrimary"
+                    android:textAlignment="center"
+                    android:textSize="20sp" />
+                <EditText
+
+                    android:imeOptions="actionDone"
+                    android:id="@+id/edtAnaSearch"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="12dp"
+                    android:background="@drawable/deneme"
+                    android:drawableRight="@drawable/action_search"
+                    android:hint="ANABARKOD SEÇİNİZ"
+                    android:padding="10dp"
+                    android:textAlignment="center"
+                    android:textColor="#ffffff"
+                    android:textSize="24sp"
+                    android:textStyle="bold"
+                    android:focusable="false"
+
+                    />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingTop="5dp"
+
+              >
+                <ProgressBar
+                    android:id="@+id/pbbar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center" />
+                <ListView
+                    android:id="@+id/lstproducts"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:divider="#808080"
+                    android:dividerHeight="1dp"
+                    android:padding="2dp">
+
+                </ListView>
+
+            </LinearLayout>
+        </LinearLayout>
+
+
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/lnrbtnabove"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="5dp"
+        android:orientation="vertical">
+
+
+        <Button
+            android:id="@+id/btndevam"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/deneme"
+            android:drawableEnd="@drawable/ic_action_arrow"
+            android:drawableRight="@drawable/ic_action_arrow"
+            android:padding="10dp"
+            android:text="TAMAMLA"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:enabled="false"/>
+
+
+    </LinearLayout>
+
+
+</RelativeLayout>
+

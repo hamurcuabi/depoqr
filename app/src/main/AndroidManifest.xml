@@ -30,6 +30,7 @@
         </activity>
         <activity android:name=".Products" />
         <activity android:name=".CodeReader" />
+        <activity android:name=".CodeReaderGrupBarcode" />
         <activity android:name=".CodeReaderForSevkiyat" />
         <activity android:name=".ProductInfo" />
         <activity android:name=".NavBar" />
@@ -78,7 +79,8 @@
             android:name=".PlasiyerProduct"
             android:windowSoftInputMode="adjustPan" />
         <activity android:name=".Iade" />
-        <activity android:name=".IadeOku"></activity>
+        <activity android:name=".IadeOku" />
+        <activity android:name=".GrupBarkodSecondStep"></activity>
     </application>
 
 </manifest>

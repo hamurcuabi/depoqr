@@ -1,15 +1,29 @@
 package com.emrehmrc.depoqr;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * Created by Emre Hmrc on 28.03.2018.
  */
 
-public class DependedBarcodes {
+public class DependedBarcodes implements Serializable{
 
     private String Name;
     private String Code;
+    private  String ParentID;
+
+
+
+
+    public String getParentID() {
+        return ParentID;
+    }
+
+    public void setParentID(String parentID) {
+        ParentID = parentID;
+    }
+
     private Boolean IsCheck;
 
     public static ArrayList<DependedBarcodes> getData() {
