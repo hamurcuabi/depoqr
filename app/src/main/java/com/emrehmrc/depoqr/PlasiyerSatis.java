@@ -75,38 +75,22 @@ public class PlasiyerSatis extends AppCompatActivity {
         moveto2.setEnabled(false);
         moveto.setEnabled(false);
 
-       /* FillList filldepo = new FillList();
-        filldepo.execute("");*/
+        FillList filldepo = new FillList();
+        filldepo.execute("");
         FillList2 fillcari = new FillList2();
         fillcari.execute("");
 
-      /*  moveto.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(PlasiyerSatis.this, PlasiyerSatisSec.class);
-                intent.putExtra("secilenad", secilenad);
-                intent.putExtra("secilenkod", secilenkod);
-                intent.putExtra("secilendepo", secilendepo);
-                intent.putExtra("secilendepoId", secilendepoId);
-                intent.putExtra("secilenCariId", secilenCariId);
-                startActivity(intent);
-
-            }
-        });*/
         moveto2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(PlasiyerSatis.this, PlasiyerProduct.class);
-                /*intent.putExtra("secilenad", secilenad);
-                intent.putExtra("secilenkod", secilenkod);
-                //intent.putExtra("secilendepo", secilendepo);
-               //intent.putExtra("secilendepoId", secilendepoId);
-                intent.putExtra("secilenCariId", secilenCariId);
-                */intent.putExtra("disable", "undisable");
+                intent.putExtra("disable", "undisable");
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.putString("plasiyerCariAd", secilenad);
                 editor.putString("plasiyerCariKod", secilenkod);
                 editor.putString("plasiyerCariId", secilenCariId);
+                editor.putString("plasiyerDepoAd", secilendepo );
+                editor.putString("plasiyerDepoId", secilendepoId );
                 editor.commit();
                 startActivity(intent);
 
@@ -146,7 +130,7 @@ public class PlasiyerSatis extends AppCompatActivity {
 
 
     @SuppressLint("NewApi")
-  /*  public class FillList extends AsyncTask<String, String, String> {
+    public class FillList extends AsyncTask<String, String, String> {
         String z = "";
         ArrayList<Depolar> depolars = new ArrayList<>();
 
@@ -167,11 +151,11 @@ public class PlasiyerSatis extends AppCompatActivity {
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                     ((TextView) parent.getChildAt(0)).setGravity(Gravity.CENTER);
                     ((TextView) parent.getChildAt(0)).setTextColor(getResources().getColor(R.color.white));
-                    // Depolar depolar = (Depolar) depo.getItemAtPosition(position);
-                    Depolar depolar1 = new Depolar();
+                    Depolar depolar1;
                     depolar1 = (Depolar) depo.getItemAtPosition(position);
                     secilendepo = depolar1.getDepoadi();
                     secilendepoId = depolar1.getDepono();
+
                 }
 
                 @Override
@@ -209,9 +193,9 @@ public class PlasiyerSatis extends AppCompatActivity {
             }
             return z;
         }
-    }*/
+    }
 
-  /*  private class Depolar {
+    private class Depolar {
         private String depoadi;
         private String depono;
 
@@ -246,7 +230,7 @@ public class PlasiyerSatis extends AppCompatActivity {
         }
 
 
-    }*/
+    }
 
     public class FillList2 extends AsyncTask<String, String, String> {
         String w = "";

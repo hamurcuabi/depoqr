@@ -1,5 +1,6 @@
 package com.emrehmrc.depoqr;
 
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.ActivityOptions;
 import android.content.Context;
@@ -14,16 +15,21 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -46,8 +52,13 @@ public class PlasiyerList extends AppCompatActivity {
     Button btn_satisbasla,btn_yenisatis;
     ProgressBar progressBar;
     ArrayList<PlasiyerListModel> plasiyerArray;
+    ArrayAdapter<Depolar> adapterDepo;
+    ArrayList<Depolar> depolars = new ArrayList<>();
     private PlasiyerListAdapter adapter;
     float toplam;
+    ImageView btn_drop,btn_filtre;
+    AutoCompleteTextView tx_deposec;
+    String secilenDepoName,getSecilenDepoId;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,8 +81,13 @@ public class PlasiyerList extends AppCompatActivity {
         tx_toplam = (TextView) findViewById(R.id.tx_toplam);
         cariArama = (EditText) findViewById(R.id.CariArama);
         lst_Cari = (ListView) findViewById(R.id.lst_Cari);
+        btn_drop = (ImageView) findViewById(R.id.btn_drop);
+        btn_filtre = (ImageView) findViewById(R.id.btn_filtre);
+        tx_deposec = (AutoCompleteTextView) findViewById(R.id.tx_deposec);
         FillList fillList = new FillList();
         fillList.execute("");
+        FillListDepo fillListDepo = new FillListDepo();
+        fillListDepo.execute("");
         btn_yenisatis.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -88,7 +104,20 @@ public class PlasiyerList extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
+        btn_drop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                tx_deposec.showDropDown();
+            }
+        });
+        btn_filtre.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(!tx_deposec.getText().toString().isEmpty()){
+                    //adapter.getFilter().filter(secilenDepoName);
+                }else Toast.makeText(getApplicationContext(), "Lütfen Depo Seçiniz.", Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
 
@@ -251,5 +280,102 @@ public class PlasiyerList extends AppCompatActivity {
         }
     }
 
+    @SuppressLint("NewApi")
+    public class FillListDepo extends AsyncTask<String, String, String> {
+        String z = "";
+
+
+        @Override
+        protected void onPreExecute() {
+
+
+        }
+
+        @Override
+        protected void onPostExecute(String r) {
+
+            adapterDepo = new ArrayAdapter<Depolar>(getApplicationContext(), android.R.layout.simple_dropdown_item_1line, depolars);
+            tx_deposec.setAdapter(adapterDepo);
+            tx_deposec.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    Depolar depolar = (Depolar) parent.getItemAtPosition(position);
+                    secilenDepoName = depolar.getDepoadi();
+                    getSecilenDepoId = depolar.getDepono();
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+
+                }
+            });
+        }
+
+
+        @Override
+        protected String doInBackground(String... params) {
+
+            try {
+                Connection con = connectionClass.CONN();
+                if (con == null) {
+                    z = "Error in connection with SQL server";
+                } else {
+                    String query = "SELECT distinct WAREHOUSEID , NAME FROM " +
+                            "VW_WAREHOUSEPERMISSION where MEMBERID='" + memberid + "' and ISACTIVE='1' and " +
+                            "ISSHOW='1'  and WAREHOUSEMENUID='" + 3 + "'  order by NAME";
+                    PreparedStatement ps = con.prepareStatement(query);
+                    ResultSet rs = ps.executeQuery();
+
+                    while (rs.next()) {
+                        depolars.add(new Depolar(rs.getString
+                                ("NAME"), rs.getString("WAREHOUSEID")));
+
+                    }
+                    z = "Başarılı";
+                }
+            } catch (Exception ex) {
+                z = "Veri Çekme Hatası";
+
+            }
+            return z;
+        }
+    }
+
+    private class Depolar {
+        private String depoadi;
+        private String depono;
+
+        public Depolar() {
+        }
+
+        public Depolar(String depoadi, String depono) {
+            this.depoadi = depoadi;
+            this.depono = depono;
+        }
+
+        public String getDepoadi() {
+            return depoadi;
+        }
+
+        public void setDepoadi(String depoadi) {
+            this.depoadi = depoadi;
+        }
+
+        public String getDepono() {
+            return depono;
+        }
+
+        public void setDepono(String depono) {
+            this.depono = depono;
+        }
+
+
+        @Override
+        public String toString() {
+            return depoadi;
+        }
+
+
+    }
 
 }

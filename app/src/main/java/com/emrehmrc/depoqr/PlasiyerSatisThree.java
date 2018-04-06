@@ -39,7 +39,6 @@ public class PlasiyerSatisThree extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_plasiyersatisthree);
-        Intent incomingIntent = getIntent();
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
         sharedPreferences = getApplicationContext().getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
@@ -55,11 +54,14 @@ public class PlasiyerSatisThree extends AppCompatActivity {
         incomingCariId = sharedPreferences.getString("plasiyerCariId", null);
         incomingDepo = sharedPreferences.getString("plasiyerDepoAd", null);
         incomingDepoId = sharedPreferences.getString("plasiyerDepoId", null);
+
+        btn_barcodeoku = (Button) findViewById(R.id.btn_barcodoku);
         gelenad = (TextView) findViewById(R.id.gelenad2);
         gelendepo = (TextView) findViewById(R.id.gelendepo2);
+
         gelendepo.setText(incomingDepo);
         gelenad.setText(incomingAd);
-        btn_barcodeoku = (Button) findViewById(R.id.btn_barcodoku);
+
         btn_barcodeoku.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
