@@ -107,23 +107,27 @@ public class BarkodBilgiEkrani extends AppCompatActivity {
 
             if (resultCode == Activity.RESULT_OK) {
                 codeid = data.getStringExtra("codeid");
+
+                try {
+                    uuid = UUID.fromString(codeid);
+                    PorB2 = "fdsfds";
+
+                } catch (Exception ex) {
+                    PorB2 = codeid.substring(0, 1);
+                    codeid = codeid.substring(1, codeid.length());
+
+                }
+                if (PorB2.equals("P")) {
+                    Toast.makeText(getApplicationContext(), "PALET GIRILEMEZ!", Toast.LENGTH_SHORT).show();
+                } else if (PorB2.equals("B")) {
+
+                } else {
+
+
+                }
             }
-            try {
-                uuid = UUID.fromString(codeid);
-                PorB2 = "fdsfds";
-
-            } catch (Exception ex) {
-                PorB2 = codeid.substring(0, 1);
-                codeid = codeid.substring(1, codeid.length());
-
-            }
-            if (PorB2.equals("P")) {
-                Toast.makeText(getApplicationContext(), "PALET GIRILEMEZ!", Toast.LENGTH_SHORT).show();
-            } else if (PorB2.equals("B")) {
-
-            } else {
-
-
+            if (resultCode == Activity.RESULT_CANCELED) {
+                //Write your code if there's no result
             }
         }
     }

@@ -352,19 +352,18 @@ public class SevkiyatSecondStep extends AppCompatActivity {
 
                 }
 
-            }
-             else {
+            } else {
                 if (way == 0) {
                     if (PorB.equals("P")) {
 
-                        FillProductsThre fillProducts = new FillProductsThre();
-                        String g2 = "select * from VW_SENTFORWADINGLIST where FORWARDINGID='"+sevkNo+"' and COMPANIESID='"+companiesid+"' and WAREHOUSEID='"+sevkdepoid+"' PALETID IN (select PALETID from VW_WAREHOUSEPRODUCT where PALETBARCODES = '"+edtCode.getText().toString()+"')";
+                        FillProductsfoure fillProducts = new FillProductsfoure();
+                        String g2 = "select * from VW_SENTFORWADINGLIST where FORWARDINGID='" + sevkNo + "' and COMPANIESID='" + companiesid + "' and PALETID IN (select PALETID from VW_WAREHOUSEPRODUCT where PALETBARCODES = '" + edtCode.getText().toString() + "')";
                         fillProducts.execute(g2);
 
 
                     } else if (PorB.equals("B")) {
-                        FillProductsThre fillProducts = new FillProductsThre();
-                        String g2 = "select * from VW_SENTFORWADINGLIST where FORWARDINGID='"+sevkNo+"' and COMPANIESID='"+companiesid+"' and WAREHOUSEID='"+sevkdepoid+"' and BARCODENO='"+edtCode.getText().toString()+"'";
+                        FillProductsfoure fillProducts = new FillProductsfoure();
+                        String g2 = "select * from VW_SENTFORWADINGLIST where FORWARDINGID='" + sevkNo + "' and COMPANIESID='" + companiesid + "'  and BARCODENO='" + edtCode.getText().toString() + "'";
                         fillProducts.execute(g2);
 
 
@@ -373,19 +372,19 @@ public class SevkiyatSecondStep extends AppCompatActivity {
 
                 if (way == 1) {
                     if (PorB2.equals("P")) {
-                        FillProductsThre fillProducts = new FillProductsThre();
-                        String query = "select * from VW_SENTFORWADINGLIST where FORWARDINGID='"+sevkNo+"' and COMPANIESID='"+companiesid+"' and WAREHOUSEID='"+sevkdepoid+"' and PALETID IN (select PALETID from VW_WAREHOUSEPRODUCT where PALETBARCODES = '"+codeid+"')";
+                        FillProductsfoure fillProducts = new FillProductsfoure();
+                        String query = "select * from VW_SENTFORWADINGLIST where FORWARDINGID='" + sevkNo + "' and COMPANIESID='" + companiesid + "' and PALETID IN (select PALETID from VW_WAREHOUSEPRODUCT where PALETBARCODES = '" + codeid + "')";
                         fillProducts.execute(query);
 
                     } else if (PorB2.equals("B")) {
-                        FillProductsThre fillProducts = new FillProductsThre();
-                        String query = "select * from VW_SENTFORWADINGLIST where FORWARDINGID='"+sevkNo+"' and COMPANIESID='"+companiesid+"' and WAREHOUSEID='"+sevkdepoid+"'  and BARCODENO='"+codeid+"'";
+                        FillProductsfoure fillProducts = new FillProductsfoure();
+                        String query = "select * from VW_SENTFORWADINGLIST where FORWARDINGID='" + sevkNo + "' and COMPANIESID='" + companiesid + "' and BARCODENO='" + codeid + "'";
                         fillProducts.execute(query);
 
 
                     } else {
-                        FillProductsThre fillProducts = new FillProductsThre();
-                        String query = "select * from VW_SENTFORWADINGLIST where FORWARDINGID='"+sevkNo+"' and COMPANIESID='"+companiesid+"' and WAREHOUSEID='"+sevkdepoid+"' and (BARCODEID ='"+uuid+"' or PALETID='"+uuid+"')";
+                        FillProductsfoure fillProducts = new FillProductsfoure();
+                        String query = "select * from VW_SENTFORWADINGLIST where FORWARDINGID='" + sevkNo + "' and COMPANIESID='" + companiesid + "' and (BARCODEID ='" + uuid + "' or PALETID='" + uuid + "')";
                         fillProducts.execute(query);
 
                     }
@@ -449,7 +448,7 @@ public class SevkiyatSecondStep extends AppCompatActivity {
             } else {
                 toneG.startTone(ToneGenerator.TONE_CDMA_CALL_SIGNAL_ISDN_PING_RING, 200);
                 Intent intent = new Intent(getBaseContext(), UyariBildirim.class);
-                intent.putExtra("UYARI", "YANLIS NUMARA!");
+                intent.putExtra("UYARI", "DEPODA BULUNAMADI!");
                 startActivity(intent);
             }
 
@@ -502,8 +501,95 @@ public class SevkiyatSecondStep extends AppCompatActivity {
         }
 
     }
+
+    public class FillProductsfoure extends AsyncTask<String, String, String> {
+        String z = "";
+        Boolean exist = true;
+
+        @Override
+        protected void onPreExecute() {
+
+            progressBar.setVisibility(View.VISIBLE);
+        }
+
+        @Override
+        protected void onPostExecute(String r) {
+            progressBar.setVisibility(View.GONE);
+            if (!exist) {
+                Toast.makeText(getApplicationContext(), "BARKOD BULUNAMADI!", Toast.LENGTH_SHORT).show();
+            } else {
+                if (way == 0) {
+                    if (PorB.equals("P")) {
+
+                        FillProductsThre fillProducts = new FillProductsThre();
+                        String g2 = "select * from VW_SENTFORWADINGLIST where FORWARDINGID='" + sevkNo + "' and COMPANIESID='" + companiesid + "' and WAREHOUSEID='" + sevkdepoid + "' PALETID IN (select PALETID from VW_WAREHOUSEPRODUCT where PALETBARCODES = '" + edtCode.getText().toString() + "')";
+                        fillProducts.execute(g2);
+
+
+                    } else if (PorB.equals("B")) {
+                        FillProductsThre fillProducts = new FillProductsThre();
+                        String g2 = "select * from VW_SENTFORWADINGLIST where FORWARDINGID='" + sevkNo + "' and COMPANIESID='" + companiesid + "' and WAREHOUSEID='" + sevkdepoid + "' and BARCODENO='" + edtCode.getText().toString() + "'";
+                        fillProducts.execute(g2);
+
+
+                    }
+                }
+
+                if (way == 1) {
+                    if (PorB2.equals("P")) {
+                        FillProductsThre fillProducts = new FillProductsThre();
+                        String query = "select * from VW_SENTFORWADINGLIST where FORWARDINGID='" + sevkNo + "' and COMPANIESID='" + companiesid + "' and WAREHOUSEID='" + sevkdepoid + "' and PALETID IN (select PALETID from VW_WAREHOUSEPRODUCT where PALETBARCODES = '" + codeid + "')";
+                        fillProducts.execute(query);
+
+                    } else if (PorB2.equals("B")) {
+                        FillProductsThre fillProducts = new FillProductsThre();
+                        String query = "select * from VW_SENTFORWADINGLIST where FORWARDINGID='" + sevkNo + "' and COMPANIESID='" + companiesid + "' and WAREHOUSEID='" + sevkdepoid + "'  and BARCODENO='" + codeid + "'";
+                        fillProducts.execute(query);
+
+
+                    } else {
+                        FillProductsThre fillProducts = new FillProductsThre();
+                        String query = "select * from VW_SENTFORWADINGLIST where FORWARDINGID='" + sevkNo + "' and COMPANIESID='" + companiesid + "' and WAREHOUSEID='" + sevkdepoid + "' and (BARCODEID ='" + uuid + "' or PALETID='" + uuid + "')";
+                        fillProducts.execute(query);
+
+                    }
+                }
+
+            }
+
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            try {
+                Connection con = connectionClass.CONN();
+                if (con == null) {
+                    z = "Error in connection with SQL server";
+                } else {
+                    PreparedStatement ps = con.prepareStatement(params[0]);
+                    ResultSet rs = ps.executeQuery();
+
+                    if (rs.next()) {
+                        exist = true;
+                    } else {
+                        exist = false;
+
+                    }
+                    z = "Başarılı";
+                }
+            } catch (Exception ex) {
+                z = "Veri Çekme Hatası";
+                ex.printStackTrace();
+
+            }
+            return z;
+        }
+    }
+
+
     public class FillProductsThre extends AsyncTask<String, String, String> {
         String z = "";
+
         @Override
         protected void onPreExecute() {
 
@@ -522,8 +608,7 @@ public class SevkiyatSecondStep extends AppCompatActivity {
                 LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
                 linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
                 recyclerView.setLayoutManager(linearLayoutManager);
-            }
-            else{
+            } else {
                 toneG.startTone(ToneGenerator.TONE_CDMA_CALL_SIGNAL_ISDN_PING_RING, 200);
                 Intent intent = new Intent(getBaseContext(), UyariBildirim.class);
                 intent.putExtra("UYARI", "DEPODA BULUNAMADI!");
@@ -577,6 +662,7 @@ public class SevkiyatSecondStep extends AppCompatActivity {
             return z;
         }
     }
+
     @SuppressLint("NewApi")
     public class SendProducts extends AsyncTask<String, String, String> {
         String z = "";
@@ -822,6 +908,7 @@ public class SevkiyatSecondStep extends AppCompatActivity {
 
             return z;
         }
+
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)

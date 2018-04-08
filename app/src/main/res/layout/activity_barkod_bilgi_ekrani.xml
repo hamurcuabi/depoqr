@@ -54,7 +54,8 @@
                         android:singleLine="true"
                         android:textColor="@color/error"
                         android:textColorHint="@color/error"
-                        android:textSize="17sp" />
+                        android:textSize="17sp"
+                        android:inputType="numberDecimal"/>
 
                     <ImageView
                         android:id="@+id/btn_drop"
@@ -116,7 +117,7 @@
                         android:background="@drawable/deneme"
                         android:drawableRight="@drawable/ic_action_arrow"
                         android:padding="8dp"
-                        android:text="QR OKUT"
+                        android:text="ARA"
                         android:textSize="15sp" />
 
                 </LinearLayout>
