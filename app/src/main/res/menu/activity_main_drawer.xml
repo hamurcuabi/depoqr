@@ -13,6 +13,13 @@
         android:icon="@drawable/ic_action_grup"
         android:showAsAction="always"
         android:title="GRUP BARKOD" />
+
+    <item
+        android:id="@+id/nav_barkodBilgi"
+        android:icon="@drawable/ic_action_about"
+        android:showAsAction="always"
+        android:title="BARKOD BILGI" />
+
     <item
         android:id="@+id/nav_depolistesi"
         android:icon="@drawable/ic_action_depolistesi"

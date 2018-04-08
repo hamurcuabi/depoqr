@@ -273,14 +273,20 @@ public class SliderMenu extends AppCompatActivity implements NavigationView.OnNa
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.nav_menuG://etiket basımı  Kullanilmiyor
+            case R.id.nav_menuG://
 
                 i = new Intent(SliderMenu.this, GrupBarkod.class);
                 bundle = ActivityOptions.makeSceneTransitionAnimation(SliderMenu.this).toBundle();
                 startActivity(i, bundle);
                 break;
+            case R.id.nav_barkodBilgi://
 
-            case R.id.nav_depolistesi://etiket basımı  Kullanilmiyor
+                i = new Intent(SliderMenu.this, BarkodBilgiEkrani.class);
+                bundle = ActivityOptions.makeSceneTransitionAnimation(SliderMenu.this).toBundle();
+                startActivity(i, bundle);
+                break;
+
+            case R.id.nav_depolistesi:
 
                 i = new Intent(SliderMenu.this, DepoListesi.class);
                 bundle = ActivityOptions.makeSceneTransitionAnimation(SliderMenu.this).toBundle();
