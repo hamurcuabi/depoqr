@@ -72,15 +72,18 @@
         <activity
             android:name=".GrupBarkod"
             android:windowSoftInputMode="adjustPan" />
-        <activity
-            android:name=".PlasiyerList"
-            android:windowSoftInputMode="adjustPan" />
+        <activity android:name=".PlasiyerList" />
         <activity
             android:name=".PlasiyerProduct"
             android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".DepoListesi"
+            android:windowSoftInputMode="adjustPan"/>
         <activity android:name=".Iade" />
         <activity android:name=".IadeOku" />
-        <activity android:name=".GrupBarkodSecondStep"></activity>
+        <activity android:name=".GrupBarkodSecondStep" />
+
+
     </application>
 
 </manifest>

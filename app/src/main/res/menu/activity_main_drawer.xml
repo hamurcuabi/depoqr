@@ -12,7 +12,13 @@
         android:id="@+id/nav_menuG"
         android:icon="@drawable/ic_action_grup"
         android:showAsAction="always"
-        android:title="Grup Barkod" />
+        android:title="GRUP BARKOD" />
+    <item
+        android:id="@+id/nav_depolistesi"
+        android:icon="@drawable/ic_action_depolistesi"
+        android:showAsAction="never"
+        android:title="DEPO LISTESI" />
+
     <item
         android:id="@+id/nav_menu2"
         android:icon="@drawable/barcode"

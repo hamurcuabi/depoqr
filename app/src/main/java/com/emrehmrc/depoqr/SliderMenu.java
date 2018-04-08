@@ -36,7 +36,7 @@ public class SliderMenu extends AppCompatActivity implements NavigationView.OnNa
     Bundle bundle;
     LinearLayout ll;
     CardView first, second, third, fourth;
-    Animation fadein, rotate, scale,scale2, fadeout, reverse,rotate2,fadeout2,fadein2,reverse2;
+    Animation fadein, rotate, scale, scale2, fadeout, reverse, rotate2, fadeout2, fadein2, reverse2;
     ImageView i1, i2, i3, i4;
     private DrawerLayout dl;
     private ActionBarDrawerToggle abt;
@@ -280,6 +280,12 @@ public class SliderMenu extends AppCompatActivity implements NavigationView.OnNa
                 startActivity(i, bundle);
                 break;
 
+            case R.id.nav_depolistesi://etiket basımı  Kullanilmiyor
+
+                i = new Intent(SliderMenu.this, DepoListesi.class);
+                bundle = ActivityOptions.makeSceneTransitionAnimation(SliderMenu.this).toBundle();
+                startActivity(i, bundle);
+                break;
 
             case R.id.nav_menu1://etiket basımı  Kullanilmiyor
 
@@ -357,11 +363,11 @@ public class SliderMenu extends AppCompatActivity implements NavigationView.OnNa
 
     @Override
     protected void onResume() {
-     //   dl.openDrawer(GravityCompat.START);
-       // i1.startAnimation(rotate);
-      //  i2.startAnimation(scale);
-      //  i3.startAnimation(fadeout);
-     //   i4.startAnimation(reverse);
+        //   dl.openDrawer(GravityCompat.START);
+        // i1.startAnimation(rotate);
+        //  i2.startAnimation(scale);
+        //  i3.startAnimation(fadeout);
+        //   i4.startAnimation(reverse);
         super.onResume();
     }
 
