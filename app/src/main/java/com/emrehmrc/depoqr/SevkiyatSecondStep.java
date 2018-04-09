@@ -154,8 +154,10 @@ public class SevkiyatSecondStep extends AppCompatActivity {
                         datalist.get(i).setChecked(false);
                     }
                 }
+
                 emreAdaptor = new EmreAdaptor(getApplicationContext(), datalist);
                 recyclerView.setAdapter(emreAdaptor);
+
             }
         });
         btnenterbarcode.setOnClickListener(new View.OnClickListener() {

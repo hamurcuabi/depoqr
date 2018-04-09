@@ -47,6 +47,9 @@ public class EmreAdaptor extends RecyclerView.Adapter<EmreAdaptor.MyViewHolder> 
 
         SevkiyatÜrünleriRecyclerView clicked = datalist.get(position);
         holder.setData(clicked, position);
+        holder.checkBox.setChecked(clicked.isChecked());
+
+
         final float deneme = datalist.get(position).getFirstamount();
         final float deneme2 = datalist.get(position).getSecondamount();
         holder.edtfirstamount.addTextChangedListener(new TextWatcher() {

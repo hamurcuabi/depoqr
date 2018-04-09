@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppBaseTheme" parent="Theme.AppCompat.DayNight.DarkActionBar">
         <item name="android:windowExitTransition">@transition/exit</item>
 
     </style>
+
+
 </resources>
