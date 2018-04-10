@@ -275,7 +275,7 @@ public class SliderMenu extends AppCompatActivity implements NavigationView.OnNa
         switch (item.getItemId()) {
             case R.id.nav_menuG://
 
-                i = new Intent(SliderMenu.this, GrupBarkod.class);
+                i = new Intent(SliderMenu.this, GrupAnaBarkod.class);
                 bundle = ActivityOptions.makeSceneTransitionAnimation(SliderMenu.this).toBundle();
                 startActivity(i, bundle);
                 break;

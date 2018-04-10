@@ -82,10 +82,11 @@
         <activity android:name=".Iade" />
         <activity android:name=".IadeOku" />
         <activity android:name=".GrupBarkodSecondStep" />
-        <activity android:name=".BarkodBilgiEkrani"
-            android:windowSoftInputMode="adjustPan">
-
-        </activity>
+        <activity
+            android:name=".BarkodBilgiEkrani"
+            android:windowSoftInputMode="adjustPan" />
+        <activity android:name=".GrupAnaBarkod" />
+        <activity android:name=".CodeReaderAnaBarkod"></activity>
     </application>
 
 </manifest>

@@ -6,26 +6,20 @@ import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.TransitionDrawable;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.text.Editable;
-import android.text.TextWatcher;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
@@ -54,12 +48,15 @@ public class GrupBarkodSecondStep extends AppCompatActivity {
     ConnectionClass connectionClass;
     SharedPreferences sharedpreferences;
     String memberid, comid;
-    ArrayList<DependedBarcodes> datalist;
     String parentId;
     SpecialAdapter ADA;
     ListView lstpro;
     ProgressBar pbbar;
-    EditText edtsearch;
+
+    RecyclerView recyclerView;
+    DependedBarcodesAdaptor adaptor;
+    ArrayList<DependedBarcodes> datalist;
+    DependedBarcodes dependedBarcodes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,16 +64,17 @@ public class GrupBarkodSecondStep extends AppCompatActivity {
         setContentView(R.layout.activity_grup_barkod_second_step);
 
         ab = getSupportActionBar();
-        ab.setTitle("Grup Barkod");
+        ab.setTitle("GRUP BARKOD");
+        ab.setSubtitle("Grup Barkod Aktarım");
         ab.setBackgroundDrawable(getResources().getDrawable(R.drawable.arkaplan));
 
 
         connectionClass = new ConnectionClass();
-        lstpro = (ListView) findViewById(R.id.lstproducts);
+
         btnDone = (Button) findViewById(R.id.btndevam);
         spnDepo = (Spinner) findViewById(R.id.spn_depo);
 
-        pbbar = (ProgressBar) findViewById(R.id.pbbar);
+        pbbar = (ProgressBar) findViewById(R.id.pbarloading);
         btnDone = (Button) findViewById(R.id.btndevam);
 
 
@@ -85,52 +83,27 @@ public class GrupBarkodSecondStep extends AppCompatActivity {
         comid = sharedpreferences.getString("Companiesid", null);
 
         pbbar.setVisibility(View.GONE);
+        recyclerView = (RecyclerView) findViewById(R.id.recyclerview);
 
-        edtsearch = (EditText) findViewById(R.id.edtAnaSearch);
-        edtsearch.setOnTouchListener(new View.OnTouchListener() {
-
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-
-                v.setFocusable(true);
-                v.setFocusableInTouchMode(true);
-                return false;
-            }
-        });
-        edtsearch.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-                try {
-                    ADA.getFilter().filter(edtsearch.getText());
-
-
-                } catch (Exception ex) {
-
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
         Bundle bundle = getIntent().getExtras();
         datalist = (ArrayList<DependedBarcodes>) bundle.getSerializable("MyClass");
+        adaptor = new DependedBarcodesAdaptor(getApplicationContext(), datalist);
+        recyclerView.setAdapter(adaptor);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
+        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        recyclerView.setLayoutManager(linearLayoutManager);
+
         final FillDepo fillDepo = new FillDepo();
         fillDepo.execute("");
-        FillList fillList = new FillList();
-        fillList.execute("");
+        if (datalist.size() > 0) {
+            btnDone.setEnabled(true);
+        }
 
 
         btnDone.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
 
                 SendGrup sendGrup = new SendGrup();
                 sendGrup.execute("");
@@ -177,16 +150,20 @@ public class GrupBarkodSecondStep extends AppCompatActivity {
         protected void onPreExecute() {
 
             hata = false;
-
+            pbbar.setVisibility(View.VISIBLE);
 
         }
 
         @Override
         protected void onPostExecute(String r) {
-            if (!hata){
-                Toast.makeText(getApplicationContext(),aktarılan+" ÜRÜN AKTARILDI",Toast
+            pbbar.setVisibility(View.GONE);
+            if (!hata) {
+                Toast.makeText(getApplicationContext(), aktarılan + " ÜRÜN AKTARILDI", Toast
                         .LENGTH_SHORT).show();
+                Intent i= new Intent(getApplicationContext(),GrupAnaBarkod.class);
+                startActivity(i);
                 finish();
+
 
 
             }
@@ -203,6 +180,7 @@ public class GrupBarkodSecondStep extends AppCompatActivity {
                 } else {
 
                     for (int i = 0; i < datalist.size(); i++) {
+                        parentId= datalist.get(0).getParentID();
                         aktarılan++;
                         UUID uuıd = UUID.randomUUID();
                         String q = "Insert into GROUPBARCODE (ID,PARENTID,CHILDID,WAREHOUSEID," +
@@ -215,6 +193,7 @@ public class GrupBarkodSecondStep extends AppCompatActivity {
                                 "by " +
                                 "BARCODEID,BARCODENO,WAREHOUSEID having SUM(WDIRECTION * FIRSTAMOUNT)" +
                                 " !='0' or SUM(WDIRECTION * SECONDAMOUNT) != '0'))";
+
 
 
                         PreparedStatement preparedStatement = con.prepareStatement(q);
@@ -243,13 +222,14 @@ public class GrupBarkodSecondStep extends AppCompatActivity {
 
         @Override
         protected void onPreExecute() {
-
+            pbbar.setVisibility(View.VISIBLE);
 
         }
 
         @Override
         protected void onPostExecute(String r) {
 
+            pbbar.setVisibility(View.GONE);
             ArrayAdapter<Depo> adapter = new ArrayAdapter<Depo>(getApplicationContext
                     (), R.layout.specialspinner, depolar);
             adapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
@@ -378,88 +358,4 @@ public class GrupBarkodSecondStep extends AppCompatActivity {
         }
     }
 
-    @SuppressLint("NewApi")
-    public class FillList extends AsyncTask<String, String, String> {
-        String z = "";
-        List<Map<String, String>> prolist = new ArrayList<Map<String, String>>();
-
-        @Override
-        protected void onPreExecute() {
-
-            pbbar.setVisibility(View.VISIBLE);
-        }
-
-        @Override
-        protected void onPostExecute(String r) {
-            pbbar.setVisibility(View.GONE);
-            //  Toast.makeText(Products.this, r, Toast.LENGTH_SHORT).show();
-
-            String[] from = {"A", "B","C"};
-            int[] views = {R.id.deponame, R.id.id,R.id.proname};
-            ADA = new SpecialAdapter(GrupBarkodSecondStep.this,
-                    prolist, R.layout.listanabarkod, from,
-                    views);
-
-            lstpro.setAdapter(ADA);
-
-
-            lstpro.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-
-                @Override
-                public void onItemClick(AdapterView<?> arg0, View arg1,
-                                        int arg2, long arg3) {
-
-                    HashMap<String, Object> obj = (HashMap<String, Object>) ADA
-                            .getItem(arg2);
-                    String deponame = (String) obj.get("A");
-                    parentId = (String) obj.get("B");
-                    String proname = (String) obj.get("C");
-                    Toast.makeText(getApplicationContext(),proname+" SEÇİLDİ",Toast
-                            .LENGTH_SHORT).show();
-                    btnDone.setEnabled(true);
-
-
-
-
-                }
-            });
-
-
-        }
-
-
-        @Override
-        protected String doInBackground(String... params) {
-
-            try {
-                Connection con = connectionClass.CONN();
-                if (con == null) {
-                    z = "Error in connection with SQL server";
-                } else {
-                    String query = "SELECT DISTINCT BARCODEID,WAREHOUSENAME,PRODUCTNAME from " +
-                            "VW_WAREHOUSESTOCKMOVEMENT " ;
-                    PreparedStatement ps = con.prepareStatement(query);
-                    ResultSet rs = ps.executeQuery();
-
-
-                    while (rs.next()) {
-                        Map<String, String> datanum = new HashMap<String, String>();
-                        datanum.put("A", rs.getString("WAREHOUSENAME"));
-                        datanum.put("B", rs.getString("BARCODEID"));
-                        datanum.put("C", rs.getString("PRODUCTNAME"));
-                        prolist.add(datanum);
-
-                    }
-
-
-                    z = "Başarılı";
-                }
-            } catch (Exception ex) {
-                z = "Veri Çekme Hatası";
-
-            }
-            return z;
-        }
-    }
 }

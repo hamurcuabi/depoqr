@@ -59,7 +59,7 @@ public class GrupBarkod extends AppCompatActivity {
     Spinner spngrup;
     ImageView btnEkle;
     EditText edtKod;
-    ProgressBar progressBar;
+    ProgressBar pbbar;
 
     RecyclerView recyclerView;
     DependedBarcodesAdaptor adaptor;
@@ -80,8 +80,10 @@ public class GrupBarkod extends AppCompatActivity {
         datalistcame = new ArrayList<DependedBarcodes>();
         recyclerView = (RecyclerView) findViewById(R.id.recyclerview);
 
+        Bundle extras = getIntent().getExtras();
+        anabarkod = extras.getString("anabarkod");
 
-        progressBar = (ProgressBar) findViewById(R.id.pbbarS);
+        pbbar = (ProgressBar) findViewById(R.id.pbarloading);
         edtKod = (EditText) findViewById(R.id.edtKodEnter);
         btn_ekle = (ImageView) findViewById(R.id.btnEkle);
 
@@ -92,11 +94,16 @@ public class GrupBarkod extends AppCompatActivity {
         comid = sharedPreferences.getString("Companiesid", null);
         connectionClass = new ConnectionClass();
         ab = getSupportActionBar();
-        ab.setTitle("Grup Barkod");
+        ab.setTitle("GRUP BARKOD");
+        ab.setSubtitle("Barkod Okut");
         ab.setBackgroundDrawable(getResources().getDrawable(R.drawable.arkaplan));
         spngrup = (Spinner) findViewById(R.id.spn_grup);
         final FillGrups fillGrups = new FillGrups();
         fillGrups.execute("");
+        GetGrupProducts getGrupProducts = new GetGrupProducts();
+        //Olması gerek Ürünleri al
+        String q = "SELECT * from VW_GRUPPRODUCT where  PARENTPRODUCTID='" + anabarkod + "'";
+        getGrupProducts.execute(q);
         toneG = new ToneGenerator(AudioManager.STREAM_ALARM, 100);
 
 
@@ -106,13 +113,14 @@ public class GrupBarkod extends AppCompatActivity {
 
                 FillProducts fillProducts = new FillProducts();
                 String query = "SELECT * from VW_GRUPPRODUCT where CHILDBARCODENO='" + edtKod
-                        .getText().toString() + "' and PARENTPRODUCTID='" + secilenGrubId + "'";
+                        .getText().toString() + "' and PARENTPRODUCTID='" + anabarkod + "'";
                 fillProducts.execute(query);
             }
         });
         btnQr.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
 
                 Intent i = new Intent(GrupBarkod.this, CodeReaderGrupBarcode.class);
                 startActivityForResult(i, 1);
@@ -130,7 +138,7 @@ public class GrupBarkod extends AppCompatActivity {
                     bundle.putSerializable("MyClass",datalist);
                     i.putExtras(bundle);
                     startActivity(i);
-                    finish();
+
 
                 }
 
@@ -215,7 +223,7 @@ public class GrupBarkod extends AppCompatActivity {
                 codeid = data.getStringExtra("codeid");
                 FillProducts fillProducts = new FillProducts();
                 String query = "SELECT * from VW_GRUPPRODUCT where CHILDPRODUCTID='" + codeid + "' and " +
-                        "PARENTPRODUCTID='" + secilenGrubId + "'";
+                        "PARENTPRODUCTID='" + anabarkod + "'";
                 fillProducts.execute(query);
             }
         }
@@ -230,12 +238,12 @@ public class GrupBarkod extends AppCompatActivity {
         protected void onPreExecute() {
 
             isEmpty = true;
-            progressBar.setVisibility(View.VISIBLE);
+            pbbar.setVisibility(View.VISIBLE);
         }
 
         @Override
         protected void onPostExecute(String r) {
-            progressBar.setVisibility(View.GONE);
+            pbbar.setVisibility(View.GONE);
             for (int i = 0; i < datalist.size() - 1; i++) {
 
                 for (int j = i + 1; j < datalist.size(); j++) {
@@ -314,11 +322,13 @@ public class GrupBarkod extends AppCompatActivity {
 
             spngrup.setAdapter(null);
             gruplars.clear();
+            pbbar.setVisibility(View.VISIBLE);
         }
 
         @Override
         protected void onPostExecute(String r) {
 
+        pbbar.setVisibility(View.GONE);
             ArrayAdapter<Gruplar> adapter = new ArrayAdapter<Gruplar>(getApplicationContext
                     (), R.layout.specialspinner, gruplars);
             adapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
@@ -332,12 +342,8 @@ public class GrupBarkod extends AppCompatActivity {
                     ((TextView) parent.getChildAt(0)).setGravity(Gravity.CENTER);
                     ((TextView) parent.getChildAt(0)).setTextColor(getResources().getColor(R.color.white));
 
-                    secilenGrubId = gruplar.getGrubId();
 
-                    GetGrupProducts getGrupProducts = new GetGrupProducts();
-                    //Olması gerek Ürünleri al
-                    String q = "SELECT * from VW_GRUPPRODUCT where  PARENTPRODUCTID='" + secilenGrubId + "'";
-                    getGrupProducts.execute(q);
+
 
 
                 }
@@ -357,7 +363,7 @@ public class GrupBarkod extends AppCompatActivity {
                 if (con == null) {
                     z = "Error in connection with SQL server";
                 } else {
-                    String query = "SELECT distinct PARENTPRODUCTID, PARENTNAME from VW_GRUPPRODUCT ";
+                    String query = "SELECT distinct PARENTPRODUCTID, PARENTNAME from VW_GRUPPRODUCT";
                     PreparedStatement ps = con.prepareStatement(query);
                     ResultSet rs = ps.executeQuery();
 
@@ -388,12 +394,13 @@ public class GrupBarkod extends AppCompatActivity {
         protected void onPreExecute() {
 
             isEmpty = true;
+            pbbar.setVisibility(View.VISIBLE);
 
         }
 
         @Override
         protected void onPostExecute(String r) {
-
+            pbbar.setVisibility(View.GONE);
 
         }
 

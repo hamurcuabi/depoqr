@@ -33,24 +33,6 @@
                     android:popupBackground="@color/colorPrimary"
                     android:textAlignment="center"
                     android:textSize="20sp" />
-                <EditText
-
-                    android:imeOptions="actionDone"
-                    android:id="@+id/edtAnaSearch"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="12dp"
-                    android:background="@drawable/deneme"
-                    android:drawableRight="@drawable/action_search"
-                    android:hint="ANABARKOD SEÇİNİZ"
-                    android:padding="10dp"
-                    android:textAlignment="center"
-                    android:textColor="#ffffff"
-                    android:textSize="24sp"
-                    android:textStyle="bold"
-                    android:focusable="false"
-
-                    />
             </LinearLayout>
 
             <LinearLayout
@@ -60,23 +42,22 @@
                 android:paddingTop="5dp"
 
               >
-                <ProgressBar
-                    android:id="@+id/pbbar"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center" />
-                <ListView
-                    android:id="@+id/lstproducts"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:divider="#808080"
-                    android:dividerHeight="1dp"
-                    android:padding="2dp">
 
-                </ListView>
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recyclerview"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                </android.support.v7.widget.RecyclerView>
 
             </LinearLayout>
+            <include
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                layout="@layout/loading"
+                >
+
+            </include>
         </LinearLayout>
 
 
