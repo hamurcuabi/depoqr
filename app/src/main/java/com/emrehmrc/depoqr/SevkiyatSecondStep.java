@@ -524,7 +524,7 @@ public class SevkiyatSecondStep extends AppCompatActivity {
                     if (PorB.equals("P")) {
 
                         FillProductsThre fillProducts = new FillProductsThre();
-                        String g2 = "select * from VW_SENTFORWADINGLIST where FORWARDINGID='" + sevkNo + "' and COMPANIESID='" + companiesid + "' and WAREHOUSEID='" + sevkdepoid + "' PALETID IN (select PALETID from VW_WAREHOUSEPRODUCT where PALETBARCODES = '" + edtCode.getText().toString() + "')";
+                        String g2 = "select * from VW_SENTFORWADINGLIST where FORWARDINGID='" + sevkNo + "' and COMPANIESID='" + companiesid + "' and WAREHOUSEID='" + sevkdepoid + "' and PALETID IN (select PALETID from VW_WAREHOUSEPRODUCT where PALETBARCODES = '" + edtCode.getText().toString() + "')";
                         fillProducts.execute(g2);
 
 
@@ -632,6 +632,7 @@ public class SevkiyatSecondStep extends AppCompatActivity {
 
                     while (rs.next()) {
                         gecici = new SevkiyatÜrünleriRecyclerView();
+                        empty = false;
                         boolean same = false;
                         gecici.setChecked(true);
                         gecici.setName(rs.getString("PRODUCTNAME"));
@@ -652,11 +653,12 @@ public class SevkiyatSecondStep extends AppCompatActivity {
                             }
                         }
                         if (!same) datalist.add(gecici);
-                        empty = false;
+
                     }
                     z = "Başarılı";
                 }
             } catch (Exception ex) {
+
                 z = "Veri Çekme Hatası";
                 ex.printStackTrace();
 
