@@ -930,6 +930,9 @@ public class MalKabulOku extends AppCompatActivity {
             if (isSuccess) {
                 silinenürün++;
                 edtName.setText("SİLİNEN ÜRÜN SAYISI: " + silinenürün);
+                findPArray.clear();
+                prolist.clear();
+                lstBarcode.setAdapter(null);
             }
             lstBarcode.setAdapter(null);
 
