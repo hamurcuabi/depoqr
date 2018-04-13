@@ -63,7 +63,11 @@ public class DepoListesiAdapter extends BaseAdapter implements Filterable {
         txName.setText(name);
         txKod.setText(kod);
         txfirst.setText(new DecimalFormat("##.##").format(first)+ " " +inputfirstname);
-        txsecond.setText(new DecimalFormat("##.##").format(second)+" "+inputsecondname);
+        if(inputsecondname ==null && second==0){
+            txsecond.setText("YOKTUR");
+        }else{
+            txsecond.setText(new DecimalFormat("##.##").format(second)+" "+inputsecondname);
+        }
         return convertView;
     }
 

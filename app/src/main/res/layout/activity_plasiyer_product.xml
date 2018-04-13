@@ -11,35 +11,35 @@
         android:id="@+id/mainLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
         android:layout_above="@+id/lastGG"
-        android:layout_marginBottom="10dp">
+        android:layout_marginBottom="10dp"
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_margin="5dp">
+            android:layout_margin="5dp"
+            android:orientation="horizontal">
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_margin="5dp"
                 android:layout_weight="5"
                 android:text="Cari:"
                 android:textColor="#000000"
                 android:textSize="15sp"
-                android:textStyle="bold"
-                android:layout_margin="5dp"/>
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/tx_cariAdi"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
                 android:layout_margin="5dp"
+                android:layout_weight="1"
                 android:textColor="@color/error"
                 android:textSize="15sp"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
         </LinearLayout>
 
         <LinearLayout
@@ -71,6 +71,7 @@
                 android:textStyle="bold" />
 
         </LinearLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -86,8 +87,7 @@
                 android:text="Ü.Kodu"
                 android:textColor="#FFFFFF"
                 android:textSize="13sp"
-                android:textStyle="bold"
-                />
+                android:textStyle="bold" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -136,6 +136,7 @@
                 android:textSize="13sp"
                 android:textStyle="bold" />
         </LinearLayout>
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -155,14 +156,14 @@
                     android:textColor="#ffffff"
                     android:visibility="gone" />
 
-                <ListView
+                <android.support.v7.widget.RecyclerView
                     android:id="@+id/lst_products"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:divider="#808080"
                     android:dividerHeight="1dp"
-                    android:scrollbarThumbVertical="@drawable/scrollbar_vertical_thumb"
-                    android:listSelector="@android:color/darker_gray"/>
+                    android:listSelector="@android:color/darker_gray"
+                    android:scrollbarThumbVertical="@drawable/scrollbar_vertical_thumb" />
             </LinearLayout>
 
             <LinearLayout
@@ -181,8 +182,7 @@
                     android:paddingLeft="5dp"
                     android:textColor="#FFFFFF"
                     android:textSize="13sp"
-                    android:textStyle="bold"
-                    />
+                    android:textStyle="bold" />
 
                 <TextView
                     android:layout_width="match_parent"
@@ -206,77 +206,117 @@
                     android:id="@+id/toplamToplam"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="2dp"
+                    android:layout_marginStart="2dp"
                     android:layout_weight="1"
                     android:textColor="#FFFFFF"
                     android:textSize="13sp"
-                    android:textStyle="bold"
-                    android:layout_marginLeft="2dp"
-                    android:layout_marginStart="2dp"/>
+                    android:textStyle="bold" />
+
                 <View
                     android:layout_width="1dp"
                     android:layout_height="fill_parent"
                     android:background="#ffffff" />
+
                 <TextView
                     android:id="@+id/kdvToplam"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="2dp"
+                    android:layout_marginStart="2dp"
                     android:layout_weight="1"
                     android:textColor="#FFFFFF"
                     android:textSize="13sp"
-                    android:textStyle="bold"
-                    android:layout_marginLeft="2dp"
-                    android:layout_marginStart="2dp"/>
+                    android:textStyle="bold" />
+
                 <View
                     android:layout_width="1dp"
                     android:layout_height="fill_parent"
                     android:background="#ffffff" />
+
                 <TextView
                     android:id="@+id/genelToplam"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="2dp"
+                    android:layout_marginStart="2dp"
                     android:layout_weight="1"
                     android:textColor="#FFFFFF"
                     android:textSize="13sp"
-                    android:textStyle="bold"
-                    android:layout_marginLeft="2dp"
-                    android:layout_marginStart="2dp" />
+                    android:textStyle="bold" />
             </LinearLayout>
         </RelativeLayout>
 
     </LinearLayout>
+
     <LinearLayout
+        android:id="@+id/lastGG"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/lastGG"
         android:layout_alignParentBottom="true"
-        android:orientation="horizontal"
+        android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
-        android:layout_marginLeft="5dp">
-        <Button
-            android:id="@+id/btn_direkSatis"
+        android:orientation="vertical"
+        android:weightSum="2">
+
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
             android:layout_weight="1"
-            android:background="@drawable/deneme"
-            android:text="Direk Satış"
-            android:textSize="15sp"
-            android:textStyle="bold"
-            android:layout_marginRight="5dp"
-            android:layout_marginEnd="5dp" android:padding="10dp"
-            android:drawableEnd="@drawable/ic_action_last"
-            android:drawableRight="@drawable/ic_action_last" />
-        <Button
-            android:id="@+id/btn_barkodSatis"
+            android:weightSum="2">
+
+
+            <Button
+                android:id="@+id/btn_direkSatis"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_weight="1"
+                android:background="@drawable/deneme"
+                android:drawableEnd="@drawable/ic_action_last"
+                android:drawableRight="@drawable/ic_action_last"
+                android:padding="10dp"
+                android:text="Direk Satış"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/btn_barkodSatis"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="5dp"
+                android:layout_marginStart="5dp"
+                android:layout_weight="1"
+                android:background="@drawable/deneme"
+                android:drawableEnd="@drawable/ic_action_name"
+                android:drawableRight="@drawable/ic_action_name"
+                android:padding="10dp"
+                android:text="Barkod Satış"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@drawable/deneme"
-            android:text="Barkod Satış"
-            android:textSize="15sp"
-            android:textStyle="bold"
-            android:layout_marginLeft="5dp"
-            android:layout_marginStart="5dp" android:padding="10dp"
-            android:drawableEnd="@drawable/ic_action_name"
-            android:drawableRight="@drawable/ic_action_name" />
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+            <Button
+                android:id="@+id/btn_tamamla"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="5dp"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/deneme"
+                android:drawableEnd="@drawable/ic_action_arrow"
+                android:drawableRight="@drawable/ic_action_arrow"
+                android:padding="10dp"
+                android:text="Satışı tamamla"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+        </LinearLayout>
     </LinearLayout>
 </RelativeLayout>

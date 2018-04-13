@@ -86,7 +86,9 @@
             android:name=".BarkodBilgiEkrani"
             android:windowSoftInputMode="adjustPan" />
         <activity android:name=".GrupAnaBarkod" />
-        <activity android:name=".CodeReaderAnaBarkod"></activity>
+        <activity android:name=".CodeReaderAnaBarkod" />
+        <activity android:name=".BarkodBilgiEkraniSec"
+            android:windowSoftInputMode="adjustPan"/>
     </application>
 
 </manifest>
