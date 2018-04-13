@@ -8,16 +8,17 @@
     android:padding="5dp"
     android:weightSum="2">
 
-
     <TextView
-
-        android:id="@+id/procode"
+        android:id="@+id/proweight"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:textColor="#000000"
         android:textSize="15sp"
-        android:visibility="gone"/>
+        android:textAlignment="center"
+        />
+
+
 
 
 
@@ -27,16 +28,21 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:textColor="#000000"
-        android:textSize="15sp" />
+        android:textSize="15sp"
+        android:textAlignment="center"
+        />
 
 
     <TextView
-        android:id="@+id/proweight"
+
+        android:id="@+id/procode"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:textColor="#000000"
-        android:textSize="15sp" />
+        android:textSize="15sp"
+        android:visibility="gone"
+        />
 
 
 

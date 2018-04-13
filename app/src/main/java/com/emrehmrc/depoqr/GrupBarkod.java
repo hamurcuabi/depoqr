@@ -65,7 +65,6 @@ public class GrupBarkod extends AppCompatActivity {
     RecyclerView recyclerView;
     DependedBarcodesAdaptor adaptor;
     ArrayList<DependedBarcodes> datalist;
-    ArrayList<DependedBarcodes> datalistcame;
     DependedBarcodes dependedBarcodes;
     String selectedDepo="";
     Spinner spnDepo;
@@ -82,7 +81,7 @@ public class GrupBarkod extends AppCompatActivity {
 
         datalist = new ArrayList<DependedBarcodes>();
 
-        datalistcame = new ArrayList<DependedBarcodes>();
+
         recyclerView = (RecyclerView) findViewById(R.id.recyclerview);
  /*
         Bundle extras = getIntent().getExtras();
@@ -117,11 +116,15 @@ public class GrupBarkod extends AppCompatActivity {
             public void onClick(View v) {
 
                 FillProducts fillProducts = new FillProducts();
-                String query = "Select BARCODEID,BARCODENO,PRODUCTNAME from " +
-                        "VW_WAREHOUSESTOCKMOVEMENT where BARCODENO='"+edtKod.getText().toString()+"'  " +
-                        "group by " +
-                        "BARCODEID," +
-                        "BARCODENO,PRODUCTNAME having SUM(WDIRECTION * FIRSTAMOUNT) !='0' or SUM(WDIRECTION * SECONDAMOUNT) != '0'";
+                String query = "Select BARCODEID,BARCODENO,PRODUCTNAME,FIRSTUNITNAME," +
+                        "FIRSTUNITAMOUNT,SECONDUNITAMOUNT,SECONDUNITNAME,PRODUCTCODE from " +
+                        "VW_WAREHOUSESTOCKMOVEMENT where BARCODENO='"+edtKod.getText().toString()+"' " +
+                        "group by  " +
+                        "BARCODENO," +
+                        "PRODUCTNAME,BARCODEID,FIRSTUNITNAME,FIRSTUNITAMOUNT,SECONDUNITAMOUNT," +
+                        "SECONDUNITNAME,PRODUCTCODE  having SUM(WDIRECTION * FIRSTAMOUNT) !='0' or SUM(WDIRECTION * SECONDAMOUNT) != '0'";
+
+
                 fillProducts.execute(query);
             }
         });
@@ -183,12 +186,11 @@ public class GrupBarkod extends AppCompatActivity {
             if (resultCode == Activity.RESULT_OK) {
                 codeid = data.getStringExtra("codeid");
                 FillProducts fillProducts = new FillProducts();
-                String query = "Select BARCODEID,BARCODENO,PRODUCTNAME from " +
-                        "VW_WAREHOUSESTOCKMOVEMENT where BARCODEID='"+codeid
-                        +"'  " +
-                        "group by " +
-                        "BARCODEID," +
-                        "BARCODENO,PRODUCTNAME having SUM(WDIRECTION * FIRSTAMOUNT) !='0' or SUM(WDIRECTION * SECONDAMOUNT) != '0'";
+                String query = "Select BARCODEID,BARCODENO,PRODUCTNAME,FIRSTUNITNAME," +
+                        "FIRSTUNITAMOUNT,SECONDUNITAMOUNT,SECONDUNITNAME,PRODUCTCODE from " +
+                        "VW_WAREHOUSESTOCKMOVEMENT where BARCODEID='"+codeid+"' group by  BARCODENO," +
+                        "PRODUCTNAME,BARCODEID,FIRSTUNITNAME,FIRSTUNITAMOUNT,SECONDUNITAMOUNT," +
+                        "SECONDUNITNAME,PRODUCTCODE  having SUM(WDIRECTION * FIRSTAMOUNT) !='0' or SUM(WDIRECTION * SECONDAMOUNT) != '0'";
                 fillProducts.execute(query);
             }
         }
@@ -267,6 +269,12 @@ public class GrupBarkod extends AppCompatActivity {
                         dependedBarcodes.setCode(rs.getString("BARCODEID"));
                         dependedBarcodes.setName(rs.getString("PRODUCTNAME"));
                         dependedBarcodes.setCodeNo(rs.getString("BARCODENO"));
+                        dependedBarcodes.setFirstAmount(rs.getString("FIRSTUNITAMOUNT"));
+                        dependedBarcodes.setFirstUnit(rs.getString("FIRSTUNITNAME"));
+                        dependedBarcodes.setSecondAmount(rs.getString("SECONDUNITAMOUNT"));
+                        dependedBarcodes.setSecondUnit(rs.getString("SECONDUNITNAME"));
+                        dependedBarcodes.setProductCode(rs.getString("PRODUCTCODE"));
+
                         datalist.add(dependedBarcodes);
 
                         isEmpty = false;

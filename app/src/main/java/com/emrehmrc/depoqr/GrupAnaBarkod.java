@@ -12,36 +12,35 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class GrupAnaBarkod extends AppCompatActivity {
 
 
-    EditText edtKod, edtCode;
+    EditText  edtCode;
     ActionBar ab;
     Button btnbarcoderead, btnonayla, btnDevam;
     ProgressBar pbbar;
-    String barcodeid,barcodeidlist="",productnamelist,barcodenolist;
+    String barcodeid, barcodeidlist = "", productnamelist, barcodenolist;
     ListView lstBarcode;
     ConnectionClass connectionClass;
     SpecialAdapter ADA;
@@ -57,6 +56,12 @@ public class GrupAnaBarkod extends AppCompatActivity {
     Spinner spn;
     float first, second;
     Boolean isSuccess;
+    Button btnRead;
+
+    RecyclerView recyclerView;
+    DependedBarcodesAdaptor adaptor;
+    ArrayList<DependedBarcodes> datalist;
+    DependedBarcodes dependedBarcodes;
 
 
     ArrayList<String> findPArray = new ArrayList<>();
@@ -73,11 +78,12 @@ public class GrupAnaBarkod extends AppCompatActivity {
         ab.setBackgroundDrawable(getResources().getDrawable(R.drawable.arkaplan));
         toneG = new ToneGenerator(AudioManager.STREAM_ALARM, 100);
 
-        lstBarcode = (ListView) findViewById(R.id.lstproductsinfo);
+
+        datalist = new ArrayList<DependedBarcodes>();
+        recyclerView = (RecyclerView) findViewById(R.id.recyclerview);
 
         pbbar = (ProgressBar) findViewById(R.id.pbarloading);
         spn = (Spinner) findViewById(R.id.spnPB);
-        edtKod = (EditText) findViewById(R.id.edtKodinfo);
         edtCode = (EditText) findViewById(R.id.edtCode);
         edtCode.setOnTouchListener(new View.OnTouchListener() {
 
@@ -113,15 +119,12 @@ public class GrupAnaBarkod extends AppCompatActivity {
             }
         });
 
-
+        btnRead = (Button) findViewById(R.id.btnRead);
         btnDevam = (Button) findViewById(R.id.btndevam);
         btnbarcoderead = (Button) findViewById(R.id.btnbarcoderead);
         btnonayla = (Button) findViewById(R.id.btnonay);
         lstBarcode = (ListView) findViewById(R.id.lstproductsinfo);
         connectionClass = new ConnectionClass();
-        FillAnaBarkod fillAnaBarkod = new FillAnaBarkod();
-        String query = "Select BARCODEID,BARCODENO,PRODUCTNAME from VW_WAREHOUSESTOCKMOVEMENT   group by BARCODEID,BARCODENO,PRODUCTNAME having SUM(WDIRECTION * FIRSTAMOUNT) !='0' or SUM(WDIRECTION * SECONDAMOUNT) != '0'";
-        fillAnaBarkod.execute(query);
 
         btnbarcoderead.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -137,17 +140,36 @@ public class GrupAnaBarkod extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                if (!barcodeidlist.equals("")) {
+                anabarkod= datalist.get(0).getCode();
+                if (!anabarkod.equals("")) {
                     Intent i = new Intent(getApplicationContext(), GrupBarkod.class);
-                    i.putExtra("anabarkod", barcodeidlist);
+
+                    i.putExtra("anabarkod", anabarkod);
                     startActivity(i);
                 } else {
 
                     Intent intent = new Intent(getBaseContext(), UyariBildirim.class);
-                    intent.putExtra("UYARI", "LİSTEDE ÜRÜN BULUNAMADI!");
+                    intent.putExtra("UYARI", "ÜRÜN SEÇİLMEDİ!");
                     startActivity(intent);
                 }
 
+
+            }
+        });
+        btnRead.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if(edtCode.getText().toString()!="") {
+                    FillAnaBarkod fillAnaBarkod = new FillAnaBarkod();
+                    String query = "Select BARCODEID,BARCODENO,PRODUCTNAME,FIRSTUNITNAME," +
+                            "FIRSTUNITAMOUNT,SECONDUNITAMOUNT,SECONDUNITNAME,PRODUCTCODE from " +
+                            "VW_WAREHOUSESTOCKMOVEMENT where BARCODENO='" + edtCode.getText().toString() + "' group by  " +
+                            "BARCODENO," +
+                            "PRODUCTNAME,BARCODEID,FIRSTUNITNAME,FIRSTUNITAMOUNT,SECONDUNITAMOUNT," +
+                            "SECONDUNITNAME,PRODUCTCODE  having SUM(WDIRECTION * FIRSTAMOUNT) !='0' or SUM(WDIRECTION * SECONDAMOUNT) != '0'";
+                    fillAnaBarkod.execute(query);
+                }
 
             }
         });
@@ -159,19 +181,16 @@ public class GrupAnaBarkod extends AppCompatActivity {
         if (requestCode == 1) {
             if (resultCode == Activity.RESULT_OK) {
                 codeid = data.getStringExtra("codeid");
-                try {
-                    ADA.getFilter().filter(codeid);
 
-                } catch (Exception ex) {
-
-                }
-
-                /*
                 FillAnaBarkod fillAnaBarkod = new FillAnaBarkod();
-                String query = "SELECT distinct BARCODEID,PRODUCTNAME,BARCODENO from " +
-                        "VW_WAREHOUSESTOCKMOVEMENT where BARCODEID='" + codeid + "'";
+                String query = "Select BARCODEID,BARCODENO,PRODUCTNAME,FIRSTUNITNAME," +
+                        "FIRSTUNITAMOUNT,SECONDUNITAMOUNT,SECONDUNITNAME,PRODUCTCODE from " +
+                        "VW_WAREHOUSESTOCKMOVEMENT where BARCODEID='" + codeid
+                        + "' group by  " +
+                        "BARCODENO," +
+                        "PRODUCTNAME,BARCODEID,FIRSTUNITNAME,FIRSTUNITAMOUNT,SECONDUNITAMOUNT," +
+                        "SECONDUNITNAME,PRODUCTCODE  having SUM(WDIRECTION * FIRSTAMOUNT) !='0' or SUM(WDIRECTION * SECONDAMOUNT) != '0'";
                 fillAnaBarkod.execute(query);
-                */
             }
         }
     }
@@ -211,6 +230,7 @@ public class GrupAnaBarkod extends AppCompatActivity {
             arraysize = 0;
             isEmpty = true;
             pbbar.setVisibility(View.VISIBLE);
+            datalist.clear();
 
 
         }
@@ -222,36 +242,20 @@ public class GrupAnaBarkod extends AppCompatActivity {
 
             if (!isEmpty) {
                 toneG.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD, 200);
-                String[] from = {"A", "B", "C"};
-                int[] views = {R.id.procode, R.id.proname, R.id.proweight};
-
-                ADA = new SpecialAdapter(GrupAnaBarkod.this, prolist, R.layout.grupbarkodlist, from, views);
-                lstBarcode.setAdapter(ADA);
-                lstBarcode.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-                    @Override
-                    public void onItemClick(AdapterView<?> arg0, View arg1,
-                                            int arg2, long arg3) {
-                        HashMap<String, Object> obj = (HashMap<String, Object>) ADA.getItem(arg2);
-                         barcodeidlist   = (String) obj.get("A");
-                         productnamelist  = (String) obj.get("B");
-                         barcodenolist   = (String) obj.get("C");
-
-                        Intent intent = new Intent(GrupAnaBarkod.this, UyariBildirim.class);
-                        intent.putExtra("UYARI", productnamelist+" - "+barcodenolist);
-                        startActivity(intent);
+                adaptor = new DependedBarcodesAdaptor(getApplicationContext(), datalist);
+                recyclerView.setAdapter(adaptor);
+                LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
+                linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+                recyclerView.setLayoutManager(linearLayoutManager);
 
 
-
-                    }
-                });
 
 
             } else {
 
                 toneG.startTone(ToneGenerator.TONE_CDMA_CALL_SIGNAL_ISDN_PING_RING, 200);
-                Intent intent = new Intent(getBaseContext(), UyariBildirim.class);
-                intent.putExtra("UYARI", "ANA GRUP BULUNAMADI!");
+                Intent intent = new Intent(getApplicationContext(), UyariBildirim.class);
+                intent.putExtra("UYARI", "ÜRÜN BULUNAMDI!!");
                 startActivity(intent);
             }
 
@@ -273,12 +277,20 @@ public class GrupAnaBarkod extends AppCompatActivity {
 
                     while (rs.next()) {
                         arraysize++;
-                        datanum = new HashMap<String, String>();
-                        datanum.put("A", rs.getString("BARCODEID"));
-                        datanum.put("B", rs.getString("PRODUCTNAME"));
-                        datanum.put("C", rs.getString("BARCODENO"));
-                        prolist.add(datanum);
-                        isEmpty = false;
+                        dependedBarcodes = new DependedBarcodes();
+                        dependedBarcodes.setCheck(true);
+                        dependedBarcodes.setCode(rs.getString("BARCODEID"));
+                        dependedBarcodes.setName(rs.getString("PRODUCTNAME"));
+                        dependedBarcodes.setCodeNo(rs.getString("BARCODENO"));
+                        dependedBarcodes.setFirstAmount(rs.getString("FIRSTUNITAMOUNT"));
+                        dependedBarcodes.setFirstUnit(rs.getString("FIRSTUNITNAME"));
+                        dependedBarcodes.setSecondAmount(rs.getString("SECONDUNITAMOUNT"));
+                        dependedBarcodes.setSecondUnit(rs.getString("SECONDUNITNAME"));
+                        dependedBarcodes.setProductCode(rs.getString("PRODUCTCODE"));
+
+                        datalist.add(dependedBarcodes);
+                        isEmpty=false;
+
 
                     }
 

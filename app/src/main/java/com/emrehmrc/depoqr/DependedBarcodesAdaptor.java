@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -56,7 +57,7 @@ public class DependedBarcodesAdaptor extends RecyclerView.Adapter<DependedBarcod
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
         CheckBox checkBox;
-        TextView txtcode, txtname;
+        TextView txtcode, txtname,txtBarcode,txtFirst,txtSecond,edtFirst,edtSecond;
 
 
         public MyViewHolder(View itemView) {
@@ -64,6 +65,13 @@ public class DependedBarcodesAdaptor extends RecyclerView.Adapter<DependedBarcod
             checkBox = (CheckBox) itemView.findViewById(R.id.checkBox);
             txtcode = (TextView) itemView.findViewById(R.id.txtcode);
             txtname = (TextView) itemView.findViewById(R.id.txtname);
+            txtBarcode=(TextView)itemView.findViewById(R.id.txtbarcode);
+            txtFirst=(TextView)itemView.findViewById(R.id.txtfirst);
+            txtSecond=(TextView)itemView.findViewById(R.id.txtsecond);
+            edtFirst=(EditText)itemView.findViewById(R.id.edtfirstamount);
+            edtSecond=(EditText)itemView.findViewById(R.id.edtsecondtamount);
+
+
 
         }
 
@@ -71,7 +79,12 @@ public class DependedBarcodesAdaptor extends RecyclerView.Adapter<DependedBarcod
 
             this.checkBox.setChecked(clicked.getCheck());
             this.txtname.setText(clicked.getName());
-            this.txtcode.setText(clicked.getCode());
+            this.txtcode.setText(clicked.getProductCode());
+            this.txtBarcode.setText(clicked.getCodeNo());
+            this.txtFirst.setText((clicked.getFirstUnit()));
+            this.txtSecond.setText(clicked.getSecondUnit());
+            this.edtFirst.setText(clicked.getFirstAmount());
+            this.edtSecond.setText(clicked.getSecondAmount());
 
 
         }

@@ -98,6 +98,46 @@
                 android:textSize="20sp" />
 
         </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:background="@color/colorPrimary"
+            android:orientation="horizontal"
+            android:padding="5dp">
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="1"
+                android:text="Barkod No"
+                android:textColor="#FFFFFF"
+                android:textSize="13sp"
+                android:textAlignment="center"/>
+
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="1"
+                android:text="Ürün Adı"
+                android:textColor="#FFFFFF"
+                android:textSize="13sp"
+                android:textAlignment="center"/>
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_weight="1"
+                android:text="Ürün Kodu"
+                android:textColor="#FFFFFF"
+                android:textSize="13sp"
+                android:textAlignment="center"/>
+
+
+
+
+
+        </LinearLayout>
 
 
         <LinearLayout
