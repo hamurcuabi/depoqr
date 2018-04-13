@@ -12,35 +12,16 @@
         android:background="#E0F7FA"
         android:orientation="vertical"
         android:weightSum="3"
-        >
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/zyonetim"
-            android:orientation="vertical"
-            android:layout_above="@+id/lnrbtnabove">
+        android:layout_above="@id/lnrbtnabove"
 
-        </LinearLayout>
+
+        >
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:padding="2dp">
-
-            <EditText
-                android:id="@+id/edtAnaBarkod"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:layout_weight="1"
-                android:enabled="false"
-                android:focusable="false"
-                android:hint="TOPLAM ÜRÜN SAYISI: "
-                android:padding="10dp"
-                android:textColor="#000000"
-                android:textColorHint="#000000"
-                android:textSize="18dp"
-                android:textStyle="bold" />
 
             <EditText
                 android:id="@+id/edtKodinfo"
@@ -91,17 +72,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:padding="5dp">
-            <Button
-                android:id="@+id/btnbarcodeenter"
-                style="@style/mybuttons"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="2dp"
-                android:layout_marginTop="10dp"
-                android:background="@drawable/deneme3"
-                android:padding="7dp"
-                android:text="BARKOD GİR"
-                android:textSize="20sp" />
+
 
             <EditText
 
@@ -110,10 +81,12 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
                 android:layout_weight="1"
+                android:editable="false"
                 android:focusable="false"
-                android:hint="ÜRÜN KODUNU GİRİNİZ."
+                android:gravity="center_horizontal"
+                android:hint="ÜRÜNÜ ARAMA..."
                 android:imeOptions="actionDone"
-                android:inputType="numberDecimal"
+                android:inputType="text"
                 android:padding="5dp"
                 android:textColor="#000000"
                 android:textColorHint="@android:color/holo_red_dark"
@@ -126,12 +99,17 @@
 
 
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recyclerview"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
 
-        </android.support.v7.widget.RecyclerView>
+        <ListView
+            android:id="@+id/lstproductsinfo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="2dp"
+            android:divider="#808080"
+            android:dividerHeight="1dp"
+            android:padding="2dp"
+            android:layout_gravity="end"
+            />
         <include
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -140,6 +118,7 @@
 
         </include>
     </LinearLayout>
+
     <LinearLayout
         android:id="@+id/lnrbtnabove"
         android:layout_width="match_parent"

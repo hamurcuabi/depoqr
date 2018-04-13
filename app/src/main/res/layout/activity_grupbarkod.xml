@@ -149,10 +149,9 @@
             android:background="@drawable/deneme"
             android:drawableRight="@drawable/ic_action_arrow"
             android:padding="10dp"
-            android:text="Devam"
+            android:text="TAMAMLA"
             android:textSize="14sp"
-            android:textStyle="bold"
-           />
+            android:textStyle="bold" />
 
 
     </LinearLayout>

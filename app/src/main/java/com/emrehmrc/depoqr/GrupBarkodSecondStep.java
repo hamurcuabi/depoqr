@@ -180,7 +180,7 @@ public class GrupBarkodSecondStep extends AppCompatActivity {
                 } else {
 
                     for (int i = 0; i < datalist.size(); i++) {
-                        parentId= datalist.get(0).getParentID();
+                        parentId= datalist.get(0).getCodeNo();
                         aktarılan++;
                         UUID uuıd = UUID.randomUUID();
                         String q = "Insert into GROUPBARCODE (ID,PARENTID,CHILDID,WAREHOUSEID," +

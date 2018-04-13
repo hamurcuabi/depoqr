@@ -33,11 +33,13 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.UUID;
 
 import static com.emrehmrc.depoqr.AnaSayfa.MyPREFERENCES;
 
@@ -56,16 +58,17 @@ public class GrupBarkod extends AppCompatActivity {
     ArrayList<String> BarkodArray = new ArrayList<>();
     ArrayList<Gruplar> gruplars = new ArrayList<>();
     String anabarkod, secilenGrubId;
-    Spinner spngrup;
     ImageView btnEkle;
     EditText edtKod;
     ProgressBar pbbar;
-
+    ArrayList<Depo> depolar = new ArrayList<>();
     RecyclerView recyclerView;
     DependedBarcodesAdaptor adaptor;
     ArrayList<DependedBarcodes> datalist;
     ArrayList<DependedBarcodes> datalistcame;
     DependedBarcodes dependedBarcodes;
+    String selectedDepo="";
+    Spinner spnDepo;
 
     ToneGenerator toneG;
 
@@ -76,12 +79,17 @@ public class GrupBarkod extends AppCompatActivity {
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
 
+
         datalist = new ArrayList<DependedBarcodes>();
+
         datalistcame = new ArrayList<DependedBarcodes>();
         recyclerView = (RecyclerView) findViewById(R.id.recyclerview);
-
+ /*
         Bundle extras = getIntent().getExtras();
         anabarkod = extras.getString("anabarkod");
+        */
+        Intent i = getIntent();
+        anabarkod = i.getStringExtra("anabarkod");
 
         pbbar = (ProgressBar) findViewById(R.id.pbarloading);
         edtKod = (EditText) findViewById(R.id.edtKodEnter);
@@ -97,13 +105,10 @@ public class GrupBarkod extends AppCompatActivity {
         ab.setTitle("GRUP BARKOD");
         ab.setSubtitle("Barkod Okut");
         ab.setBackgroundDrawable(getResources().getDrawable(R.drawable.arkaplan));
-        spngrup = (Spinner) findViewById(R.id.spn_grup);
-        final FillGrups fillGrups = new FillGrups();
-        fillGrups.execute("");
-        GetGrupProducts getGrupProducts = new GetGrupProducts();
-        //Olması gerek Ürünleri al
-        String q = "SELECT * from VW_GRUPPRODUCT where  PARENTPRODUCTID='" + anabarkod + "'";
-        getGrupProducts.execute(q);
+        spnDepo = (Spinner) findViewById(R.id.spn_grup);
+        final FillDepo filldepo = new FillDepo();
+        filldepo.execute("");
+
         toneG = new ToneGenerator(AudioManager.STREAM_ALARM, 100);
 
 
@@ -112,8 +117,11 @@ public class GrupBarkod extends AppCompatActivity {
             public void onClick(View v) {
 
                 FillProducts fillProducts = new FillProducts();
-                String query = "SELECT * from VW_GRUPPRODUCT where CHILDBARCODENO='" + edtKod
-                        .getText().toString() + "' and PARENTPRODUCTID='" + anabarkod + "'";
+                String query = "Select BARCODEID,BARCODENO,PRODUCTNAME from " +
+                        "VW_WAREHOUSESTOCKMOVEMENT where BARCODENO='"+edtKod.getText().toString()+"'  " +
+                        "group by " +
+                        "BARCODEID," +
+                        "BARCODENO,PRODUCTNAME having SUM(WDIRECTION * FIRSTAMOUNT) !='0' or SUM(WDIRECTION * SECONDAMOUNT) != '0'";
                 fillProducts.execute(query);
             }
         });
@@ -131,17 +139,10 @@ public class GrupBarkod extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                if (IsDone()) {
-
-                    Intent i = new Intent(getApplicationContext(), GrupBarkodSecondStep.class);
-                    Bundle bundle=new Bundle();
-                    bundle.putSerializable("MyClass",datalist);
-                    i.putExtras(bundle);
-                    startActivity(i);
 
 
-                }
-
+                SendGrup sendGrup= new SendGrup();
+                sendGrup.execute("");
 
             }
         });
@@ -149,46 +150,6 @@ public class GrupBarkod extends AppCompatActivity {
 
     }
 
-    public boolean IsDone() {
-
-        int d = 0;
-        String eksikler;
-
-        if (datalist.size() != 0 && datalistcame.size() != 0) {
-
-            for (int i = 0; i < datalist.size(); i++) {
-
-                for (int j = 0; j < datalist.size(); j++) {
-
-                    if (datalist.get(i).getCode().equals(datalistcame.get(j).getCode())) {
-                        d++;
-                        break;
-
-                    }
-                }
-            }
-        }
-        else {
-            Intent intent = new Intent(getBaseContext(), UyariBildirim.class);
-            intent.putExtra("UYARI", "LİSTEDE ÜRÜN BULUNAMDI!!");
-            startActivity(intent);
-            return false;
-
-        }
-
-        if (d == datalist.size()) {
-
-            return true;
-
-        } else {
-            Intent intent = new Intent(getBaseContext(), UyariBildirim.class);
-            intent.putExtra("UYARI", "EKLENMEYEN " + (datalist.size() - d) + " ÜRÜN BULUNDU!!");
-            startActivity(intent);
-            return false;
-        }
-
-
-    }
 
 
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -222,11 +183,21 @@ public class GrupBarkod extends AppCompatActivity {
             if (resultCode == Activity.RESULT_OK) {
                 codeid = data.getStringExtra("codeid");
                 FillProducts fillProducts = new FillProducts();
-                String query = "SELECT * from VW_GRUPPRODUCT where CHILDPRODUCTID='" + codeid + "' and " +
-                        "PARENTPRODUCTID='" + anabarkod + "'";
+                String query = "Select BARCODEID,BARCODENO,PRODUCTNAME from " +
+                        "VW_WAREHOUSESTOCKMOVEMENT where BARCODEID='"+codeid
+                        +"'  " +
+                        "group by " +
+                        "BARCODEID," +
+                        "BARCODENO,PRODUCTNAME having SUM(WDIRECTION * FIRSTAMOUNT) !='0' or SUM(WDIRECTION * SECONDAMOUNT) != '0'";
                 fillProducts.execute(query);
             }
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
     }
 
     @SuppressLint("NewApi")
@@ -244,14 +215,16 @@ public class GrupBarkod extends AppCompatActivity {
         @Override
         protected void onPostExecute(String r) {
             pbbar.setVisibility(View.GONE);
-            for (int i = 0; i < datalist.size() - 1; i++) {
+            if (datalist.size() > 1) {
+                for (int i = 0; i < datalist.size() - 1; i++) {
 
-                for (int j = i + 1; j < datalist.size(); j++) {
-                    if (datalist.get(i).getCode().equals(datalist.get(j).getCode())) {
-                        datalist.remove(j);
+                    for (int j = i + 1; j < datalist.size(); j++) {
+                        if (datalist.get(i).getCode().equals(datalist.get(j).getCode())) {
+                            datalist.remove(j);
+                        }
+
+
                     }
-
-
                 }
             }
 
@@ -268,7 +241,7 @@ public class GrupBarkod extends AppCompatActivity {
 
                 toneG.startTone(ToneGenerator.TONE_CDMA_CALL_SIGNAL_ISDN_PING_RING, 200);
                 Intent intent = new Intent(getBaseContext(), UyariBildirim.class);
-                intent.putExtra("UYARI", "GRUP ÜYESİ DEĞİLDİR!");
+                intent.putExtra("UYARI", "ÜRÜN BULUNAMDI!!");
                 startActivity(intent);
             }
 
@@ -291,9 +264,9 @@ public class GrupBarkod extends AppCompatActivity {
                     while (rs.next()) {
                         dependedBarcodes = new DependedBarcodes();
                         dependedBarcodes.setCheck(true);
-                        dependedBarcodes.setCode(rs.getString("CHILDPRODUCTID"));
-                        dependedBarcodes.setName(rs.getString("CHILDNAME"));
-                        dependedBarcodes.setParentID(rs.getString("PARENTPRODUCTID"));
+                        dependedBarcodes.setCode(rs.getString("BARCODEID"));
+                        dependedBarcodes.setName(rs.getString("PRODUCTNAME"));
+                        dependedBarcodes.setCodeNo(rs.getString("BARCODENO"));
                         datalist.add(dependedBarcodes);
 
                         isEmpty = false;
@@ -313,37 +286,34 @@ public class GrupBarkod extends AppCompatActivity {
     }
 
     @SuppressLint("NewApi")
-    public class FillGrups extends AsyncTask<String, String, String> {
+    public class FillDepo extends AsyncTask<String, String, String> {
         String z = "";
 
 
         @Override
         protected void onPreExecute() {
 
-            spngrup.setAdapter(null);
-            gruplars.clear();
+            spnDepo.setAdapter(null);
             pbbar.setVisibility(View.VISIBLE);
         }
 
         @Override
         protected void onPostExecute(String r) {
 
-        pbbar.setVisibility(View.GONE);
-            ArrayAdapter<Gruplar> adapter = new ArrayAdapter<Gruplar>(getApplicationContext
-                    (), R.layout.specialspinner, gruplars);
+            pbbar.setVisibility(View.GONE);
+            ArrayAdapter<Depo> adapter = new ArrayAdapter<Depo>(getApplicationContext
+                    (), R.layout.specialspinner, depolar);
             adapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
-            spngrup.setAdapter(adapter);
+            spnDepo.setAdapter(adapter);
 
-            spngrup.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            spnDepo.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
-                    Gruplar gruplar = (Gruplar) spngrup.getItemAtPosition(position);
+                    Depo depo = (Depo) spnDepo.getItemAtPosition(position);
                     ((TextView) parent.getChildAt(0)).setGravity(Gravity.CENTER);
                     ((TextView) parent.getChildAt(0)).setTextColor(getResources().getColor(R.color.white));
-
-
-
+                    selectedDepo = depo.getDepoId();
 
 
                 }
@@ -363,13 +333,16 @@ public class GrupBarkod extends AppCompatActivity {
                 if (con == null) {
                     z = "Error in connection with SQL server";
                 } else {
-                    String query = "SELECT distinct PARENTPRODUCTID, PARENTNAME from VW_GRUPPRODUCT";
+                    String query = "SELECT distinct WAREHOUSEID , NAME FROM " +
+                            "VW_WAREHOUSEPERMISSION where MEMBERID='" + memberid + "' and WAREHOUSEISDELETE = '0' and ISACTIVE='1' and " +
+                            "ISSHOW='1'  and WAREHOUSEMENUID='" + 3 + "'  order by NAME";
                     PreparedStatement ps = con.prepareStatement(query);
                     ResultSet rs = ps.executeQuery();
 
 
                     while (rs.next()) {
-                        gruplars.add(new Gruplar(rs.getString("PARENTNAME"), rs.getString("PARENTPRODUCTID")));
+                        depolar.add(new Depo(rs.getString("NAME"), rs.getString
+                                ("WAREHOUSEID")));
 
                     }
 
@@ -384,16 +357,17 @@ public class GrupBarkod extends AppCompatActivity {
             return z;
         }
     }
-
     @SuppressLint("NewApi")
-    public class GetGrupProducts extends AsyncTask<String, String, String> {
+    public class SendGrup extends AsyncTask<String, String, String> {
         String z = "";
-        boolean isEmpty;
+        boolean hata;
+        int aktarılan = 0;
+
 
         @Override
         protected void onPreExecute() {
 
-            isEmpty = true;
+            hata = false;
             pbbar.setVisibility(View.VISIBLE);
 
         }
@@ -401,43 +375,63 @@ public class GrupBarkod extends AppCompatActivity {
         @Override
         protected void onPostExecute(String r) {
             pbbar.setVisibility(View.GONE);
+            if (!hata) {
+                Toast.makeText(getApplicationContext(), aktarılan + " ÜRÜN AKTARILDI", Toast
+                        .LENGTH_SHORT).show();
+                Intent i= new Intent(getApplicationContext(),GrupAnaBarkod.class);
+                startActivity(i);
+                finish();
+
+
+
+            }
+
 
         }
 
         @Override
         protected String doInBackground(String... params) {
-
             try {
                 Connection con = connectionClass.CONN();
                 if (con == null) {
                     z = "Error in connection with SQL server";
                 } else {
 
-                    PreparedStatement ps = con.prepareStatement(params[0]);
-                    ResultSet rs = ps.executeQuery();
+                    for (int i = 0; i < datalist.size(); i++) {
+
+                        aktarılan++;
+                        UUID uuıd = UUID.randomUUID();
+                        String q = "Insert into GROUPBARCODE (ID,PARENTID,CHILDID,WAREHOUSEID," +
+                                "EXWAREHOUSEID) values ('" + uuıd + "','" + anabarkod + "','" + datalist.get
+                                (i).getCode()
+                                + "','" + selectedDepo + "',(Select WAREHOUSEID from " +
+                                "VW_WAREHOUSESTOCKMOVEMENT  where BARCODEID='" + datalist.get(i)
+                                .getCode() + "'" +
+                                "  group " +
+                                "by " +
+                                "BARCODEID,BARCODENO,WAREHOUSEID having SUM(WDIRECTION * FIRSTAMOUNT)" +
+                                " !='0' or SUM(WDIRECTION * SECONDAMOUNT) != '0'))";
 
 
-                    while (rs.next()) {
-                        dependedBarcodes = new DependedBarcodes();
-                        dependedBarcodes.setCheck(true);
-                        dependedBarcodes.setCode(rs.getString("CHILDPRODUCTID"));
-                        dependedBarcodes.setName(rs.getString("CHILDNAME"));
-                        datalistcame.add(dependedBarcodes);
 
+                        PreparedStatement preparedStatement = con.prepareStatement(q);
+                        preparedStatement.executeUpdate();
 
                     }
-
-
-                    z = "Başarılı";
                 }
+
+
             } catch (Exception ex) {
-                ex.printStackTrace();
                 z = "Veri Çekme Hatası";
+                aktarılan--;
+                ex.printStackTrace();
+
 
             }
             return z;
         }
     }
+
 
     private class Gruplar {
 
@@ -476,11 +470,43 @@ public class GrupBarkod extends AppCompatActivity {
             this.grubAdi = grubAdi;
         }
     }
+    public class Depo {
 
-    @Override
-    protected void onResume() {
-        super.onResume();
+        String depoName;
+        String depoId;
 
+        public Depo(String depoName, String depoId) {
+            this.depoName = depoName;
+            this.depoId = depoId;
+        }
+
+        public Depo() {
+        }
+
+        public Depo(String depoName) {
+            this.depoName = depoName;
+        }
+
+        public String toString() {
+            return depoName;
+        }
+
+        public String getDepoName() {
+
+            return depoName;
+        }
+
+        public void setDepoName(String depoName) {
+            this.depoName = depoName;
+        }
+
+        public String getDepoId() {
+            return depoId;
+        }
+
+        public void setDepoId(String depoId) {
+            this.depoId = depoId;
+        }
     }
 }
 
