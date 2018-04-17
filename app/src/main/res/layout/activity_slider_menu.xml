@@ -26,10 +26,7 @@
         android:background="@color/appbackcolor"
         app:headerLayout="@layout/header"
         app:itemTextColor="@color/slidertext"
-        app:menu="@menu/activity_main_drawer"
-
-
-        >
+        app:menu="@menu/activity_main_drawer">
 
 
     </android.support.design.widget.NavigationView>

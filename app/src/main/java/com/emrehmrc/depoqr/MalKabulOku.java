@@ -768,6 +768,10 @@ public class MalKabulOku extends AppCompatActivity {
             if (isSuccess) {
                 Toast.makeText(MalKabulOku.this, "AKTARILDI", Toast.LENGTH_SHORT).show();
                 edtName.setText("TOPLAM ÜRÜN SAYISI: " + 0);
+                arraysize = 0;
+                findPArray.clear();
+                prolist.clear();
+                lstBarcode.setAdapter(null);
             } else Toast.makeText(MalKabulOku.this, "HATA OLUŞTU", Toast.LENGTH_SHORT).show();
         }
 
@@ -814,8 +818,6 @@ public class MalKabulOku extends AppCompatActivity {
 
         @Override
         protected void onPreExecute() {
-
-            arraysize = 0;
             pbbar.setVisibility(View.VISIBLE);
             FillType fillType = new FillType();
             fillType.execute("");
@@ -933,8 +935,8 @@ public class MalKabulOku extends AppCompatActivity {
                 findPArray.clear();
                 prolist.clear();
                 lstBarcode.setAdapter(null);
+                arraysize = 0;
             }
-            lstBarcode.setAdapter(null);
 
         }
 

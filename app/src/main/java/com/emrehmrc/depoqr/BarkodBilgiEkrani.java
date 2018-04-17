@@ -58,7 +58,7 @@ public class BarkodBilgiEkrani extends AppCompatActivity {
     String firstAmount;
     String secondAmount;
     String productPalette;
-
+    String deneme;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -203,8 +203,9 @@ public class BarkodBilgiEkrani extends AppCompatActivity {
 
                 } else {
                     Boolean exist = true;
+                    codeid = codeid.toUpperCase();
                     for (int i = 0; i < products.size(); i++) {
-                        if (products.get(i).productId.equals(codeid)) {
+                        if (products.get(i).getProductId().equals(codeid)) {
                             secilenProductId = products.get(i).productId;
                             FillListProduct fillListProduct = new FillListProduct();
                             fillListProduct.execute("");
@@ -333,7 +334,7 @@ public class BarkodBilgiEkrani extends AppCompatActivity {
 
                     if (rs.next()) {
                         productName = rs.getString("PRODUCTNAME");
-                        productCode = rs.getString("PRODUCTBARCODE");
+                        productCode = rs.getString("PRODUCTCODE");
                         productDetails = rs.getString("DESCRIPTION");
                         productDate = rs.getString("PRODUCTDATE");
                         firstAmount = rs.getString("FIRSTUNITAMOUNT") + " " + rs.getString("FIRSTUNITNAME");

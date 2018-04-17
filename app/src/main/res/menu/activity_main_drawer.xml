@@ -2,6 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
 
+
     <item
         android:id="@+id/nav_menu1"
         android:icon="@drawable/print"
@@ -75,6 +76,5 @@
         android:icon="@drawable/exit"
         android:showAsAction="always"
         android:title="ÇIKIŞ" />
-
 
 </menu>
