@@ -21,7 +21,9 @@
         <activity
             android:name=".SplashScreen"
             android:label="@string/app_name"
-            android:theme="@style/Splash"></activity>
+            android:theme="@style/Splash">
+
+        </activity>
         <activity android:name=".Products" />
         <activity android:name=".CodeReader" />
         <activity android:name=".CodeReaderGrupBarcode" />
@@ -46,13 +48,7 @@
         <activity
             android:name=".BarcodeEnterPop"
             android:theme="@style/AppTheme.CustomTheme" />
-        <activity android:name=".AnaSayfa" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+        <activity android:name=".AnaSayfa" />
         <activity android:name=".Sevkiyat" />
         <activity
             android:name=".UyariBildirim"
@@ -91,10 +87,11 @@
             android:name=".BarkodBilgiEkraniSec"
             android:windowSoftInputMode="adjustPan" />
         <activity android:name=".TakvimGorevler">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
-        </activity>
-        <activity android:name=".ExpMenuMain">
-
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
 
     </application>
