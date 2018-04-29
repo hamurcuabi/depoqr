@@ -31,8 +31,9 @@ public class SliderMenu extends AppCompatActivity implements NavigationView.OnNa
 
     TextView txtName, txtMail;
     ActionBar ab;
-    Intent i;
     NavigationView nv;
+    Intent i;
+
     Bundle bundle;
     LinearLayout ll;
     CardView first, second, third, fourth;
@@ -280,19 +281,16 @@ public class SliderMenu extends AppCompatActivity implements NavigationView.OnNa
                 startActivity(i, bundle);
                 break;
             case R.id.nav_barkodBilgi://
-
                 i = new Intent(SliderMenu.this, BarkodBilgiEkrani.class);
                 bundle = ActivityOptions.makeSceneTransitionAnimation(SliderMenu.this).toBundle();
                 startActivity(i, bundle);
                 break;
 
             case R.id.nav_depolistesi:
-
                 i = new Intent(SliderMenu.this, DepoListesi.class);
                 bundle = ActivityOptions.makeSceneTransitionAnimation(SliderMenu.this).toBundle();
                 startActivity(i, bundle);
                 break;
-
             case R.id.nav_menu1://etiket basımı  Kullanilmiyor
 
                 i = new Intent(SliderMenu.this, Products.class);

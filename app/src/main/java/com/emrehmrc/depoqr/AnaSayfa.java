@@ -38,6 +38,7 @@ public class AnaSayfa extends AppCompatActivity {
 
     public static final String MyPREFERENCES = "MyPrefs";
     public static final String ID = "IdKey";
+    public static final String MEMBERIMG= "proifl fotosu";
     public static final String Name = "nameKey";
     public static final String Companiesid = "CIKey";
     public static final String Email = "emailKey";
@@ -65,6 +66,7 @@ public class AnaSayfa extends AppCompatActivity {
     private SharedPreferences loginPreferences;
     private SharedPreferences.Editor loginPrefsEditor;
     private Boolean saveLogin;
+    String img="";
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
@@ -263,11 +265,12 @@ public class AnaSayfa extends AppCompatActivity {
                 editor.putString("Companiesid", ci);
                 editor.putString("Email", e);
                 editor.putString("ID", id);
+                editor.putString("MEMBERIMG", img);
                 editor.putString("PaletID", "0");
                 editor.putString("BarcodeCodeEnter", "");
                 editor.commit();
 
-                Intent i = new Intent(AnaSayfa.this, SliderMenu.class);
+                Intent i = new Intent(AnaSayfa.this, ExpMenuMain.class);
                startActivity(i);
               finish();
             }
@@ -297,6 +300,7 @@ public class AnaSayfa extends AppCompatActivity {
                             n = rs.getString("NAME");
                             e = rs.getString("EMAIL");
                             ci = rs.getString("COMPANIESID");
+                            img=rs.getString("IMAGE");
                             z = "Giriş Başarılı";
                             isSuccess = true;
                         } else {
