@@ -28,6 +28,7 @@ import android.widget.Toast;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -55,10 +56,13 @@ public class BarkodBilgiEkrani extends AppCompatActivity {
     String productCode;
     String productDetails;
     String productDate;
+    float first;
+    float secod;
     String firstAmount;
     String secondAmount;
     String productPalette;
     String deneme;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -132,8 +136,9 @@ public class BarkodBilgiEkrani extends AppCompatActivity {
         btn_hareket.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(secilenProductId.isEmpty()) Toast.makeText(getApplicationContext(), "Barkod Seçiniz.", Toast.LENGTH_SHORT).show();
-                else{
+                if (secilenProductId.isEmpty())
+                    Toast.makeText(getApplicationContext(), "Barkod Seçiniz.", Toast.LENGTH_SHORT).show();
+                else {
                     Intent intent = new Intent(BarkodBilgiEkrani.this, BarkodBilgiEkraniSec.class);
                     intent.putExtra("secilenProductId", secilenProductId);
                     startActivity(intent);
@@ -300,6 +305,7 @@ public class BarkodBilgiEkrani extends AppCompatActivity {
     @SuppressLint("NewApi")
     public class FillListProduct extends AsyncTask<String, String, String> {
         String z = "";
+
         @Override
         protected void onPreExecute() {
             pbbarP.setVisibility(View.VISIBLE);
@@ -312,11 +318,15 @@ public class BarkodBilgiEkrani extends AppCompatActivity {
             btn_hareket.setVisibility(View.VISIBLE);
             tx_productName.setText(productName);
             tx_productCode.setText(productCode);
-            tx_productFirst.setText(firstAmount);
-            tx_productSecond.setText(secondAmount);
+            tx_productFirst.setText(new DecimalFormat("##.##").format(first)+ " " +firstAmount);
+            if(secondAmount ==null || secod==0){
+                tx_productSecond.setText("YOKTUR");
+            }else{
+                tx_productSecond.setText(new DecimalFormat("##.##").format(secod)+" "+secondAmount);
+            }
             tx_productDate.setText(productDate);
             tx_productPallete.setText(productPalette);
-            if(productDetails==null) tx_productInfo.setText("AÇIKLAMA YOK..");
+            if (productDetails == null) tx_productInfo.setText("AÇIKLAMA YOK..");
             else tx_productInfo.setText(productDetails);
         }
 
@@ -337,9 +347,11 @@ public class BarkodBilgiEkrani extends AppCompatActivity {
                         productCode = rs.getString("PRODUCTCODE");
                         productDetails = rs.getString("DESCRIPTION");
                         productDate = rs.getString("PRODUCTDATE");
-                        firstAmount = rs.getString("FIRSTUNITAMOUNT") + " " + rs.getString("FIRSTUNITNAME");
-                        if(rs.getString("SECONDUNITNAME")==null) secondAmount = "YOKTUR";
-                        else secondAmount = rs.getString("SECONDUNITAMOUNT") + " " + rs.getString("SECONDUNITNAME");
+                        first = rs.getFloat("FIRSTUNITAMOUNT");
+                        firstAmount = rs.getString("FIRSTUNITNAME");
+                        secod = rs.getFloat("SECONDUNITAMOUNT");
+                        secondAmount = rs.getString("SECONDUNITNAME");
+
                         productPalette = rs.getString("PALETBARCODES");
                     }
                     z = "Başarılı";
