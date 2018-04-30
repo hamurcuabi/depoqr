@@ -91,7 +91,6 @@
             android:name=".BarkodBilgiEkraniSec"
             android:windowSoftInputMode="adjustPan" />
         <activity android:name=".ExpMenuMain">
-
         </activity>
 
     </application>
