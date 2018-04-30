@@ -84,7 +84,7 @@ public class MainTaskAdapter extends RecyclerView.Adapter<MainTaskAdapter.Myview
             imgTaskManList.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                   txtTaskMan.setText(clicked.getTaskManlistCount());
+                  // txtTaskMan.setText(clicked.getTaskManlistCount());
                 }
             });
 
