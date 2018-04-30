@@ -877,16 +877,20 @@ public class MalKabulOku extends AppCompatActivity {
                         datanum.put("B", rs.getString("PRODUCTNAME"));
                         first += Float.parseFloat(rs.getString("FIRSTUNITAMOUNT"));
                         ftype = rs.getString("FIRSTUNITNAME");
-                        datanum.put("C", rs.getString("FIRSTUNITAMOUNT") + " " + rs.getString("FIRSTUNITNAME"));
+                        float first1 = rs.getFloat("FIRSTUNITAMOUNT");
+                        String firstz = Float.toString(first1);
+                        datanum.put("C", firstz + " " + rs.getString("FIRSTUNITNAME"));
                         second += Float.parseFloat(rs.getString("SECONDUNITAMOUNT"));
                         stype = rs.getString("SECONDUNITNAME");
-                        datanum.put("D", rs.getString("SECONDUNITAMOUNT") + " " + rs.getString("SECONDUNITNAME"));
+                        float sec1 = rs.getFloat("SECONDUNITAMOUNT");
+                        String secz = Float.toString(sec1);
+                        datanum.put("D", secz + " " + rs.getString("SECONDUNITNAME"));
                         datanum.put("E", rs.getString("BARCODEID"));
                         datanum.put("F", rs.getString("PALETID"));
                         datanum.put("G", rs.getString("PRODUCTBARCODE"));
                         if (!prolist.contains(datanum)) {
-                            if (datanum.get("D").equals("0.00 null")) {
-                                datanum.put("D", "");
+                            if (datanum.get("D").contains("null")) {
+                                datanum.put("D", "YOKTUR");
                             }
                             if (!prolist.contains(datanum)) {
                                 arraysize++;
