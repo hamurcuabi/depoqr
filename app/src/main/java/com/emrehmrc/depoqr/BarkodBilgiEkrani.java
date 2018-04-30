@@ -51,7 +51,7 @@ public class BarkodBilgiEkrani extends AppCompatActivity {
     ArrayAdapter<BarkodProducts> adapter;
     String secilenProductId;
     ProgressBar pbbarP;
-    TextView tx_productName, tx_productCode, tx_productFirst, tx_productSecond, tx_productDate, tx_productPallete, tx_productInfo;
+    TextView tx_productName, tx_productCode, tx_productFirst, tx_productSecond, tx_productDate, tx_productPallete, tx_productInfo,tx_producerName;
     String productName;
     String productCode;
     String productDetails;
@@ -60,7 +60,7 @@ public class BarkodBilgiEkrani extends AppCompatActivity {
     float secod;
     String firstAmount;
     String secondAmount;
-    String productPalette;
+    String productPalette,producerName;
     String deneme;
 
     @Override
@@ -89,7 +89,7 @@ public class BarkodBilgiEkrani extends AppCompatActivity {
         tx_productDate = (TextView) findViewById(R.id.tx_productDate);
         tx_productPallete = (TextView) findViewById(R.id.tx_productPallete);
         tx_productInfo = (TextView) findViewById(R.id.tx_productInfo);
-
+        tx_producerName = (TextView) findViewById(R.id.tx_producerName);
         FillBarkods fillBarkods = new FillBarkods();
         fillBarkods.execute("");
         btn_qr.setOnClickListener(new View.OnClickListener() {
@@ -318,11 +318,14 @@ public class BarkodBilgiEkrani extends AppCompatActivity {
             btn_hareket.setVisibility(View.VISIBLE);
             tx_productName.setText(productName);
             tx_productCode.setText(productCode);
-            tx_productFirst.setText(new DecimalFormat("##.##").format(first)+ " " +firstAmount);
+            tx_producerName.setText(producerName);
+            String firstx = Float.toString(first);
+            tx_productFirst.setText(firstx + " " +firstAmount);
             if(secondAmount ==null || secod==0){
                 tx_productSecond.setText("YOKTUR");
             }else{
-                tx_productSecond.setText(new DecimalFormat("##.##").format(secod)+" "+secondAmount);
+                String secndx = Float.toString(secod);
+                tx_productSecond.setText(secndx +" "+secondAmount);
             }
             tx_productDate.setText(productDate);
             tx_productPallete.setText(productPalette);
@@ -351,7 +354,7 @@ public class BarkodBilgiEkrani extends AppCompatActivity {
                         firstAmount = rs.getString("FIRSTUNITNAME");
                         secod = rs.getFloat("SECONDUNITAMOUNT");
                         secondAmount = rs.getString("SECONDUNITNAME");
-
+                        producerName = rs.getString("MEMBERFULLNAME");
                         productPalette = rs.getString("PALETBARCODES");
                     }
                     z = "Başarılı";
