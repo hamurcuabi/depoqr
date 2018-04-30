@@ -44,4 +44,28 @@ public class ConnectionClass {
         }
         return conn;
     }
+
+    @SuppressLint("NewApi")
+    public java.sql.Connection CONN(String db2) {
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
+                .permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+        java.sql.Connection conn = null;
+        String ConnURL = null;
+        try {
+
+            Class.forName(classs);
+            ConnURL = "jdbc:jtds:sqlserver://" + ip + ";"
+                    + "databaseName=" + db2 + ";user=" + un + ";password="
+                    + password + ";";
+            conn = DriverManager.getConnection(ConnURL);
+        } catch (SQLException se) {
+            Log.e("ERRO", se.getMessage());
+        } catch (ClassNotFoundException e) {
+            Log.e("ERRO", e.getMessage());
+        } catch (Exception e) {
+            Log.e("ERRO", e.getMessage());
+        }
+        return conn;
+    }
 }

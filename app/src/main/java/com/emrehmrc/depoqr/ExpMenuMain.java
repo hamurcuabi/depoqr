@@ -17,6 +17,8 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -38,6 +40,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -57,17 +60,20 @@ public class ExpMenuMain extends AppCompatActivity {
     ConnectionClass connectionClass;
 
     CompactCalendarView compactCalendar;
+    RecyclerView recyclerView;
+    MainTaskAdapter mainTaskAdapter;
+    ArrayList<MainTaskModel> datalist;
+    ArrayList<String> memberList;
+    MainTaskModel gecici;
+    HashSet<String> hset;
     private SimpleDateFormat dateFormatMonth = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss",
             Locale.getDefault());
     private SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMMM - yyyy",
             Locale.getDefault());
-
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
     private String mActivtyTitle;
     private String[] items;
-
-
     private ExpandableListView expandableListView;
     private ExpandableListAdapter expandableListAdapter;
     private List<String> lstTitle;
@@ -83,8 +89,18 @@ public class ExpMenuMain extends AppCompatActivity {
         ab = getSupportActionBar();
         ab.setTitle("İŞLEM MENÜSÜ");
         ab.setBackgroundDrawable(getResources().getDrawable(R.drawable.arkaplan));
+//Reccle Deneme
+        recyclerView = (RecyclerView) findViewById(R.id.recyclerview);
+        datalist = new ArrayList<>();
 
-
+       /* datalist = MainTaskModel.getData();
+        mainTaskAdapter = new MainTaskAdapter(getApplicationContext(), datalist);
+        recyclerView.setAdapter(mainTaskAdapter);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
+        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        recyclerView.setLayoutManager(linearLayoutManager);
+        */
+//
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mActivtyTitle = getTitle().toString();
         expandableListView = (ExpandableListView) findViewById(R.id.navList);
@@ -278,10 +294,10 @@ public class ExpMenuMain extends AppCompatActivity {
                 return false;
             }
         });
-        */
 
-        Delegation delegation = new Delegation();
-        delegation.execute("");
+*/
+        MainTasks mainTasks = new MainTasks();
+        mainTasks.execute("");
 
 
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.open, R.string.close) {
@@ -401,11 +417,9 @@ public class ExpMenuMain extends AppCompatActivity {
         satinalma.add("SATIN ALMA3");
 
 
-        if(grup1) listDataChild.put(listDataHeader.get(0), pano); // Header, Child data
-        if(grup2) listDataChild.put(listDataHeader.get(1), lojistik);
-        if(grup3)  listDataChild.put(listDataHeader.get(2), satinalma);
-
-
+        if (grup1) listDataChild.put(listDataHeader.get(0), pano); // Header, Child data
+        if (grup2) listDataChild.put(listDataHeader.get(1), lojistik);
+        if (grup3) listDataChild.put(listDataHeader.get(2), satinalma);
 
 
     }
@@ -417,9 +431,9 @@ public class ExpMenuMain extends AppCompatActivity {
         Date date3 = null;
         Date date4 = null;
 
-        String dateInString = "22-04-2018 10:20:56";
+        String dateInString = "23-04-2018 10:20:56";
         String dateInString2 = "23-04-2018 10:20:56";
-        String dateInString3 = "24-04-2018 10:20:56";
+        String dateInString3 = "23-04-2018 10:20:56";
         String dateInString4 = "25-04-2018 10:20:56";
         try {
             date = dateFormatMonth.parse(dateInString);
@@ -487,14 +501,15 @@ public class ExpMenuMain extends AppCompatActivity {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.CUPCAKE)
-    public class Delegation extends AsyncTask<String, String, String> {
+    public class MainTasks extends AsyncTask<String, String, String> {
         String z = "";
         Boolean isSuccess = false;
-        boolean g1, g2, g3;
 
         @Override
         protected void onPreExecute() {
 
+            memberList = new ArrayList<>();
+            hset = new HashSet<>();
 
         }
 
@@ -502,11 +517,11 @@ public class ExpMenuMain extends AppCompatActivity {
         @Override
         protected void onPostExecute(String r) {
 
-            if (isSuccess) {
-                grup1=g1;
-                grup2=g2;
-                grup3=g3;
-            }
+            mainTaskAdapter = new MainTaskAdapter(getApplicationContext(), datalist);
+            recyclerView.setAdapter(mainTaskAdapter);
+            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
+            linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+            recyclerView.setLayoutManager(linearLayoutManager);
 
         }
 
@@ -515,27 +530,41 @@ public class ExpMenuMain extends AppCompatActivity {
 
             try {
 
-                Connection con = connectionClass.CONN();
+                Connection con = connectionClass.CONN("ArGeMerkezi");
                 if (con == null) {
                     z = "Bağlantı Hatası";
                 } else {
 
 
-                    String query = "select * from VW_DELEGATION where MEMBERID='" + memberID + "'";
+                    String query = "select * from VW_MAINTASKLIST ";
                     Statement stmt = con.createStatement();
                     ResultSet rs = stmt.executeQuery(query);
 
-                    if (rs.next()) {
+                    while (rs.next()) {
 
-                        g1 = (rs.getBoolean("LOJ"));
-                        g2 = (rs.getBoolean("PANO"));
-                        g3 = rs.getBoolean("SATINALMA");
-                        z = "Giriş Başarılı";
+
+                        if (!hset.contains(rs.getString("ID"))) {
+
+                            gecici=new MainTaskModel();
+                            hset.add(rs.getString("ID"));
+                            gecici.setContent(rs.getString("DESCRIPTION").substring(0, 25));
+                            gecici.setTaskMan(rs.getString("PUBLISHERNAME"));
+                            if (!(rs.getString("CREATINGDATE").equals(null)))
+                            {
+                                gecici.setDate(rs.getString ("CREATINGDATE"));
+
+                            }
+                            else gecici.setDate("TARİH YOK");
+
+                            gecici.setTaskManList(memberList);
+                            gecici.setTaskManlistCount(memberList.size());
+                        }
+
+                        memberList.add(rs.getString("MEMBERNAME"));
+                        datalist.add(gecici);
                         isSuccess = true;
-                    } else {
-                        z = "Hata";
-                        isSuccess = false;
                     }
+
 
                 }
             } catch (Exception ex) {

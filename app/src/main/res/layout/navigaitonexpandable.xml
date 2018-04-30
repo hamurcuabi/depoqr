@@ -3,34 +3,50 @@
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/zyonetim">
+    android:background="@color/appbackcolor">
 
     <LinearLayout
         android:id="@+id/activity_controller"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:weightSum="2">
 
         <FrameLayout
+            android:layout_weight="1"
+           android:layout_marginTop="12dp"
             android:id="@+id/container"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            >
+
             <com.github.sundeepk.compactcalendarview.CompactCalendarView xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/compactcalendar_view"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
-                app:compactCalendarBackgroundColor="@color/zyonetim"
-                app:compactCalendarCurrentDayBackgroundColor="@color/colorPrimary"
-                app:compactCalendarCurrentSelectedDayBackgroundColor="@color/colorBack"
-                app:compactCalendarMultiEventIndicatorColor="@color/colorPrimaryDark"
+                app:compactCalendarBackgroundColor="@color/appbackcolor"
+                app:compactCalendarCurrentDayBackgroundColor="@color/depotr"
+                app:compactCalendarCurrentSelectedDayBackgroundColor="@color/colorPrimaryDark"
+                app:compactCalendarMultiEventIndicatorColor="@color/zyonetim"
+                app:compactCalendarOtherMonthDaysTextColor="@color/defaultblue"
                 app:compactCalendarTargetHeight="250dp"
-                app:compactCalendarTextColor="#fff"
-                app:compactCalendarTextSize="12sp"
-                />
+                app:compactCalendarTextColor="@color/black_overlay"
+                app:compactCalendarTextSize="16sp" />
+
+
         </FrameLayout>
 
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@color/zyonetim">
+
+        </android.support.v7.widget.RecyclerView>
     </LinearLayout>
 
     <ExpandableListView
