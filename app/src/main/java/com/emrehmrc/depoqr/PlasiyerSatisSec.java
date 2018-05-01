@@ -34,6 +34,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import static com.emrehmrc.depoqr.AnaSayfa.MyPREFERENCES;
 
@@ -61,6 +63,7 @@ public class PlasiyerSatisSec extends AppCompatActivity {
     boolean check = true;
     ImageView btn_hesapla;
     float toplam, genelToplam;
+    int productCount;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -116,10 +119,10 @@ public class PlasiyerSatisSec extends AppCompatActivity {
                 for (ProductsP productsP : products) {
                     if (productsP.getProductKod().equals(tx_urunkodu.getText().toString())) {
                         tx_urunadi.setText(productsP.getProductadi());
-                        secilenUrun = productsP.getProductno();
+                        secilenUrun = productsP.getProductKod();
                         check = false;
-                        CheckProductInDepo checkdepo = new CheckProductInDepo();
-                        checkdepo.execute("");
+                        CheckNewestCurrent newestCurrent = new CheckNewestCurrent();
+                        newestCurrent.execute("");
 
                     }
                 }
@@ -191,9 +194,17 @@ public class PlasiyerSatisSec extends AppCompatActivity {
     public class FillList extends AsyncTask<String, String, String> {
         String z = "";
 
-
         @Override
         protected void onPostExecute(String r) {
+            for (int i = 0; i < products.size(); i++) {
+                for (int j = i + 1; j < products.size(); j++) {
+                    if (products.get(i).getProductKod().equals(products.get(j).getProductKod())) {
+                        productCount++;
+                        products.remove(j);
+                        j--;
+                    }
+                }
+            }
             adapter = new ArrayAdapter<ProductsP>(getApplicationContext(), android.R.layout.simple_dropdown_item_1line, products);
             tx_urunadi.setAdapter(adapter);
             tx_urunadi.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -216,13 +227,24 @@ public class PlasiyerSatisSec extends AppCompatActivity {
                 if (con == null) {
                     z = "Error in connection with SQL server";
                 } else {
-                    String query = "SELECT ID , NAME , CODE FROM " + "VW_PRODUCT  where COMPANIESID='" + comid + "' and ISDELETE ='0' ";
+                    String query = "Select BARCODEID,BARCODENO,PRODUCTNAME,PALETID,PALETBARCODES,PRODUCTID," +
+                            "PRODUCTCODE, " +
+                            "FIRSTUNITNAME,SECONDUNITNAME,\n" +
+                            "SUM(WDIRECTION * FIRSTAMOUNT)  AS FIRSTAMOUNT, \n" +
+                            "SUM(WDIRECTION * SECONDAMOUNT) AS SECONDAMOUNT \n" +
+                            "from VW_WAREHOUSESTOCKMOVEMENT where\n" +
+                            "(DESTINATIONWAREHOUSEID = \n" +
+                            "'" + incomingDepoId + "' \n" +
+                            "or SOURCEWAREHOUSEID = '" + incomingDepoId + "') \n" +
+                            "group by BARCODEID,BARCODENO,PALETBARCODES,PRODUCTNAME,PALETID,PRODUCTID," +
+                            "PRODUCTCODE," +
+                            "FIRSTUNITNAME,SECONDUNITNAME\n" +
+                            "having SUM(WDIRECTION * FIRSTAMOUNT) != 0 or \n" +
+                            "SUM(WDIRECTION * SECONDAMOUNT) != 0";
                     PreparedStatement ps = con.prepareStatement(query);
                     ResultSet rs = ps.executeQuery();
                     while (rs.next()) {
-                        products.add(new ProductsP(rs.getString("NAME")
-                                , rs.getString("ID")
-                                , rs.getString("CODE")));
+                        products.add(new ProductsP(rs.getString("PRODUCTNAME"), rs.getString("PRODUCTCODE")));
 
                     }
                     z = "Başarılı";
@@ -237,15 +259,13 @@ public class PlasiyerSatisSec extends AppCompatActivity {
 
     private class ProductsP {
         private String productadi;
-        private String productno;
         private String productKod;
 
         public ProductsP() {
         }
 
-        public ProductsP(String productadi, String productno, String productKod) {
+        public ProductsP(String productadi, String productKod) {
             this.productadi = productadi;
-            this.productno = productno;
             this.productKod = productKod;
         }
 
@@ -257,13 +277,6 @@ public class PlasiyerSatisSec extends AppCompatActivity {
             this.productadi = productadi;
         }
 
-        public String getProductno() {
-            return productno;
-        }
-
-        public void setProductno(String productno) {
-            this.productno = productno;
-        }
 
         public String getProductKod() {
             return productKod;
@@ -279,51 +292,7 @@ public class PlasiyerSatisSec extends AppCompatActivity {
         }
     }
 
-    public class CheckProductInDepo extends AsyncTask<String, String, String> {
 
-        String z = "";
-
-        @Override
-        protected void onPostExecute(String r) {
-
-            if (control.equals("Empty")) {
-
-                Toast.makeText(getApplicationContext(), "Depoda Ürün Bulunamadı.", Toast.LENGTH_SHORT).show();
-                toneG.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD, 200);
-                vibrator.vibrate(100);
-                tx_urunadi.setText("");
-            } else {
-
-                CheckNewestCurrent newestCurrent = new CheckNewestCurrent();
-                newestCurrent.execute("");
-
-            }
-
-        }
-
-        @Override
-        protected String doInBackground(String... strings) {
-            try {
-                Connection con = connectionClass.CONN();
-                if (con == null) {
-                    z = "Error in connection with SQL server";
-                } else {
-                    String query = "SELECT PRODUCTID FROM " + "VW_WAREHOUSEPRODUCT  where WAREHOUSEID ='" + incomingDepoId + "' and PRODUCTID = '" + secilenUrun + "'and COMPANIESID='" + comid + "'";
-                    PreparedStatement ps = con.prepareStatement(query);
-                    ResultSet rs = ps.executeQuery();
-                    if (rs.next()) {
-                        control = rs.getString("PRODUCTID");
-                    } else {
-                        control = "Empty";
-                    }
-                    z = "Başarılı";
-                }
-            } catch (Exception ex) {
-                z = "Veri Çekme Hatası";
-            }
-            return z;
-        }
-    }
 
     public class CheckNewestCurrent extends AsyncTask<String, String, String> {
         String z = "";
@@ -339,9 +308,11 @@ public class PlasiyerSatisSec extends AppCompatActivity {
             if (check) {
                 ProductInfo infoget = new ProductInfo();
                 infoget.execute("");
+
             } else {
-                Toast.makeText(getApplicationContext(), "Hata.", Toast.LENGTH_SHORT).show();
-                tx_urunadi.setText("");
+                tx_iskdv.setText("EVET");
+                Toast.makeText(getApplicationContext(), "CARI FIYAT LISTESI BULUNAMADI.", Toast.LENGTH_SHORT).show();
+               // tx_urunadi.setText("");
             }
         }
 
@@ -380,8 +351,6 @@ public class PlasiyerSatisSec extends AppCompatActivity {
         @Override
         protected void onPostExecute(String r) {
             if (check) {
-                tx_price.setFocusable(true);
-                tx_kdv.setFocusable(true);
                 tx_price.setText(modelProductInfo.getProductPrice());
                 tx_kdv.setText(modelProductInfo.getProductKdv());
                 tx_iskdv.setText(modelProductInfo.getProductKdvC());
@@ -391,7 +360,7 @@ public class PlasiyerSatisSec extends AppCompatActivity {
                     public void onClick(View v) {
                         String change;
                         change = modelProductInfo.getProductKdvC();
-                        if (change.equals("EVET")) {
+                        if (tx_iskdv.getText().toString().equals("EVET")) {
                             modelProductInfo.setProductKdvC("0");
                             tx_iskdv.setText(modelProductInfo.getProductKdvC());
                         } else {
@@ -417,7 +386,7 @@ public class PlasiyerSatisSec extends AppCompatActivity {
                 if (con == null) {
                     z = "Error in connection with SQL server";
                 } else {
-                    String query = "select KDV , ISKDV , SALARY , NAME , MONEYUNITID from VW_PRICELISTPRODUCT where PRICELISTID ='" + priceId + "' and PRODUCTID ='" + control + "'";
+                    String query = "select KDV , ISKDV , SALARY , NAME , MONEYUNITID from VW_PRICELISTPRODUCT where PRICELISTID ='" + priceId + "' and PRODUCTCODE='" + control + "'";
                     PreparedStatement ps = con.prepareStatement(query);
                     ResultSet rs = ps.executeQuery();
                     if (rs.next()) {
@@ -426,6 +395,7 @@ public class PlasiyerSatisSec extends AppCompatActivity {
                         modelProductInfo.setProductPrice(rs.getString("SALARY"));
                         modelProductInfo.setTypeName(rs.getString("NAME"));
                         modelProductInfo.setMoneyUnitId(rs.getString("MONEYUNITID"));
+
                         check = true;
                     } else {
                         check = false;

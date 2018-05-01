@@ -252,7 +252,7 @@
                 android:padding="5dp"
                 android:singleLine="true"
                 android:textColor="@android:color/holo_red_dark"
-                android:textSize="20sp" android:focusable="false"/>
+                android:textSize="20sp" />
 
             <TextView
                 android:id="@+id/tx_moneyTeype"
@@ -296,7 +296,7 @@
                 android:padding="5dp"
                 android:singleLine="true"
                 android:textColor="@android:color/holo_red_dark"
-                android:textSize="20sp" android:focusable="false" />
+                android:textSize="20sp" />
 
         </LinearLayout>
 
