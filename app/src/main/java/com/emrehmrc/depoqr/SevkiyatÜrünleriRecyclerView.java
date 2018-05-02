@@ -20,6 +20,7 @@ public class SevkiyatÜrünleriRecyclerView {
     private String secondUnit;
     private float firstamount;
     private float secondamount;
+    private String prductionDate;
 
     public static ArrayList<SevkiyatÜrünleriRecyclerView> getData() {
 
@@ -39,6 +40,14 @@ public class SevkiyatÜrünleriRecyclerView {
         return datalist;
 
 
+    }
+
+    public String getPrductionDate() {
+        return prductionDate;
+    }
+
+    public void setPrductionDate(String prductionDate) {
+        this.prductionDate = prductionDate;
     }
 
     public String getUyari2() {

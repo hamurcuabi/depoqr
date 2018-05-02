@@ -46,7 +46,7 @@ import static com.emrehmrc.depoqr.AnaSayfa.MyPREFERENCES;
 
 public class Sevkiyat extends AppCompatActivity {
 
-    Button bntsevkiyat, btnstart, tamamla;
+    Button bntsevkiyat, btnstart, tamamla,btnstart2;
     Spinner spndepo;
     ActionBar ab;
     ConnectionClass connectionClass;
@@ -84,6 +84,7 @@ public class Sevkiyat extends AppCompatActivity {
         tamamla = (Button) findViewById(R.id.btn_tamamla2);
         spndepo = (Spinner) findViewById(R.id.spnDepo);
         btnstart = (Button) findViewById(R.id.btnstart);
+        btnstart2 = (Button) findViewById(R.id.btnstart2);
         sevkiyetPlaka = (TextView) findViewById(R.id.sevkiyetPlaka);
         sevkiyetNo = (AutoCompleteTextView) findViewById(R.id.edtsevkiyatno2);
         dropDown = (ImageView) findViewById(R.id.btn_drop2);
@@ -96,6 +97,23 @@ public class Sevkiyat extends AppCompatActivity {
                 if (depook && !empty) {
                     Intent i = new Intent(Sevkiyat.this, SevkiyatSecondStep.class);
                     startActivityForResult(i, 1);
+                } else {
+
+                    Intent intent = new Intent(getBaseContext(), UyariBildirim.class);
+                    intent.putExtra("UYARI", "SEVK EDİLECEK ÜRÜN BULUNAMDI!");
+                    startActivity(intent);
+                }
+
+
+            }
+        });
+        btnstart2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (depook && !empty) {
+                    Intent i = new Intent(Sevkiyat.this, SevkiyatTarih.class);
+                    startActivity(i);
                 } else {
 
                     Intent intent = new Intent(getBaseContext(), UyariBildirim.class);
@@ -218,9 +236,9 @@ public class Sevkiyat extends AppCompatActivity {
                     ((TextView) parent.getChildAt(0)).setGravity(Gravity.CENTER);
                     SharedPreferences.Editor editor = sharedpreferences.edit();
                     editor.putString("SevkiyatDepoID", depolar.getDepono());
+                    editor.putString("SevkiyatDepoAdi",depolar.getDepoadi());
                     editor.commit();
                     bntsevkiyat.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.yes, 0);
-                    btnstart.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.start, 0);
                     depook = true;
 
                 }
@@ -281,6 +299,7 @@ public class Sevkiyat extends AppCompatActivity {
             if (!empty) {
                 SharedPreferences.Editor editor = sharedpreferences.edit();
                 editor.putString("SevkiyatForwadingID", fordid);
+                editor.putString("sevkNo", sevkiyetNo.getText().toString());
                 editor.commit();
                 FillDepo fillDepo = new FillDepo();
                 fillDepo.execute();
