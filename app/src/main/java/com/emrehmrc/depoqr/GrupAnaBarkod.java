@@ -4,7 +4,9 @@ import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.ActivityOptions;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.AudioManager;
 import android.media.ToneGenerator;
 import android.os.AsyncTask;
@@ -33,6 +35,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import static com.emrehmrc.depoqr.AnaSayfa.MyPREFERENCES;
+
 public class GrupAnaBarkod extends AppCompatActivity {
 
 
@@ -57,7 +61,7 @@ public class GrupAnaBarkod extends AppCompatActivity {
     float first, second;
     Boolean isSuccess;
     Button btnRead;
-
+    SharedPreferences sharedPreferences;
     RecyclerView recyclerView;
     DependedBarcodesAdaptor adaptor;
     ArrayList<DependedBarcodes> datalist;
@@ -77,7 +81,9 @@ public class GrupAnaBarkod extends AppCompatActivity {
         ab.setSubtitle("Ana Barkod Seçiniz");
         ab.setBackgroundDrawable(getResources().getDrawable(R.drawable.arkaplan));
         toneG = new ToneGenerator(AudioManager.STREAM_ALARM, 100);
-
+        sharedPreferences = getApplicationContext().getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
+        memberid = sharedPreferences.getString("ID", null);
+        Companiesid = sharedPreferences.getString("Companiesid", null);
 
         datalist = new ArrayList<DependedBarcodes>();
         recyclerView = (RecyclerView) findViewById(R.id.recyclerview);
@@ -139,19 +145,22 @@ public class GrupAnaBarkod extends AppCompatActivity {
         btnDevam.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+               if(!datalist.isEmpty()){
+                   anabarkod= datalist.get(0).getCode();
+                   if (!anabarkod.equals("")) {
+                       Intent i = new Intent(getApplicationContext(), GrupBarkod.class);
 
-                anabarkod= datalist.get(0).getCode();
-                if (!anabarkod.equals("")) {
-                    Intent i = new Intent(getApplicationContext(), GrupBarkod.class);
+                       i.putExtra("anabarkod", anabarkod);
+                       startActivity(i);
+                   } else {
 
-                    i.putExtra("anabarkod", anabarkod);
-                    startActivity(i);
-                } else {
+                   }
 
-                    Intent intent = new Intent(getBaseContext(), UyariBildirim.class);
-                    intent.putExtra("UYARI", "ÜRÜN SEÇİLMEDİ!");
-                    startActivity(intent);
-                }
+               }else{
+                   Intent intent = new Intent(getBaseContext(), UyariBildirim.class);
+                   intent.putExtra("UYARI", "ÜRÜN SEÇİLMEDİ!");
+                   startActivity(intent);
+               }
 
 
             }
@@ -162,12 +171,7 @@ public class GrupAnaBarkod extends AppCompatActivity {
 
                 if(edtCode.getText().toString()!="") {
                     FillAnaBarkod fillAnaBarkod = new FillAnaBarkod();
-                    String query = "Select BARCODEID,BARCODENO,PRODUCTNAME,FIRSTUNITNAME," +
-                            "FIRSTUNITAMOUNT,SECONDUNITAMOUNT,SECONDUNITNAME,PRODUCTCODE from " +
-                            "VW_WAREHOUSESTOCKMOVEMENT where BARCODENO='" + edtCode.getText().toString() + "' group by  " +
-                            "BARCODENO," +
-                            "PRODUCTNAME,BARCODEID,FIRSTUNITNAME,FIRSTUNITAMOUNT,SECONDUNITAMOUNT," +
-                            "SECONDUNITNAME,PRODUCTCODE  having SUM(WDIRECTION * FIRSTAMOUNT) !='0' or SUM(WDIRECTION * SECONDAMOUNT) != '0'";
+                    String query = "select * from VW_BARCODE where ISDELETE = '0' and COMPANIESID = '"+Companiesid+"' and BARCODENO = '"+edtCode.getText().toString()+"'";
                     fillAnaBarkod.execute(query);
                 }
 
@@ -183,13 +187,7 @@ public class GrupAnaBarkod extends AppCompatActivity {
                 codeid = data.getStringExtra("codeid");
 
                 FillAnaBarkod fillAnaBarkod = new FillAnaBarkod();
-                String query = "Select BARCODEID,BARCODENO,PRODUCTNAME,FIRSTUNITNAME," +
-                        "FIRSTUNITAMOUNT,SECONDUNITAMOUNT,SECONDUNITNAME,PRODUCTCODE from " +
-                        "VW_WAREHOUSESTOCKMOVEMENT where BARCODEID='" + codeid
-                        + "' group by  " +
-                        "BARCODENO," +
-                        "PRODUCTNAME,BARCODEID,FIRSTUNITNAME,FIRSTUNITAMOUNT,SECONDUNITAMOUNT," +
-                        "SECONDUNITNAME,PRODUCTCODE  having SUM(WDIRECTION * FIRSTAMOUNT) !='0' or SUM(WDIRECTION * SECONDAMOUNT) != '0'";
+                String query = "select * from VW_BARCODE where ISDELETE = '0' and COMPANIESID = '"+Companiesid+"' and BARCODENO = '"+codeid+"'";
                 fillAnaBarkod.execute(query);
             }
         }
@@ -279,7 +277,7 @@ public class GrupAnaBarkod extends AppCompatActivity {
                         arraysize++;
                         dependedBarcodes = new DependedBarcodes();
                         dependedBarcodes.setCheck(true);
-                        dependedBarcodes.setCode(rs.getString("BARCODEID"));
+                        dependedBarcodes.setCode(rs.getString("ID"));
                         dependedBarcodes.setName(rs.getString("PRODUCTNAME"));
                         dependedBarcodes.setCodeNo(rs.getString("BARCODENO"));
                         dependedBarcodes.setFirstAmount(rs.getString("FIRSTUNITAMOUNT"));

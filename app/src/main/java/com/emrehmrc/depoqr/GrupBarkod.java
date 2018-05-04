@@ -274,9 +274,9 @@ public class GrupBarkod extends AppCompatActivity {
                         dependedBarcodes.setSecondAmount(rs.getString("SECONDUNITAMOUNT"));
                         dependedBarcodes.setSecondUnit(rs.getString("SECONDUNITNAME"));
                         dependedBarcodes.setProductCode(rs.getString("PRODUCTCODE"));
-
-                        datalist.add(dependedBarcodes);
-
+                        if (!datalist.contains(dependedBarcodes)){
+                            datalist.add(dependedBarcodes);
+                        }
                         isEmpty = false;
 
                     }
@@ -409,8 +409,8 @@ public class GrupBarkod extends AppCompatActivity {
 
                         aktarılan++;
                         UUID uuıd = UUID.randomUUID();
-                        String q = "Insert into GROUPBARCODE (ID,PARENTID,CHILDID,WAREHOUSEID," +
-                                "EXWAREHOUSEID) values ('" + uuıd + "','" + anabarkod + "','" + datalist.get
+                        String q = "Insert into GROUPBARCODE (MEMBERID,ID,PARENTID,CHILDID,WAREHOUSEID," +
+                                "EXWAREHOUSEID) values ('"+memberid+"','" + uuıd + "','" + anabarkod + "','" + datalist.get
                                 (i).getCode()
                                 + "','" + selectedDepo + "',(Select WAREHOUSEID from " +
                                 "VW_WAREHOUSESTOCKMOVEMENT  where BARCODEID='" + datalist.get(i)

@@ -9,6 +9,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 /**
@@ -83,8 +84,10 @@ public class DependedBarcodesAdaptor extends RecyclerView.Adapter<DependedBarcod
             this.txtBarcode.setText(clicked.getCodeNo());
             this.txtFirst.setText((clicked.getFirstUnit()));
             this.txtSecond.setText(clicked.getSecondUnit());
-            this.edtFirst.setText(clicked.getFirstAmount());
-            this.edtSecond.setText(clicked.getSecondAmount());
+            String s = new DecimalFormat("0.####").format(Double.parseDouble(clicked.getFirstAmount()));
+            this.edtFirst.setText(s);
+            String s2 = new DecimalFormat("0.####").format(Double.parseDouble(clicked.getSecondAmount()));
+            this.edtSecond.setText(s2);
 
 
         }

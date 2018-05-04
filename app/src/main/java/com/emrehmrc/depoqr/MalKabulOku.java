@@ -791,9 +791,9 @@ public class MalKabulOku extends AppCompatActivity {
                         add = new AddPalet();
                         UUID uid = UUID.randomUUID();
                         String query = "insert into WAREHOUSEPRODUCT (ID,BARCODEID,PALETID,WAREHOUSEID," +
-                                "MEMBERID,ISRETURN) " +
+                                "MEMBERID,ISRETURN,ISGROUP) " +
                                 "values('" + uid + "','" + barcodesil + "','" + paletsil + "','" + depoid
-                                + "','" + memberid + "','0')";
+                                + "','" + memberid + "','0','0')";
                         PreparedStatement preparedStatement = con.prepareStatement(query);
                         preparedStatement.executeUpdate();
                     }
