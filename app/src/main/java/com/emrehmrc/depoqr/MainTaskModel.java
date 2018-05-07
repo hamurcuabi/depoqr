@@ -1,75 +1,63 @@
 package com.emrehmrc.depoqr;
 
-import java.util.ArrayList;
-
 public class MainTaskModel {
 
-    private String date;
-    private String taskMan;
-    private String content;
-    private ArrayList<String> taskManList;
-    private int taskManlistCount;
+    private String taskDate;
+    private String taskCreater;
+    private String taskTag;
+    private String taskDescription;
+   private  String taskCountMan;
+   private  String taskId;
 
-    public static ArrayList<MainTaskModel> getData() {
-
-        ArrayList<MainTaskModel> datalist = new ArrayList<MainTaskModel>();
-        MainTaskModel gecici = new MainTaskModel();
-
-        for (int i = 0; i < 5; i++) {
-            ArrayList<String> taskManList = new ArrayList<>();
-            taskManList.add("emre");
-            taskManList.add("eren");
-            taskManList.add("güven");
-            gecici.setDate("tarih");
-            gecici.setTaskMan("Görevlendiren");
-            gecici.setContent("İçerik");
-            gecici.setTaskManList(taskManList);
-            datalist.add(gecici);
-        }
-        return datalist;
-
-
+    public String getTaskId() {
+        return taskId;
     }
 
-
-    public String getDate() {
-        return date;
+    public void setTaskId(String taskId) {
+        this.taskId = taskId;
     }
 
-    public void setDate(String date) {
-        this.date = date;
+    public String getTaskCountMan() {
+        return taskCountMan;
     }
 
-
-    public String getTaskMan() {
-        return taskMan;
+    public void setTaskCountMan(String taskCountMan) {
+        this.taskCountMan = taskCountMan;
     }
 
-    public void setTaskMan(String taskMan) {
-        this.taskMan = taskMan;
+    MainTaskModel() {
     }
 
-    public String getContent() {
-        return content;
+    public String getTaskDate() {
+        return taskDate;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public void setTaskDate(String taskDate) {
+        this.taskDate = taskDate;
     }
 
-    public ArrayList<String> getTaskManList() {
-        return taskManList;
+    public String getTaskCreater() {
+        return taskCreater;
     }
 
-    public void setTaskManList(ArrayList<String> taskManList) {
-        this.taskManList = taskManList;
+    public void setTaskCreater(String taskCreater) {
+        this.taskCreater = taskCreater;
     }
 
-    public int getTaskManlistCount() {
-        return taskManlistCount;
+    public String getTaskTag() {
+        return taskTag;
     }
 
-    public void setTaskManlistCount(int taskManlistCount) {
-        this.taskManlistCount = taskManlistCount;
+    public void setTaskTag(String taskTag) {
+        this.taskTag = taskTag;
     }
+
+    public String getTaskDescription() {
+        return taskDescription;
+    }
+
+    public void setTaskDescription(String taskDescription) {
+        this.taskDescription = taskDescription;
+    }
+
 }

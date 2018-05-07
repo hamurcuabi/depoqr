@@ -8,12 +8,20 @@
         <item name="colorControlHighlight">#ea057f</item>
         <item name="colorButtonNormal">#F28F24</item>
 
-
-
-
     </style>
 
+
     <style name="Splash" parent="Theme.AppCompat.NoActionBar" />
+
+    <style name="TaskMans" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:imeOptions">actionNext</item>
+        <item name="android:windowExitTransition" tools:targetApi="lollipop">@transition/exit</item>
+        <item name="android:windowContentTransitions" tools:targetApi="lollipop">true</item>
+        <item name="colorControlHighlight">#ea057f</item>
+        <item name="colorButtonNormal">#F28F24</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowCloseOnTouchOutside">true</item>
+    </style>
 
 
     <style name="AppTheme.CustomTheme">

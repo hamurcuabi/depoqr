@@ -38,12 +38,14 @@ import java.sql.Statement;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.TimeZone;
 
 public class ExpMenuMain extends AppCompatActivity {
 
@@ -54,6 +56,7 @@ public class ExpMenuMain extends AppCompatActivity {
     Intent i;
     Bundle bundle;
     ImageView imgAvatar;
+    TextView txtCountTask;
     String imgPath = "";
     boolean grup1 = true, grup2 = true, grup3 = true;
     String memberID = "";
@@ -66,9 +69,9 @@ public class ExpMenuMain extends AppCompatActivity {
     ArrayList<String> memberList;
     MainTaskModel gecici;
     HashSet<String> hset;
-    private SimpleDateFormat dateFormatMonth = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss",
+    private SimpleDateFormat dateDefault = new SimpleDateFormat("yyyy-MM-dd",
             Locale.getDefault());
-    private SimpleDateFormat simpleDateFormat = new SimpleDateFormat("MMMM - yyyy",
+    SimpleDateFormat dateFormatTask = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss",
             Locale.getDefault());
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
@@ -101,6 +104,7 @@ public class ExpMenuMain extends AppCompatActivity {
         recyclerView.setLayoutManager(linearLayoutManager);
         */
 //
+        txtCountTask=(TextView)findViewById(R.id.txtCountTasks);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mActivtyTitle = getTitle().toString();
         expandableListView = (ExpandableListView) findViewById(R.id.navList);
@@ -297,7 +301,16 @@ public class ExpMenuMain extends AppCompatActivity {
 
 */
         MainTasks mainTasks = new MainTasks();
-        mainTasks.execute("");
+        String query = "select * from VW_MAINTASKLIST";
+        mainTasks.execute(query);
+        txtCountTask.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MainTasks mainTasks = new MainTasks();
+                String query = "select * from VW_MAINTASKLIST";
+                mainTasks.execute(query);
+            }
+        });
 
 
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.open, R.string.close) {
@@ -358,27 +371,31 @@ public class ExpMenuMain extends AppCompatActivity {
         }
 
 
-        allEvents();
-
 
         compactCalendar.setListener(new CompactCalendarView.CompactCalendarViewListener() {
             @Override
             public void onDayClick(Date dateClicked) {
-                Context context = getApplicationContext();
 
-                if (dateClicked.toString().compareTo("Tue Apr 17 00:00:00 GMT+03:00 2018") == 0) {
-                    Toast.makeText(context, "Teachers' Professional Day", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(context, "NO EVENTSSS", Toast.LENGTH_SHORT).show();
-                }
+
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                sdf.setTimeZone(TimeZone.getTimeZone("GMT+03"));
+                long oneday=86400000l;
+
+                MainTasks mainTasks = new MainTasks();
+                String q="select * from VW_MAINTASKLIST where CREATINGDATE  >=  '"+sdf.format(new
+                        Date(dateClicked.getTime()))+"' and " +
+                        "CREATINGDATE  <  '"+sdf.format(new Date(dateClicked.getTime()+oneday))
+                        +"'";
+                mainTasks.execute(q);
+
 
 
             }
 
             @Override
             public void onMonthScroll(Date firstDayOfNewMonth) {
-
-                getSupportActionBar().setTitle(simpleDateFormat.format(firstDayOfNewMonth));
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                getSupportActionBar().setTitle(sdf.format(firstDayOfNewMonth));
             }
         });
 
@@ -424,47 +441,7 @@ public class ExpMenuMain extends AppCompatActivity {
 
     }
 
-    private void allEvents() {
 
-        Date date = null;
-        Date date2 = null;
-        Date date3 = null;
-        Date date4 = null;
-
-        String dateInString = "23-04-2018 10:20:56";
-        String dateInString2 = "23-04-2018 10:20:56";
-        String dateInString3 = "23-04-2018 10:20:56";
-        String dateInString4 = "25-04-2018 10:20:56";
-        try {
-            date = dateFormatMonth.parse(dateInString);
-            date2 = dateFormatMonth.parse(dateInString2);
-            date3 = dateFormatMonth.parse(dateInString3);
-            date4 = dateFormatMonth.parse(dateInString4);
-
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        //  compactCalendar.addEvent(ev1);
-        ArrayList<Event> events = new ArrayList<>();
-
-        Event ev1 = new Event(Color.RED, date.getTime(), "EVENTSSS");
-        events.add(ev1);
-        Event ev2 = new Event(Color.RED, date2.getTime(), "EVENTSSS");
-        events.add(ev2);
-        Event ev3 = new Event(Color.RED, date3.getTime(), "EVENTSSS");
-        events.add(ev3);
-        Event ev4 = new Event(Color.RED, date4.getTime(), "EVENTSSS");
-        events.add(ev4);
-
-        for (int i = 0; i < events.size(); i++) {
-
-            compactCalendar.addEvent(events.get(i));
-
-        }
-
-
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -510,6 +487,8 @@ public class ExpMenuMain extends AppCompatActivity {
 
             memberList = new ArrayList<>();
             hset = new HashSet<>();
+            datalist.clear();
+            recyclerView.setAdapter(null);
 
         }
 
@@ -522,6 +501,23 @@ public class ExpMenuMain extends AppCompatActivity {
             LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
             linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
             recyclerView.setLayoutManager(linearLayoutManager);
+            //  String dateInString = "2018-04-27";
+            txtCountTask.setText("GÖREV LİSTESİ("+datalist.size()+")");
+            for(int i=0;i<datalist.size()-1;i++){
+                Date date = null;
+                String dateInString = datalist.get(i).getTaskDate();
+                try {
+                    date = dateDefault.parse(dateInString);
+
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+
+                Event ev1 = new Event(Color.RED, date.getTime(), "TASK");
+                compactCalendar.addEvent(ev1);
+
+            }
+
 
         }
 
@@ -536,31 +532,19 @@ public class ExpMenuMain extends AppCompatActivity {
                 } else {
 
 
-                    String query = "select * from VW_MAINTASKLIST ";
+
                     Statement stmt = con.createStatement();
-                    ResultSet rs = stmt.executeQuery(query);
+                    ResultSet rs = stmt.executeQuery(params[0]);
 
                     while (rs.next()) {
 
-
-                        if (!hset.contains(rs.getString("ID"))) {
-
-                            gecici=new MainTaskModel();
-                            hset.add(rs.getString("ID"));
-                            gecici.setContent(rs.getString("DESCRIPTION").substring(0, 25));
-                            gecici.setTaskMan(rs.getString("PUBLISHERNAME"));
-                            if (!(rs.getString("CREATINGDATE").equals(null)))
-                            {
-                                gecici.setDate(rs.getString ("CREATINGDATE"));
-
-                            }
-                            else gecici.setDate("TARİH YOK");
-
-                            gecici.setTaskManList(memberList);
-                            gecici.setTaskManlistCount(memberList.size());
-                        }
-
-                        memberList.add(rs.getString("MEMBERNAME"));
+                        gecici = new MainTaskModel();
+                        gecici.setTaskId(rs.getString("ID"));
+                        gecici.setTaskDescription(rs.getString("DESCRIPTION"));
+                        gecici.setTaskCreater(rs.getString("PUBLISHERNAME"));
+                        gecici.setTaskDate(rs.getString("CREATINGDATE"));
+                        gecici.setTaskTag(rs.getString("NAME"));
+                        gecici.setTaskCountMan(rs.getString("TOTALMEMBER").toString());
                         datalist.add(gecici);
                         isSuccess = true;
                     }

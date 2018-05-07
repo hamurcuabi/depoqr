@@ -13,12 +13,11 @@
         android:weightSum="2">
 
         <FrameLayout
-            android:layout_weight="1"
-           android:layout_marginTop="12dp"
             android:id="@+id/container"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            >
+            android:layout_marginTop="12dp"
+            android:layout_weight="1">
 
             <com.github.sundeepk.compactcalendarview.CompactCalendarView xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/compactcalendar_view"
@@ -26,7 +25,7 @@
                 android:layout_height="match_parent"
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"
-                app:compactCalendarBackgroundColor="@color/appbackcolor"
+                app:compactCalendarBackgroundColor="#B9F6CA"
                 app:compactCalendarCurrentDayBackgroundColor="@color/depotr"
                 app:compactCalendarCurrentSelectedDayBackgroundColor="@color/colorPrimaryDark"
                 app:compactCalendarMultiEventIndicatorColor="@color/zyonetim"
@@ -38,13 +37,27 @@
 
         </FrameLayout>
 
+        <TextView
+            android:id="@+id/txtCountTasks"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:background="@drawable/custom4"
+            android:drawableLeft="@drawable/showall"
+            android:padding="5dp"
+            android:text="GÖREV LİSTESİ"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textSize="24sp"
+            android:textStyle="bold" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recyclerview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="@color/zyonetim">
+            android:background="@color/appbackcolor"
+            android:paddingTop="5dp">
 
         </android.support.v7.widget.RecyclerView>
     </LinearLayout>
@@ -55,15 +68,11 @@
         android:layout_height="match_parent"
         android:layout_gravity="left|start"
         android:background="@color/appbackcolor"
+        android:childDivider="@color/defaultblue"
         android:divider="@color/zyonetim"
         android:dividerHeight="1dp"
-        android:childDivider="@color/defaultblue"
-        android:transcriptMode="alwaysScroll"
         android:groupIndicator="@drawable/group_indicator"
-        ></ExpandableListView>
-
-
-
+        android:transcriptMode="alwaysScroll"></ExpandableListView>
 
 
 </android.support.v4.widget.DrawerLayout>
