@@ -93,7 +93,7 @@ public class DepoTransferMalDegisim extends AppCompatActivity {
         connectionClass = new ConnectionClass();
 
         ab = getSupportActionBar();
-        ab.setTitle("MAL KABUL");
+        ab.setTitle("DEPOLAR ARASI TRANSFER");
         ab.setSubtitle("Etiket Okut");
         ab.setBackgroundDrawable(getResources().getDrawable(R.drawable.arkaplan));
 

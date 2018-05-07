@@ -143,9 +143,16 @@ public class PlasiyerSatisSec extends AppCompatActivity {
                                 kdv = Float.valueOf(tx_kdv.getText().toString());
                                 if (fiyat >= 0 && kdv >= 0) {
                                     toplam = fiyat * siparis;
-                                    genelToplam = toplam * (kdv / 100);
-                                    tx_toplam.setText("" + toplam);
-                                    tx_genelToplam.setText("" + genelToplam);
+                                    if(tx_iskdv.getText().toString().equals("EVET")){
+                                        genelToplam = toplam * (kdv / 100);
+                                        tx_toplam.setText("" + toplam);
+                                        tx_genelToplam.setText("" + genelToplam);
+                                    }else{
+                                        genelToplam = toplam ;
+                                        tx_toplam.setText("" + toplam);
+                                        tx_genelToplam.setText("" + genelToplam);
+                                    }
+
                                 } else
                                     Toast.makeText(getApplicationContext(), "HATA, KDV VE BIRIM FIYAT SIFIRDAN BÜYÜK OLMALI! .", Toast.LENGTH_LONG).show();
                             } else
@@ -292,8 +299,6 @@ public class PlasiyerSatisSec extends AppCompatActivity {
         }
     }
 
-
-
     public class CheckNewestCurrent extends AsyncTask<String, String, String> {
         String z = "";
         boolean check = true;
@@ -312,7 +317,18 @@ public class PlasiyerSatisSec extends AppCompatActivity {
             } else {
                 tx_iskdv.setText("EVET");
                 Toast.makeText(getApplicationContext(), "CARI FIYAT LISTESI BULUNAMADI.", Toast.LENGTH_SHORT).show();
-               // tx_urunadi.setText("");
+                tx_iskdv.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (tx_iskdv.getText().toString().equals("EVET")) {
+                            modelProductInfo.setProductKdvC("0");
+                            tx_iskdv.setText(modelProductInfo.getProductKdvC());
+                        } else {
+                            modelProductInfo.setProductKdvC("1");
+                            tx_iskdv.setText(modelProductInfo.getProductKdvC());
+                        }
+                    }
+                });
             }
         }
 
@@ -325,7 +341,7 @@ public class PlasiyerSatisSec extends AppCompatActivity {
                 } else {
                     String query = "select PRICELISTID from VW_CURRENTPRICELIST where PRICEDATE = (\n" +
                             "select MAX(PRICEDATE) from VW_CURRENTPRICELIST WHERE PRICEDATE <= GETDATE() and CURRENTID = '" + incomingCariId + "' ) and\n" +
-                            " CURRENTID = '" + incomingCariId + "'";
+                            " CURRENTID = '" + incomingCariId + "'and ISDELETE = '0'";
                     PreparedStatement ps = con.prepareStatement(query);
                     ResultSet rs = ps.executeQuery();
                     if (rs.next()) {
@@ -358,8 +374,7 @@ public class PlasiyerSatisSec extends AppCompatActivity {
                 tx_iskdv.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        String change;
-                        change = modelProductInfo.getProductKdvC();
+
                         if (tx_iskdv.getText().toString().equals("EVET")) {
                             modelProductInfo.setProductKdvC("0");
                             tx_iskdv.setText(modelProductInfo.getProductKdvC());
@@ -373,7 +388,19 @@ public class PlasiyerSatisSec extends AppCompatActivity {
                 Type.execute("");
             } else {
                 Toast.makeText(getApplicationContext(), "Hata.", Toast.LENGTH_SHORT).show();
-                tx_urunadi.setText("");
+                tx_iskdv.setText("EVET");
+                tx_iskdv.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (tx_iskdv.getText().toString().equals("EVET")) {
+                            modelProductInfo.setProductKdvC("0");
+                            tx_iskdv.setText(modelProductInfo.getProductKdvC());
+                        } else {
+                            modelProductInfo.setProductKdvC("1");
+                            tx_iskdv.setText(modelProductInfo.getProductKdvC());
+                        }
+                    }
+                });
             }
 
         }
@@ -386,7 +413,7 @@ public class PlasiyerSatisSec extends AppCompatActivity {
                 if (con == null) {
                     z = "Error in connection with SQL server";
                 } else {
-                    String query = "select KDV , ISKDV , SALARY , NAME , MONEYUNITID from VW_PRICELISTPRODUCT where PRICELISTID ='" + priceId + "' and PRODUCTCODE='" + control + "'";
+                    String query = "select KDV , ISKDV , SALARY , NAME , MONEYUNITID from VW_PRICELISTPRODUCT where PRICELISTID ='" + priceId + "' and PRODUCTCODE='" + secilenUrun + "'";
                     PreparedStatement ps = con.prepareStatement(query);
                     ResultSet rs = ps.executeQuery();
                     if (rs.next()) {

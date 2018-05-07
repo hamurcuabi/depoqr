@@ -46,7 +46,7 @@ public class DepoTransfer extends AppCompatActivity {
     ProgressBar pbbar;
     String depoid,memberid;
     TextView hedefdepoadi,anadepoadi;
-    Button btnok;
+    Button btnok,btnok2;
     boolean anadepook=false,hedefdepook=false;
     EditText edtanadepo,edthedef;
     LinearLayout layout;
@@ -66,7 +66,7 @@ public class DepoTransfer extends AppCompatActivity {
 
         hedefdepoadi=(TextView)findViewById(R.id.hedefdepoadi);
         anadepoadi=(TextView)findViewById(R.id.anadepoadi);
-
+        btnok2=(Button)findViewById(R.id.btnok2);
         btnok=(Button)findViewById(R.id.btnok);
         layout=(LinearLayout) findViewById(R.id.layoutdepo);
         pbbar = (ProgressBar) findViewById(R.id.pbbar);
@@ -170,7 +170,17 @@ public class DepoTransfer extends AppCompatActivity {
                 else Toast.makeText(DepoTransfer.this,"DEPO SEÇİMİNİ YAPINIZ",Toast.LENGTH_SHORT).show();
             }
         });
+        btnok2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
+                if(anadepook==true && hedefdepook==true) {
+                    Intent i = new Intent(DepoTransfer.this, DepoTransferUrun.class);
+                    startActivity(i);
+                }
+                else Toast.makeText(DepoTransfer.this,"DEPO SEÇİMİNİ YAPINIZ",Toast.LENGTH_SHORT).show();
+            }
+        });
 
 
     }

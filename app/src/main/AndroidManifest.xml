@@ -93,7 +93,11 @@
         <activity android:name=".ExpMenuMain" />
         <activity android:name=".SevkiyatTarih" />
         <activity android:name=".TaskManPopUp"
-            android:theme="@style/TaskMans"></activity>
+            android:theme="@style/TaskMans">
+
+        </activity>
+        <activity android:name=".DepoTransferUrun" />
+
     </application>
 
 </manifest>

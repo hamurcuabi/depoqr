@@ -44,6 +44,7 @@ import java.util.UUID;
 
 import static com.emrehmrc.depoqr.AnaSayfa.MyPREFERENCES;
 
+
 public class SevkiyatTarih extends AppCompatActivity {
     ActionBar ab;
     ConnectionClass connectionClass;
@@ -90,7 +91,7 @@ public class SevkiyatTarih extends AppCompatActivity {
         datalist = new ArrayList<SevkiyatÜrünleriRecyclerView>();
         ab = getSupportActionBar();
         ab.setTitle("SEVKİYAT");
-        ab.setSubtitle("Sevkiyat İşlemleri");
+        ab.setSubtitle("Etiket Okut");
         ab.setBackgroundDrawable(getResources().getDrawable(R.drawable.arkaplan));
         toneG = new ToneGenerator(AudioManager.STREAM_ALARM, 100);
         gelenSevk = (TextView) findViewById(R.id.gelenSevk);
@@ -138,7 +139,7 @@ public class SevkiyatTarih extends AppCompatActivity {
                                 "PRODUCTCODE," +
                                 "FIRSTUNITNAME,SECONDUNITNAME\n" +
                                 "having SUM(WDIRECTION * FIRSTAMOUNT) != 0 or \n" +
-                                "SUM(WDIRECTION * SECONDAMOUNT) != 0";
+                                "SUM(WDIRECTION * SECONDAMOUNT) != 0 order by PRODUCTIONDATE";
                         fillProducts.execute(g2);
                         break;
                     }
@@ -151,12 +152,12 @@ public class SevkiyatTarih extends AppCompatActivity {
                             "SUM(WDIRECTION * FIRSTAMOUNT)  AS FIRSTAMOUNT, \n" +
                             "SUM(WDIRECTION * SECONDAMOUNT) AS SECONDAMOUNT \n" +
                             "from VW_WAREHOUSESTOCKMOVEMENT where PRODUCTID IN (Select PRODUCTID from VW_FORWARDINGPRODUCTPLAN where FORWARDINGID ='" + sevkId + "') and\n" +
-                            "PRODUCTCODE = '" + secilenUrun + "'\n" +
+                            "PRODUCTCODE = '" + tx_urunkodu.getText().toString() + "'\n" +
                             "group by PRODUCTIONDATE,BARCODEID,BARCODENO,PALETBARCODES,PRODUCTNAME,PALETID,PRODUCTID," +
                             "PRODUCTCODE," +
                             "FIRSTUNITNAME,SECONDUNITNAME\n" +
                             "having SUM(WDIRECTION * FIRSTAMOUNT) != 0 or \n" +
-                            "SUM(WDIRECTION * SECONDAMOUNT) != 0";
+                            "SUM(WDIRECTION * SECONDAMOUNT) != 0 order by PRODUCTIONDATE";
                     fillProducts.execute(g2);
                 }
 
@@ -195,12 +196,15 @@ public class SevkiyatTarih extends AppCompatActivity {
         btnsend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                emptyArray.clear();
-                emptyArray2.clear();
-                IsSame ısSame = new IsSame();
-                ısSame.execute("");
+                if(!datalist.isEmpty()){
+                    emptyArray.clear();
+                    emptyArray2.clear();
+                    IsSame ısSame = new IsSame();
+                    ısSame.execute("");
+                }else{
+                    Toast.makeText(SevkiyatTarih.this, "LİSTEDE ÜRÜN BULUNAMADI :(", Toast.LENGTH_SHORT).show();
 
-
+                }
             }
         });
 
@@ -557,7 +561,7 @@ public class SevkiyatTarih extends AppCompatActivity {
                             "FIRSTUNITNAME,SECONDUNITNAME,\n" +
                             "SUM(WDIRECTION * FIRSTAMOUNT)  AS FIRSTAMOUNT, \n" +
                             "SUM(WDIRECTION * SECONDAMOUNT) AS SECONDAMOUNT \n" +
-                            "from VW_WAREHOUSESTOCKMOVEMENT where PRODUCTID IN (Select PRODUCTID from VW_FORWARDINGPRODUCTPLAN where FORWARDINGID ='2F3D557E-B177-4196-B7EE-07884C299A00') and\n" +
+                            "from VW_WAREHOUSESTOCKMOVEMENT where PRODUCTID IN (Select PRODUCTID from VW_FORWARDINGPRODUCTPLAN where FORWARDINGID ='"+sevkId+"') and\n" +
                             "(DESTINATIONWAREHOUSEID = \n" +
                             "'" + sevkdepoid + "' \n" +
                             "or SOURCEWAREHOUSEID = '" + sevkdepoid + "') \n" +
@@ -682,7 +686,7 @@ public class SevkiyatTarih extends AppCompatActivity {
                                 "PRODUCTCODE," +
                                 "FIRSTUNITNAME,SECONDUNITNAME\n" +
                                 "having SUM(WDIRECTION * FIRSTAMOUNT) != 0 or \n" +
-                                "SUM(WDIRECTION * SECONDAMOUNT) != 0";
+                                "SUM(WDIRECTION * SECONDAMOUNT) != 0 order by PRODUCTIONDATE";
                         fillProducts.execute(g2);
                         break;
 
@@ -696,12 +700,12 @@ public class SevkiyatTarih extends AppCompatActivity {
                             "SUM(WDIRECTION * FIRSTAMOUNT)  AS FIRSTAMOUNT, \n" +
                             "SUM(WDIRECTION * SECONDAMOUNT) AS SECONDAMOUNT \n" +
                             "from VW_WAREHOUSESTOCKMOVEMENT where PRODUCTID IN (Select PRODUCTID from VW_FORWARDINGPRODUCTPLAN where FORWARDINGID ='" + sevkId + "') and\n" +
-                            "PRODUCTCODE = '" + secilenUrun + "'\n" +
+                            "PRODUCTCODE = '" + codeid + "'\n" +
                             "group by PRODUCTIONDATE,BARCODEID,BARCODENO,PALETBARCODES,PRODUCTNAME,PALETID,PRODUCTID," +
                             "PRODUCTCODE," +
                             "FIRSTUNITNAME,SECONDUNITNAME\n" +
                             "having SUM(WDIRECTION * FIRSTAMOUNT) != 0 or \n" +
-                            "SUM(WDIRECTION * SECONDAMOUNT) != 0";
+                            "SUM(WDIRECTION * SECONDAMOUNT) != 0 order by PRODUCTIONDATE";
                     fillProducts.execute(g2);
                 }
 
