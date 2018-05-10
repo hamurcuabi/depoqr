@@ -87,7 +87,8 @@ public class DepoTransferUrun extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_depo_transfer_urun);
-        this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+
+        this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN); // make screen goes up when keybourd is open
         vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
         sharedPreferences = getApplicationContext().getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
         memberid = sharedPreferences.getString("ID", null);
@@ -95,6 +96,7 @@ public class DepoTransferUrun extends AppCompatActivity {
         connectionClass = new ConnectionClass();
         arraysize = 0;
         recyclerView = (RecyclerView) findViewById(R.id.recyclerview);
+
         datalist = new ArrayList<SevkiyatÜrünleriRecyclerView>();
         btn_gir = (Button) findViewById(R.id.btn_gir);
         txtana = (TextView) findViewById(R.id.txtana);
@@ -329,8 +331,12 @@ public class DepoTransferUrun extends AppCompatActivity {
                 Intent intent = new Intent(getBaseContext(), UyariBildirim.class);
                 intent.putExtra("UYARI", "GEÇERSIZ ÜRÜN KODU!");
                 startActivity(intent);
+            }else{
+                toneG.startTone(ToneGenerator.TONE_CDMA_CALL_SIGNAL_ISDN_PING_RING, 200);
+                Intent intent = new Intent(getBaseContext(), UyariBildirim.class);
+                intent.putExtra("UYARI", "DEPODA BULUNAMADI!");
+                startActivity(intent);
             }
-
         }
 
 

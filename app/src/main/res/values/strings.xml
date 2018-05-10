@@ -60,7 +60,10 @@
         <item>PALET(P)</item>
         <item>BARKOD(B)</item>
     </string-array>
-
+    <string-array name="PORB2">
+        <item>CARI</item>
+        <item>PERSONAL</item>
+    </string-array>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="normal_sat">Normal Satış</string>

@@ -85,19 +85,29 @@
         <activity
             android:name=".BarkodBilgiEkrani"
             android:windowSoftInputMode="adjustPan" />
-        <activity android:name=".GrupAnaBarkod" />
-        <activity android:name=".CodeReaderAnaBarkod" />
+        <activity
+            android:name=".GrupAnaBarkod"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".CodeReaderAnaBarkod"
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".BarkodBilgiEkraniSec"
             android:windowSoftInputMode="adjustPan" />
-        <activity android:name=".ExpMenuMain" />
-        <activity android:name=".SevkiyatTarih" />
-        <activity android:name=".TaskManPopUp"
-            android:theme="@style/TaskMans">
-
-        </activity>
-        <activity android:name=".DepoTransferUrun" />
-
+        <activity
+            android:name=".ExpMenuMain"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".SevkiyatTarih"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".TaskManPopUp"
+            android:theme="@style/TaskMans" />
+        <activity
+            android:name=".DepoTransferUrun"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
+        <activity android:name=".Sarf" />
+        <activity android:name=".SarfSec"></activity>
     </application>
 
 </manifest>

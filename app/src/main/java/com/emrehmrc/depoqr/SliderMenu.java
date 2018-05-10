@@ -280,6 +280,18 @@ public class SliderMenu extends AppCompatActivity implements NavigationView.OnNa
                 bundle = ActivityOptions.makeSceneTransitionAnimation(SliderMenu.this).toBundle();
                 startActivity(i, bundle);
                 break;
+            case R.id.nav_menu10://
+
+                i = new Intent(SliderMenu.this, PlasiyerSatis.class);
+                bundle = ActivityOptions.makeSceneTransitionAnimation(SliderMenu.this).toBundle();
+                startActivity(i, bundle);
+                break;
+            case R.id.nav_menuS://
+
+                i = new Intent(SliderMenu.this, Sarf.class);
+                bundle = ActivityOptions.makeSceneTransitionAnimation(SliderMenu.this).toBundle();
+                startActivity(i, bundle);
+                break;
             case R.id.nav_barkodBilgi://
                 i = new Intent(SliderMenu.this, BarkodBilgiEkrani.class);
                 bundle = ActivityOptions.makeSceneTransitionAnimation(SliderMenu.this).toBundle();

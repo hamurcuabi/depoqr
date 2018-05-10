@@ -27,6 +27,11 @@
         android:icon="@drawable/ic_action_depolistesi"
         android:title="DEPO LISTESI"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/nav_menuS"
+        android:icon="@drawable/sarf"
+        android:title="SARF"
+        app:showAsAction="always" />
 
     <item
         android:id="@+id/nav_menu2"

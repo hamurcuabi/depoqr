@@ -410,7 +410,7 @@ public class GrupBarkod extends AppCompatActivity {
                         aktarılan++;
                         UUID uuıd = UUID.randomUUID();
                         String q = "Insert into GROUPBARCODE (MEMBERID,ID,PARENTID,CHILDID,WAREHOUSEID," +
-                                "EXWAREHOUSEID) values ('"+memberid+"','" + uuıd + "','" + anabarkod + "','" + datalist.get
+                                "EXWAREHOUSEID,FIRSTAMOUNT,SECONDAMOUNT) values ('"+memberid+"','" + uuıd + "','" + anabarkod + "','" + datalist.get
                                 (i).getCode()
                                 + "','" + selectedDepo + "',(Select WAREHOUSEID from " +
                                 "VW_WAREHOUSESTOCKMOVEMENT  where BARCODEID='" + datalist.get(i)
@@ -418,7 +418,7 @@ public class GrupBarkod extends AppCompatActivity {
                                 "  group " +
                                 "by " +
                                 "BARCODEID,BARCODENO,WAREHOUSEID having SUM(WDIRECTION * FIRSTAMOUNT)" +
-                                " !='0' or SUM(WDIRECTION * SECONDAMOUNT) != '0'))";
+                                " !='0' or SUM(WDIRECTION * SECONDAMOUNT) != '0'),'"+datalist.get(i).getFirstAmount()+"','"+datalist.get(i).getSecondAmount()+"')";
 
 
 

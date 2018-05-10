@@ -270,7 +270,7 @@ public class AnaSayfa extends AppCompatActivity {
                 editor.putString("BarcodeCodeEnter", "");
                 editor.commit();
 
-                Intent i = new Intent(AnaSayfa.this, ExpMenuMain.class);
+                Intent i = new Intent(AnaSayfa.this, SliderMenu.class);
                startActivity(i);
               finish();
             }

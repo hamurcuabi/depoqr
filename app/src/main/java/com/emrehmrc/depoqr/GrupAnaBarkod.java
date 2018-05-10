@@ -5,6 +5,7 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.ActivityOptions;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.AudioManager;
@@ -12,7 +13,9 @@ import android.media.ToneGenerator;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -27,6 +30,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -40,7 +44,7 @@ import static com.emrehmrc.depoqr.AnaSayfa.MyPREFERENCES;
 public class GrupAnaBarkod extends AppCompatActivity {
 
 
-    EditText  edtCode;
+    EditText edtCode;
     ActionBar ab;
     Button btnbarcoderead, btnonayla, btnDevam;
     ProgressBar pbbar;
@@ -66,10 +70,9 @@ public class GrupAnaBarkod extends AppCompatActivity {
     DependedBarcodesAdaptor adaptor;
     ArrayList<DependedBarcodes> datalist;
     DependedBarcodes dependedBarcodes;
-
-
     ArrayList<String> findPArray = new ArrayList<>();
     List<Map<String, String>> prolist = new ArrayList<Map<String, String>>();
+    String secilenBarkod;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -145,22 +148,22 @@ public class GrupAnaBarkod extends AppCompatActivity {
         btnDevam.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               if(!datalist.isEmpty()){
-                   anabarkod= datalist.get(0).getCode();
-                   if (!anabarkod.equals("")) {
-                       Intent i = new Intent(getApplicationContext(), GrupBarkod.class);
+                if (!datalist.isEmpty()) {
+                    anabarkod = datalist.get(0).getCode();
+                    if (!anabarkod.equals("")) {
+                        Intent i = new Intent(getApplicationContext(), GrupBarkod.class);
 
-                       i.putExtra("anabarkod", anabarkod);
-                       startActivity(i);
-                   } else {
+                        i.putExtra("anabarkod", anabarkod);
+                        startActivity(i);
+                    } else {
 
-                   }
+                    }
 
-               }else{
-                   Intent intent = new Intent(getBaseContext(), UyariBildirim.class);
-                   intent.putExtra("UYARI", "ÜRÜN SEÇİLMEDİ!");
-                   startActivity(intent);
-               }
+                } else {
+                    Intent intent = new Intent(getBaseContext(), UyariBildirim.class);
+                    intent.putExtra("UYARI", "ÜRÜN SEÇİLMEDİ!");
+                    startActivity(intent);
+                }
 
 
             }
@@ -169,10 +172,14 @@ public class GrupAnaBarkod extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                if(edtCode.getText().toString()!="") {
-                    FillAnaBarkod fillAnaBarkod = new FillAnaBarkod();
+                if (edtCode.getText().toString() != "") {
+                    secilenBarkod = edtCode.getText().toString();
+                    CheckExist checkExist = new CheckExist();
+                    checkExist.execute("");
+
+                 /*   FillAnaBarkod fillAnaBarkod = new FillAnaBarkod();
                     String query = "select * from VW_BARCODE where ISDELETE = '0' and COMPANIESID = '"+Companiesid+"' and BARCODENO = '"+edtCode.getText().toString()+"'";
-                    fillAnaBarkod.execute(query);
+                    fillAnaBarkod.execute(query); */
                 }
 
             }
@@ -185,10 +192,12 @@ public class GrupAnaBarkod extends AppCompatActivity {
         if (requestCode == 1) {
             if (resultCode == Activity.RESULT_OK) {
                 codeid = data.getStringExtra("codeid");
-
-                FillAnaBarkod fillAnaBarkod = new FillAnaBarkod();
+                secilenBarkod = codeid;
+                CheckExist checkExist = new CheckExist();
+                checkExist.execute("");
+             /*   FillAnaBarkod fillAnaBarkod = new FillAnaBarkod();
                 String query = "select * from VW_BARCODE where ISDELETE = '0' and COMPANIESID = '"+Companiesid+"' and BARCODENO = '"+codeid+"'";
-                fillAnaBarkod.execute(query);
+                fillAnaBarkod.execute(query); */
             }
         }
     }
@@ -247,8 +256,6 @@ public class GrupAnaBarkod extends AppCompatActivity {
                 recyclerView.setLayoutManager(linearLayoutManager);
 
 
-
-
             } else {
 
                 toneG.startTone(ToneGenerator.TONE_CDMA_CALL_SIGNAL_ISDN_PING_RING, 200);
@@ -287,7 +294,7 @@ public class GrupAnaBarkod extends AppCompatActivity {
                         dependedBarcodes.setProductCode(rs.getString("PRODUCTCODE"));
 
                         datalist.add(dependedBarcodes);
-                        isEmpty=false;
+                        isEmpty = false;
 
 
                     }
@@ -302,6 +309,127 @@ public class GrupAnaBarkod extends AppCompatActivity {
             }
             return z;
         }
+    }
+
+    @SuppressLint("NewApi")
+    public class CheckExist extends AsyncTask<String, String, String> {
+        String z = "";
+        boolean isEmpty;
+
+        @Override
+        protected void onPreExecute() {
+            isEmpty = true;
+            pbbar.setVisibility(View.VISIBLE);
+
+        }
+
+        @Override
+        protected void onPostExecute(String r) {
+            pbbar.setVisibility(View.GONE);
+
+
+            if (!isEmpty) {
+                AlertDialog.Builder builder2 = new AlertDialog.Builder(GrupAnaBarkod.this);
+                builder2.setTitle("UYARI!");
+                builder2.setMessage("GEUP BULUNDU, SİLİNSİN Mİ?");
+                builder2.setNegativeButton("EVET", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        DeletePro deletePro = new DeletePro();
+                        deletePro.execute("");
+                    }
+                });
+                builder2.setPositiveButton("HAYIR, Eklemek istiyorum", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        FillAnaBarkod fillAnaBarkod = new FillAnaBarkod();
+                        String query = "select * from VW_BARCODE where ISDELETE = '0' and COMPANIESID = '" + Companiesid + "' and BARCODENO = '" + edtCode.getText().toString() + "'";
+                        fillAnaBarkod.execute(query);
+                    }
+                });
+                builder2.show();
+
+            } else {
+
+                FillAnaBarkod fillAnaBarkod = new FillAnaBarkod();
+                String query = "select * from VW_BARCODE where ISDELETE = '0' and COMPANIESID = '" + Companiesid + "' and BARCODENO = '" + edtCode.getText().toString() + "'";
+                fillAnaBarkod.execute(query);
+            }
+
+
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+
+            try {
+                Connection con = connectionClass.CONN();
+                if (con == null) {
+                    z = "Error in connection with SQL server";
+                } else {
+                    String query = "SELECT ID from GROUPBARCODE  where PARENTID IN(Select ID from VW_BARCODE where BARCODENO='" + secilenBarkod + "')  ";
+                    PreparedStatement ps = con.prepareStatement(query);
+                    ResultSet rs = ps.executeQuery();
+
+                    while (rs.next()) {
+                        findPArray.add(rs.getString("ID"));
+                        isEmpty = false;
+
+                    }
+                    z = "Başarılı";
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                z = "Veri Çekme Hatası";
+
+            }
+            return z;
+        }
+    }
+    @RequiresApi(api = Build.VERSION_CODES.CUPCAKE)
+    public class DeletePro extends AsyncTask<String, String, String> {
+
+
+        String z = "";
+        Boolean isSuccess = false;
+
+        @Override
+        protected void onPreExecute() {
+            pbbar.setVisibility(View.VISIBLE);
+        }
+
+        @Override
+        protected void onPostExecute(String r) {
+            pbbar.setVisibility(View.GONE);
+            if (isSuccess) {
+                datalist.clear();
+                Toast.makeText(GrupAnaBarkod.this, "BAŞARIYLA SİLİNDİ", Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+
+            try {
+                Connection con = connectionClass.CONN();
+                if (con == null) {
+                    z = "Error in connection with SQL server";
+                } else {
+                    for (int j = 0; j < findPArray.size(); j++) {
+                        String query = "Delete  from GROUPBARCODE  where  ID='" + findPArray.get(j) + "' ";
+                        PreparedStatement preparedStatement = con.prepareStatement(query);
+                        preparedStatement.executeUpdate();
+                        isSuccess = true;
+                    }
+
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                isSuccess = false;
+                z = "SQL HATASI!";
+            }
+
+            return z;
+        }
+
     }
 
 }
