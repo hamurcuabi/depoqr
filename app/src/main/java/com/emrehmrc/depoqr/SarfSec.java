@@ -24,6 +24,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -49,7 +51,7 @@ public class SarfSec extends AppCompatActivity {
     ArrayList<ProductsP> products = new ArrayList<>();
     ArrayAdapter<ProductsP> adapter;
     AutoCompleteTextView tx_urunadi;
-    Button btn_gir;
+    Button btn_gir,btnsend;
     EditText tx_barkodNo;
     ImageView btn_drop2;
     String secilenUrunKodu, secilenUrunBarkodu;
@@ -59,7 +61,7 @@ public class SarfSec extends AppCompatActivity {
     ArrayList<SevkiyatÜrünleriRecyclerView> datalist;
     RecyclerView recyclerView;
     UUID uuid;
-
+    CheckBox checkBoxall;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -89,8 +91,9 @@ public class SarfSec extends AppCompatActivity {
         btn_drop2 = (ImageView) findViewById(R.id.btn_drop2);
         progressBar = (ProgressBar) findViewById(R.id.pbbarS);
         recyclerView = (RecyclerView) findViewById(R.id.recyclerview);
+        checkBoxall = (CheckBox) findViewById(R.id.checkBoxall);
         datalist = new ArrayList<SevkiyatÜrünleriRecyclerView>();
-
+        btnsend = (Button) findViewById(R.id.btnsend);
         btn_gir.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -185,9 +188,39 @@ public class SarfSec extends AppCompatActivity {
                 tx_urunadi.showDropDown();
             }
         });
+        checkBoxall.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 
+                int a = datalist.size();
+                if (isChecked) {
+                    for (int i = 0; i < a; i++) {
+                        datalist.get(i).setChecked(true);
+                    }
+
+                } else {
+                    for (int i = 0; i < a; i++) {
+                        datalist.get(i).setChecked(false);
+                    }
+                }
+
+                emreAdaptor = new DepoTransferUrunAdapter(getApplicationContext(), datalist);
+                recyclerView.setAdapter(emreAdaptor);
+
+            }
+        });
+        btnsend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(!datalist.isEmpty()){
+                    SendProducts sendProducts = new SendProducts();
+                    sendProducts.execute("");
+                }
+            }
+        });
         FillList fillList = new FillList();
         fillList.execute("");
+
     }
 
 
@@ -213,7 +246,7 @@ public class SarfSec extends AppCompatActivity {
                         "SUM(WDIRECTION * SECONDAMOUNT) AS SECONDAMOUNT \n" +
                         "from VW_WAREHOUSESTOCKMOVEMENT where\n" +
                         "(DESTINATIONWAREHOUSEID = '" + secilenDepoId + "' or SOURCEWAREHOUSEID = '" + secilenDepoId + "') and COMPANIESID ='" + comid + "'\n" +
-                        "and PRODUCTCODE = '" + tx_barkodNo.getText().toString() + "'\n" +
+                        "and BARCODENO = '" + secilenUrunBarkodu + "'\n" +
                         "group by PRODUCTIONDATE, BARCODEID,BARCODENO,PALETBARCODES,PRODUCTNAME,PALETID,PRODUCTID,PRODUCTCODE,FIRSTUNITNAME,SECONDUNITNAME\n" +
                         "having SUM(WDIRECTION * FIRSTAMOUNT) != 0 or \n" +
                         "SUM(WDIRECTION * SECONDAMOUNT) != 0 order by PRODUCTIONDATE";
@@ -241,6 +274,7 @@ public class SarfSec extends AppCompatActivity {
                     ResultSet rs = ps.executeQuery();
 
                     if (rs.next()) {
+                        secilenUrunBarkodu = (rs.getString("BARCODENO"));
                         empty = false;
                     }
                     z = "Başarılı";
@@ -254,6 +288,94 @@ public class SarfSec extends AppCompatActivity {
         }
 
     }
+    @SuppressLint("NewApi")
+    public class SendProducts extends AsyncTask<String, String, String> {
+        String z = "";
+        boolean hata;
+        int i =0;
+
+        @Override
+        protected void onPreExecute() {
+            progressBar.setVisibility(View.VISIBLE);
+            hata = false;
+
+        }
+
+        @Override
+        protected void onPostExecute(String r) {
+            progressBar.setVisibility(View.GONE);
+            //emreAdaptor = new EmreAdaptor(getApplicationContext(), datalist);
+            // recyclerView.setAdapter(emreAdaptor);
+
+
+            if (!hata){
+                datalist.clear();
+                recyclerView.setAdapter(null);
+                Toast.makeText(getApplicationContext(), "AKTARILDI!", Toast.LENGTH_SHORT).show();
+            }else{
+                Toast.makeText(getApplicationContext(), "HATA!", Toast.LENGTH_SHORT).show();
+
+            }
+
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            try {
+                Connection con = connectionClass.CONN();
+                if (con == null) {
+                    z = "Error in connection with SQL server";
+                } else {
+                    while (datalist.size() > 0) {
+                        if (datalist.get(i).isChecked()) {
+                            if(!secilenCari.isEmpty()){
+                                if(aciklama.isEmpty()){
+                                    UUID uuıd = UUID.randomUUID();
+                                    String query = "insert into CONSUMPTION (ID,WAREHOUSEID,CURENTID,MEMBEREMPLOYEEID,BARCODEID,FIRSTAMOUNT,SECONDAMOUNT,DATE) values ('"+uuıd+"','"+secilenDepoId+"','"+secilenCari+"','"+memberid+"','"+datalist.get(i).getBarcodeid()+"','"+datalist.get(i).getFirstamount()+"','"+datalist.get(i).getSecondamount()+"',GETDATE())";
+                                    PreparedStatement preparedStatement = con.prepareStatement(query);
+                                    preparedStatement.executeUpdate();
+                                }else{
+                                    UUID uuıd = UUID.randomUUID();
+                                    String query = "insert into CONSUMPTION (ID,WAREHOUSEID,CURENTID,MEMBEREMPLOYEEID,BARCODEID,FIRSTAMOUNT,SECONDAMOUNT,DATE,DESCRIPTION) values ('"+uuıd+"','"+secilenDepoId+"','"+secilenCari+"','"+memberid+"','"+datalist.get(i).getBarcodeid()+"','"+datalist.get(i).getFirstamount()+"','"+datalist.get(i).getSecondamount()+"',GETDATE(),'"+aciklama+"')";
+                                    PreparedStatement preparedStatement = con.prepareStatement(query);
+                                    preparedStatement.executeUpdate();
+                                }
+
+                            }if(!secilenPersonel.isEmpty()){
+                                if(aciklama.isEmpty()){
+                                    UUID uuıd = UUID.randomUUID();
+                                    String query = "insert into CONSUMPTION (ID,WAREHOUSEID,MEMBERID,MEMBEREMPLOYEEID,BARCODEID,FIRSTAMOUNT,SECONDAMOUNT,DATE) values ('"+uuıd+"','"+secilenDepoId+"','"+secilenPersonel+"','"+memberid+"','"+datalist.get(i).getBarcodeid()+"','"+datalist.get(i).getFirstamount()+"','"+datalist.get(i).getSecondamount()+"',GETDATE())";
+                                    PreparedStatement preparedStatement = con.prepareStatement(query);
+                                    preparedStatement.executeUpdate();
+                                }else{
+                                    UUID uuıd = UUID.randomUUID();
+                                    String query = "insert into CONSUMPTION (ID,WAREHOUSEID,MEMBERID,MEMBEREMPLOYEEID,BARCODEID,FIRSTAMOUNT,SECONDAMOUNT,DATE,DESCRIPTION) values ('"+uuıd+"','"+secilenDepoId+"','"+secilenPersonel+"','"+memberid+"','"+datalist.get(i).getBarcodeid()+"','"+datalist.get(i).getFirstamount()+"','"+datalist.get(i).getSecondamount()+"',GETDATE(),'"+aciklama+"')";
+                                    PreparedStatement preparedStatement = con.prepareStatement(query);
+                                    preparedStatement.executeUpdate();
+                                }
+
+                            }
+
+
+                            datalist.remove(i);
+                        } else i++;
+                        hata = false;
+                    }
+
+
+                }
+
+
+            } catch (Exception ex) {
+                z = "Veri Çekme Hatası";
+                ex.printStackTrace();
+
+
+            }
+            return z;
+        }
+    }
+
 
     @SuppressLint("NewApi")
     public class CheckBrakodDepo extends AsyncTask<String, String, String> {

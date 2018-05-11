@@ -50,7 +50,7 @@ public class PlasiyerSatisSec extends AppCompatActivity {
     Bundle bundle;
     TextView tx_depono, tx_cariadi, tx_urunkodu, tx_iskdv, tx_typeName, tx_moneyType, tx_productCount, tx_toplam, tx_genelToplam;
     EditText tx_price, tx_kdv, tx_siparis;
-    String incomingKod, incomingAd, incomingDepo, memberid, comid, incomingDepoId, secilenUrun, incomingCariId, control, priceId;
+    String incomingKod, incomingAd, incomingDepo, memberid, comid, incomingDepoId, secilenUrun, incomingCariId, priceId;
     AutoCompleteTextView tx_urunadi;
     ImageView btn_drop;
     ArrayAdapter<ProductsP> adapter;
@@ -64,6 +64,8 @@ public class PlasiyerSatisSec extends AppCompatActivity {
     ImageView btn_hesapla;
     float toplam, genelToplam;
     int productCount;
+    Button btn_satis;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -90,18 +92,12 @@ public class PlasiyerSatisSec extends AppCompatActivity {
         tx_typeName = (TextView) findViewById(R.id.tx_typeName);
         tx_moneyType = (TextView) findViewById(R.id.tx_moneyTeype);
         tx_productCount = (TextView) findViewById(R.id.tx_productCount);
-        tx_toplam = (TextView) findViewById(R.id.tx_toplam);
-        tx_genelToplam = (TextView) findViewById(R.id.tx_genelToplam);
         btn_gir = (Button) findViewById(R.id.btn_gir);
-        tx_siparis = (EditText) findViewById(R.id.tx_siparis);
-        btn_hesapla = (ImageView) findViewById(R.id.btn_hesapla);
-        Intent incomingIntent = getIntent();
         incomingAd = sharedPreferences.getString("plasiyerCariAd", null);
         incomingKod = sharedPreferences.getString("plasiyerCariKod", null);
         incomingCariId = sharedPreferences.getString("plasiyerCariId", null);
         incomingDepo = sharedPreferences.getString("plasiyerDepoAd", null);
         incomingDepoId = sharedPreferences.getString("plasiyerDepoId", null);
-
         tx_depono.setText(incomingDepo);
         tx_cariadi.setText(incomingAd);
         FillList fillProduct = new FillList();
@@ -121,16 +117,16 @@ public class PlasiyerSatisSec extends AppCompatActivity {
                         tx_urunadi.setText(productsP.getProductadi());
                         secilenUrun = productsP.getProductKod();
                         check = false;
-                        CheckNewestCurrent newestCurrent = new CheckNewestCurrent();
-                        newestCurrent.execute("");
-
+                        CountAndGetType countAndGetType = new CountAndGetType();
+                        countAndGetType.execute("");
+                        break;
                     }
                 }
                 if (check)
                     Toast.makeText(getApplicationContext(), "Yanliş Ürün Kodu.", Toast.LENGTH_SHORT).show();
             }
         });
-        btn_hesapla.setOnClickListener(new View.OnClickListener() {
+        btn_satis.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (!tx_siparis.getText().toString().isEmpty()) {
@@ -142,16 +138,7 @@ public class PlasiyerSatisSec extends AppCompatActivity {
                                 fiyat = Float.valueOf(tx_price.getText().toString());
                                 kdv = Float.valueOf(tx_kdv.getText().toString());
                                 if (fiyat >= 0 && kdv >= 0) {
-                                    toplam = fiyat * siparis;
-                                    if(tx_iskdv.getText().toString().equals("EVET")){
-                                        genelToplam = toplam * (kdv / 100);
-                                        tx_toplam.setText("" + toplam);
-                                        tx_genelToplam.setText("" + genelToplam);
-                                    }else{
-                                        genelToplam = toplam ;
-                                        tx_toplam.setText("" + toplam);
-                                        tx_genelToplam.setText("" + genelToplam);
-                                    }
+
 
                                 } else
                                     Toast.makeText(getApplicationContext(), "HATA, KDV VE BIRIM FIYAT SIFIRDAN BÜYÜK OLMALI! .", Toast.LENGTH_LONG).show();
@@ -163,9 +150,16 @@ public class PlasiyerSatisSec extends AppCompatActivity {
                         Toast.makeText(getApplicationContext(), "HATA, MIKTAR SIFIRDAN BÜYÜK OLMALI! .", Toast.LENGTH_LONG).show();
                 } else
                     Toast.makeText(getApplicationContext(), "MIKTAR BOŞ.", Toast.LENGTH_LONG).show();
+
+
+              /*  Intent intent = new Intent(PlasiyerSatisSec.this, PlasiyerProduct.class);
+                intent.putExtra("disable", tx_price.getText().toString());
+                intent.putExtra("disable", );
+                intent.putExtra("disable", );
+                intent.putExtra("disable", );
+                startActivity(intent);*/
             }
         });
-
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -259,6 +253,56 @@ public class PlasiyerSatisSec extends AppCompatActivity {
             } catch (Exception ex) {
                 z = "Veri Çekme Hatası";
 
+            }
+            return z;
+        }
+    }
+
+    @SuppressLint("NewApi")
+    public class CountAndGetType extends AsyncTask<String, String, String> {
+        String z = "";
+        String birim;
+        float birimcount;
+        @Override
+        protected void onPostExecute(String r) {
+            String gecici = Float.toString(birimcount);
+            tx_productCount.setText(gecici);
+            tx_typeName.setText(birim);
+            CheckNewestCurrent checkNewestCurrent = new CheckNewestCurrent();
+            checkNewestCurrent.execute("");
+
+        }
+        @Override
+        protected String doInBackground(String... params) {
+            try {
+                Connection con = connectionClass.CONN();
+                if (con == null) {
+                    z = "Error in connection with SQL server";
+                } else {
+                    String query = "Select BARCODEID,BARCODENO,PRODUCTNAME,PALETID,PALETBARCODES,PRODUCTID," +
+                            "PRODUCTCODE, " +
+                            "FIRSTUNITNAME,SECONDUNITNAME,\n" +
+                            "SUM(WDIRECTION * FIRSTAMOUNT)  AS FIRSTAMOUNT, \n" +
+                            "SUM(WDIRECTION * SECONDAMOUNT) AS SECONDAMOUNT \n" +
+                            "from VW_WAREHOUSESTOCKMOVEMENT where\n" +
+                            "(DESTINATIONWAREHOUSEID = \n" +
+                            "'" + incomingDepoId + "' \n" +
+                            "or SOURCEWAREHOUSEID = '" + incomingDepoId + "') and PRODUCTCODE = '"+secilenUrun+"' \n" +
+                            "group by BARCODEID,BARCODENO,PALETBARCODES,PRODUCTNAME,PALETID,PRODUCTID," +
+                            "PRODUCTCODE," +
+                            "FIRSTUNITNAME,SECONDUNITNAME\n" +
+                            "having SUM(WDIRECTION * FIRSTAMOUNT) != 0 or \n" +
+                            "SUM(WDIRECTION * SECONDAMOUNT) != 0";
+                    PreparedStatement ps = con.prepareStatement(query);
+                    ResultSet rs = ps.executeQuery();
+                    while (rs.next()) {
+                       birimcount = birimcount+rs.getFloat("FIRSTAMOUNT");
+                       birim = rs.getString("FIRSTUNITNAME");
+                    }
+                    z = "Başarılı";
+                }
+            } catch (Exception ex) {
+                z = "Veri Çekme Hatası";
             }
             return z;
         }
@@ -370,7 +414,6 @@ public class PlasiyerSatisSec extends AppCompatActivity {
                 tx_price.setText(modelProductInfo.getProductPrice());
                 tx_kdv.setText(modelProductInfo.getProductKdv());
                 tx_iskdv.setText(modelProductInfo.getProductKdvC());
-                tx_typeName.setText(modelProductInfo.getTypeName());
                 tx_iskdv.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -420,9 +463,7 @@ public class PlasiyerSatisSec extends AppCompatActivity {
                         modelProductInfo.setProductKdv(rs.getString("KDV"));
                         modelProductInfo.setProductKdvC(rs.getString("ISKDV"));
                         modelProductInfo.setProductPrice(rs.getString("SALARY"));
-                        modelProductInfo.setTypeName(rs.getString("NAME"));
                         modelProductInfo.setMoneyUnitId(rs.getString("MONEYUNITID"));
-
                         check = true;
                     } else {
                         check = false;
@@ -442,7 +483,9 @@ public class PlasiyerSatisSec extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(String s) {
-            tx_moneyType.setText(modelProductInfo.getMoneyunit());
+            if(modelProductInfo.getMoneyunit().isEmpty()){
+                tx_moneyType.setText("TL");
+            }else tx_moneyType.setText(modelProductInfo.getMoneyunit());
         }
 
         @Override

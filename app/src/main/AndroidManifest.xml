@@ -107,7 +107,8 @@
             android:name=".DepoTransferUrun"
             android:windowSoftInputMode="stateHidden|adjustResize" />
         <activity android:name=".Sarf" />
-        <activity android:name=".SarfSec"></activity>
+        <activity android:name=".SarfSec" />
+        <activity android:name=".PlasiyerSatisDirek"></activity>
     </application>
 
 </manifest>

@@ -45,20 +45,21 @@ public class PlasiyerList extends AppCompatActivity {
     SharedPreferences sharedPreferences;
     Bundle bundle;
     Vibrator vibrator;
-    String memberid,comid;
+    String memberid, comid;
     EditText cariArama;
     ListView lst_Cari;
     TextView tx_toplam;
-    Button btn_satisbasla,btn_yenisatis;
+    Button btn_satisbasla, btn_yenisatis;
     ProgressBar progressBar;
-    ArrayList<PlasiyerListModel> plasiyerArray;
+
     ArrayAdapter<Depolar> adapterDepo;
     ArrayList<Depolar> depolars = new ArrayList<>();
     private PlasiyerListAdapter adapter;
     float toplam;
-    ImageView btn_drop,btn_filtre;
+    ImageView btn_drop, btn_filtre;
     AutoCompleteTextView tx_deposec;
-    String secilenDepoName,getSecilenDepoId;
+    String secilenDepoName, getSecilenDepoId;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,7 +75,6 @@ public class PlasiyerList extends AppCompatActivity {
         ab.setSubtitle("Satiş Listesi");
         ab.setBackgroundDrawable(getResources().getDrawable(R.drawable.arkaplan));
         progressBar = (ProgressBar) findViewById(R.id.pbbarP);
-        plasiyerArray = new ArrayList<PlasiyerListModel>();
         btn_satisbasla = (Button) findViewById(R.id.btn_satisbasla);
         btn_yenisatis = (Button) findViewById(R.id.btn_yeniSatis);
         btn_satisbasla.setEnabled(false);
@@ -84,7 +84,7 @@ public class PlasiyerList extends AppCompatActivity {
         btn_drop = (ImageView) findViewById(R.id.btn_drop);
         btn_filtre = (ImageView) findViewById(R.id.btn_filtre);
         tx_deposec = (AutoCompleteTextView) findViewById(R.id.tx_deposec);
-        FillList fillList = new FillList();
+        final FillList fillList = new FillList();
         fillList.execute("");
         FillListDepo fillListDepo = new FillListDepo();
         fillListDepo.execute("");
@@ -113,9 +113,14 @@ public class PlasiyerList extends AppCompatActivity {
         btn_filtre.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!tx_deposec.getText().toString().isEmpty()){
-                    //adapter.getFilter().filter(secilenDepoName);
-                }else Toast.makeText(getApplicationContext(), "Lütfen Depo Seçiniz.", Toast.LENGTH_LONG).show();
+                if (!tx_deposec.getText().toString().isEmpty()) {
+                    FillList2 fillList2 = new FillList2();
+                    fillList2.execute("");
+                } else {
+                    FillList fillList1 = new FillList();
+                    fillList1.execute("");
+                }
+
             }
         });
     }
@@ -126,6 +131,7 @@ public class PlasiyerList extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.plasiyersatis, menu);
         return super.onCreateOptionsMenu(menu);
     }
+
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
@@ -144,13 +150,17 @@ public class PlasiyerList extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
     @Override
     public void onBackPressed() {
         super.onBackPressed();
     }
 
-    public class FillList extends AsyncTask<String,String,String>{
-         String w =  "";
+    public class FillList extends AsyncTask<String, String, String> {
+        String w = "";
+        ArrayList<PlasiyerListModel> plasiyerArray = new ArrayList<PlasiyerListModel>();
+        boolean exist = false;
+
         @Override
         protected void onPreExecute() {
             progressBar.setVisibility(View.VISIBLE);
@@ -159,35 +169,39 @@ public class PlasiyerList extends AppCompatActivity {
         @Override
         protected void onPostExecute(String s) {
             progressBar.setVisibility(View.GONE);
-            adapter = new PlasiyerListAdapter(getApplicationContext(),plasiyerArray);
-            lst_Cari.setAdapter(adapter);
-            tx_toplam.setText(""+toplam);
-            lst_Cari.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    PlasiyerList.PlasiyerListModel plasiyerListModel;
-                    plasiyerListModel = (PlasiyerListModel) lst_Cari.getItemAtPosition(position);
-                    btn_satisbasla.setEnabled(true);
-                }
-            });
-            cariArama.addTextChangedListener(new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            if (exist) {
+                adapter = new PlasiyerListAdapter(getApplicationContext(), plasiyerArray);
+                lst_Cari.setAdapter(adapter);
+                tx_toplam.setText("" + toplam);
+                lst_Cari.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        PlasiyerList.PlasiyerListModel plasiyerListModel;
+                        plasiyerListModel = (PlasiyerListModel) lst_Cari.getItemAtPosition(position);
+                        btn_satisbasla.setEnabled(true);
+                    }
+                });
+                cariArama.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-                }
+                    }
 
-                @Override
-                public void onTextChanged(CharSequence s, int start, int before, int count) {
-                    adapter.getFilter().filter(s.toString());
-                }
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        adapter.getFilter().filter(s.toString());
+                    }
 
-                @Override
-                public void afterTextChanged(Editable s) {
+                    @Override
+                    public void afterTextChanged(Editable s) {
 
-                }
-            });
-
+                    }
+                });
+            } else {
+                Toast.makeText(getApplicationContext(), "Satış Bulunamadı.", Toast.LENGTH_LONG).show();
+            }
         }
+
         @Override
         protected String doInBackground(String... strings) {
             try {
@@ -195,14 +209,20 @@ public class PlasiyerList extends AppCompatActivity {
                 if (con == null) {
                     w = "Error in connection with SQL server";
                 } else {
-                    String query = "SELECT * FROM VW_WAREHOUSEPRODUCT ";
+                    String query = "SELECT * FROM VW_WAREHOUSEPLASIER where WAREHOUSENAME = '" + tx_deposec.getText().toString() + "' ";
                     PreparedStatement ps = con.prepareStatement(query);
                     ResultSet rs = ps.executeQuery();
 
                     while (rs.next()) {
-                        toplam+= rs.getFloat("SECONDUNITAMOUNT");
-                        plasiyerArray.add(new PlasiyerListModel(rs.getString("NAME"), rs.getString("FULLNAME"), rs.getString("FULLNAME"),
-                                rs.getFloat("SECONDUNITAMOUNT"),rs.getFloat("SECONDUNITAMOUNT"),rs.getFloat("SECONDUNITAMOUNT")));
+                        exist = true;
+                        toplam += rs.getFloat("TOTAL");
+                        plasiyerArray.add(new PlasiyerListModel(rs.getString("PLASIERCODE"),
+                                rs.getString("DATE"),
+                                rs.getString("CURRENTNAME"),
+                                rs.getFloat("TOTALPRICE"),
+                                rs.getFloat("TOTALKDV"),
+                                rs.getFloat("TOTAL"),
+                                rs.getString("WAREHOUSENAME")));
                     }
                     w = "Başarılı";
                 }
@@ -214,31 +234,123 @@ public class PlasiyerList extends AppCompatActivity {
         }
     }
 
-    public static class PlasiyerListModel{
-        String id;
+    public class FillList2 extends AsyncTask<String, String, String> {
+        String w = "";
+        ArrayList<PlasiyerListModel> plasiyerArray = new ArrayList<PlasiyerListModel>();
+        boolean exist = false;
+
+        @Override
+        protected void onPreExecute() {
+            progressBar.setVisibility(View.VISIBLE);
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            progressBar.setVisibility(View.GONE);
+            if (exist) {
+                adapter = new PlasiyerListAdapter(getApplicationContext(), plasiyerArray);
+                lst_Cari.setAdapter(adapter);
+                tx_toplam.setText("" + toplam);
+                lst_Cari.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        PlasiyerList.PlasiyerListModel plasiyerListModel;
+                        plasiyerListModel = (PlasiyerListModel) lst_Cari.getItemAtPosition(position);
+                        btn_satisbasla.setEnabled(true);
+                    }
+                });
+                cariArama.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        adapter.getFilter().filter(s.toString());
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable s) {
+
+                    }
+                });
+            } else {
+                Toast.makeText(getApplicationContext(), "Satış Bulunamadı.", Toast.LENGTH_LONG).show();
+            }
+
+        }
+
+        @Override
+        protected String doInBackground(String... strings) {
+            try {
+                Connection con = connectionClass.CONN();
+                if (con == null) {
+                    w = "Error in connection with SQL server";
+                } else {
+                    String query = "SELECT * FROM VW_WAREHOUSEPLASIER ";
+                    PreparedStatement ps = con.prepareStatement(query);
+                    ResultSet rs = ps.executeQuery();
+
+                    while (rs.next()) {
+                        exist = true;
+                        toplam += rs.getFloat("TOTAL");
+                        plasiyerArray.add(new PlasiyerListModel(rs.getString("PLASIERCODE"),
+                                rs.getString("DATE"),
+                                rs.getString("CURRENTNAME"),
+                                rs.getFloat("TOTALPRICE"),
+                                rs.getFloat("TOTALKDV"),
+                                rs.getFloat("TOTAL"),
+                                rs.getString("WAREHOUSENAME")));
+                    }
+                    w = "Başarılı";
+                }
+            } catch (Exception ex) {
+                w = "Veri Çekme Hatası";
+
+            }
+            return w;
+        }
+    }
+
+    public static class PlasiyerListModel {
+        String plasiyercode;
         String cariTarih;
         String cariAdi;
         float toplamTutar;
         float kdv;
         float genelTutar;
+        String depoName;
 
-        public PlasiyerListModel(String id, String cariTarih, String cariAdi, float toplamTutar, float kdv, float genelTutar){
-            this.id = id;
+
+        public PlasiyerListModel(String plasiyercode, String cariTarih, String cariAdi, float toplamTutar, float kdv, float genelTutar, String depoName) {
+
             this.cariAdi = cariAdi;
             this.cariTarih = cariTarih;
             this.toplamTutar = toplamTutar;
             this.kdv = kdv;
             this.genelTutar = genelTutar;
+            this.depoName = depoName;
+            this.plasiyercode = plasiyercode;
 
         }
 
-        public String getId() {
-            return id;
+        public String getPlasiyercode() {
+            return plasiyercode;
         }
 
-        public void setId(String id) {
-            this.id = id;
+        public void setPlasiyercode(String plasiyercode) {
+            this.plasiyercode = plasiyercode;
         }
+
+        public String getDepoName() {
+            return depoName;
+        }
+
+        public void setDepoName(String depoName) {
+            this.depoName = depoName;
+        }
+
         public String getCariTarih() {
             return cariTarih;
         }
