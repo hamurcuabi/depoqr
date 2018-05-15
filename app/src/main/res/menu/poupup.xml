@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/menu_Sil"
+        android:title="Sil"
+        android:icon="@drawable/delete"/>
+
+    <item
+        android:id="@+id/menu_duzenle"
+        android:title="Düzenle"
+        android:icon="@drawable/pen"/>
+
+</menu>

@@ -108,7 +108,9 @@
             android:windowSoftInputMode="stateHidden|adjustResize" />
         <activity android:name=".Sarf" />
         <activity android:name=".SarfSec" />
-        <activity android:name=".PlasiyerSatisDirek"></activity>
+        <activity android:name=".PlasiyerSatisDirek" />
+        <activity android:name=".SarfListe" />
+        <activity android:name=".SarfDuzenle"></activity>
     </application>
 
 </manifest>

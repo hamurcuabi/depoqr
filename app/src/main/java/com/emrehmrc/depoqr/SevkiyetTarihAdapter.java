@@ -65,23 +65,28 @@ public class SevkiyetTarihAdapter extends RecyclerView.Adapter<SevkiyetTarihAdap
                         holder.uyari1.setText("MİKTAR AŞILDI!");
                         holder.checkBox.setChecked(false);
                         holder.checkBox.setEnabled(false);
+                        datalist.get(position).setChecked(false);
 
                     } else if (deneme >= Float.parseFloat(holder.edtfirstamount.getText().toString())) {
                         holder.uyari1.setText("");
                         holder.checkBox.setChecked(true);  //bunu
                         holder.checkBox.setEnabled(true); //icindeki ture
                         datalist.get(position).setFirstamount(Float.parseFloat(holder.edtfirstamount.getText().toString()));
+                        datalist.get(position).setChecked(true);
 
                     } else {
                         holder.uyari1.setText("");//bunu
                         holder.checkBox.setEnabled(true); // bunu
                         holder.checkBox.setChecked(true); //bunu
+                        datalist.get(position).setChecked(true);
+
                     }
 
                 } catch (Exception ex) {
                     holder.uyari1.setText("MİKTAR BOŞ GİRİLDİ!");
                     holder.checkBox.setChecked(false);
                     holder.checkBox.setEnabled(false);
+                    datalist.get(position).setChecked(false);
 
                 }
 
@@ -105,22 +110,27 @@ public class SevkiyetTarihAdapter extends RecyclerView.Adapter<SevkiyetTarihAdap
                         holder.uyari2.setText("MİKTAR AŞILDI!");
                         holder.checkBox.setChecked(false);
                         holder.checkBox.setEnabled(false);
+                        datalist.get(position).setChecked(false);
 
                     } else if (deneme2 >= Float.parseFloat(holder.edtsecondamount.getText().toString())) {
                         holder.uyari2.setText("");
                         holder.checkBox.setChecked(true);  //bunu
                         holder.checkBox.setEnabled(true); //icindeki ture
                         datalist.get(position).setSecondamount(Float.parseFloat(holder.edtsecondamount.getText().toString()));
-
+                        datalist.get(position).setChecked(true);
                     } else {
                         holder.uyari1.setText("");//bunu
                         holder.checkBox.setEnabled(true); // bunu
                         holder.checkBox.setChecked(true); //bunu
+                        datalist.get(position).setChecked(true);
+
                     }
                 } catch (Exception ex) {
                     holder.uyari2.setText("MİKTAR BOŞ GİRİLDİ!");
                     holder.checkBox.setChecked(false);
                     holder.checkBox.setEnabled(false);
+                    datalist.get(position).setChecked(false);
+
 
                 }
 

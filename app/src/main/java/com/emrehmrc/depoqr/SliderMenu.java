@@ -288,7 +288,7 @@ public class SliderMenu extends AppCompatActivity implements NavigationView.OnNa
                 break;
             case R.id.nav_menuS://
 
-                i = new Intent(SliderMenu.this, Sarf.class);
+                i = new Intent(SliderMenu.this, SarfListe.class);
                 bundle = ActivityOptions.makeSceneTransitionAnimation(SliderMenu.this).toBundle();
                 startActivity(i, bundle);
                 break;

@@ -25,11 +25,9 @@ public class EmreAdaptor extends RecyclerView.Adapter<EmreAdaptor.MyViewHolder> 
 
     ArrayList<SevkiyatÜrünleriRecyclerView> datalist;
     LayoutInflater layoutInflater;
-
     public EmreAdaptor(Context context, ArrayList<SevkiyatÜrünleriRecyclerView> data) {
         layoutInflater = LayoutInflater.from(context);
         this.datalist = data;
-
     }
 
 
@@ -48,8 +46,6 @@ public class EmreAdaptor extends RecyclerView.Adapter<EmreAdaptor.MyViewHolder> 
         SevkiyatÜrünleriRecyclerView clicked = datalist.get(position);
         holder.setData(clicked, position);
         holder.checkBox.setChecked(clicked.isChecked());
-
-
         final float deneme = datalist.get(position).getFirstamount();
         final float deneme2 = datalist.get(position).getSecondamount();
         holder.edtfirstamount.addTextChangedListener(new TextWatcher() {
@@ -71,24 +67,28 @@ public class EmreAdaptor extends RecyclerView.Adapter<EmreAdaptor.MyViewHolder> 
                         holder.uyari1.setText("MİKTAR AŞILDI!");
                         holder.checkBox.setChecked(false);
                         holder.checkBox.setEnabled(false);
+                        datalist.get(position).setChecked(false);
 
                     } else if (deneme >= Float.parseFloat(holder.edtfirstamount.getText().toString())) {
                         holder.uyari1.setText("");
                         holder.checkBox.setChecked(true);  //bunu
                         holder.checkBox.setEnabled(true); //icindeki ture
                         datalist.get(position).setFirstamount(Float.parseFloat(holder.edtfirstamount.getText().toString()));
+                        datalist.get(position).setChecked(true);
 
                     }else {
                         holder.uyari1.setText("");//bunu
                         holder.checkBox.setEnabled(true); // bunu
                         holder.checkBox.setChecked(true); //bunu
+                        datalist.get(position).setChecked(true);
+
                     }
 
                 } catch (Exception ex) {
                     holder.uyari1.setText("MİKTAR BOŞ GİRİLDİ!");
                     holder.checkBox.setChecked(false);
                     holder.checkBox.setEnabled(false);
-
+                    datalist.get(position).setChecked(false);
                 }
 
             }
@@ -111,22 +111,27 @@ public class EmreAdaptor extends RecyclerView.Adapter<EmreAdaptor.MyViewHolder> 
                         holder.uyari2.setText("MİKTAR AŞILDI!");
                         holder.checkBox.setChecked(false);
                         holder.checkBox.setEnabled(false);
+                        datalist.get(position).setChecked(false);
 
                     } else if (deneme2 >= Float.parseFloat(holder.edtsecondamount.getText().toString())) {
                         holder.uyari2.setText("");
                         holder.checkBox.setChecked(true);  //bunu
                         holder.checkBox.setEnabled(true); //icindeki ture
                         datalist.get(position).setSecondamount(Float.parseFloat(holder.edtsecondamount.getText().toString()));
+                        datalist.get(position).setChecked(true);
 
                     }else {
                         holder.uyari1.setText("");//bunu
                         holder.checkBox.setEnabled(true); // bunu
                         holder.checkBox.setChecked(true); //bunu
+                        datalist.get(position).setChecked(true);
+
                     }
                 } catch (Exception ex) {
                     holder.uyari2.setText("MİKTAR BOŞ GİRİLDİ!");
                     holder.checkBox.setChecked(false);
                     holder.checkBox.setEnabled(false);
+                    datalist.get(position).setChecked(false);
 
                 }
 
@@ -213,8 +218,6 @@ public class EmreAdaptor extends RecyclerView.Adapter<EmreAdaptor.MyViewHolder> 
             this.txtsecond.setText(clicked.getSecondUnit());
             this.uyari1.setText(clicked.getUyari1());
             this.uyari2.setText(clicked.getUyari2());
-
-
         }
     }
 }
