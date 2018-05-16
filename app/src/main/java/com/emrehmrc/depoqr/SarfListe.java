@@ -86,6 +86,7 @@ public class SarfListe extends AppCompatActivity implements PopupMenu.OnMenuItem
         @Override
         protected void onPreExecute() {
             pbbarP.setVisibility(View.VISIBLE);
+            lst_sarf.setAdapter(null);
         }
 
         @Override
@@ -110,7 +111,7 @@ public class SarfListe extends AppCompatActivity implements PopupMenu.OnMenuItem
                     }
                 });
             } else {
-                Toast.makeText(getApplicationContext(), "Satış Bulunamadı.", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "Bulunamadı.", Toast.LENGTH_LONG).show();
             }
         }
 
@@ -232,6 +233,7 @@ public class SarfListe extends AppCompatActivity implements PopupMenu.OnMenuItem
                 return true;
             case R.id.menu_duzenle:
                 Intent intent = new Intent(SarfListe.this,SarfDuzenle.class);
+                intent.putExtra("secilenSarf",secilenSarf);
                 startActivity(intent);
                 return true;
             default:
@@ -283,12 +285,13 @@ public class SarfListe extends AppCompatActivity implements PopupMenu.OnMenuItem
                 if (con == null) {
                     w = "Error in connection with SQL server";
                 } else {
-                    String query = "select ID from CONSUMPTION where COMPANIESID = '" + comid + "' and CODE = '" + secilenSarf + "' ";
+                    String query = "select ID from VW_CONSUMPTION where COMPANIESID = '" + comid + "' and CODE = '" + secilenSarf + "' ";
                     PreparedStatement ps = con.prepareStatement(query);
                     ResultSet rs = ps.executeQuery();
 
                     while (rs.next()) {
                         silinecekArray.add(rs.getString("ID"));
+                        exist=true;
                     }
                     w = "Başarılı";
                 }
