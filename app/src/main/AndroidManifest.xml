@@ -110,7 +110,8 @@
         <activity android:name=".SarfSec" />
         <activity android:name=".PlasiyerSatisDirek" />
         <activity android:name=".SarfListe" />
-        <activity android:name=".SarfDuzenle"></activity>
+        <activity android:name=".SarfDuzenle" />
+        <activity android:name=".PlasiyerSatisBarkod"></activity>
     </application>
 
 </manifest>

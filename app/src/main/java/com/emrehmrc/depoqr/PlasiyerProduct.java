@@ -93,7 +93,7 @@ public class PlasiyerProduct extends AppCompatActivity {
         btn_barkodSatis.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(PlasiyerProduct.this, PlasiyerSatisThree.class);
+                Intent intent = new Intent(PlasiyerProduct.this, PlasiyerSatisSec.class);
 
                 startActivity(intent);
             }
