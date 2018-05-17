@@ -76,6 +76,8 @@ public class SevkiyatSecondStep extends AppCompatActivity {
     boolean madway = true;
     TextView tx_productCount;
     int count;
+    ArrayList<String> firstAmount=new ArrayList<>();
+    ArrayList<String> secondAmount=new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -158,7 +160,7 @@ public class SevkiyatSecondStep extends AppCompatActivity {
                     }
                 }
 
-                emreAdaptor = new EmreAdaptor(getApplicationContext(), datalist);
+                emreAdaptor = new EmreAdaptor(getApplicationContext(), datalist,firstAmount,secondAmount);
                 recyclerView.setAdapter(emreAdaptor);
 
             }
@@ -558,7 +560,7 @@ public class SevkiyatSecondStep extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "BARKOD BULUNAMADI!", Toast.LENGTH_SHORT).show();
                 }else{
                     toneG.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD, 200);
-                    emreAdaptor = new EmreAdaptor(getApplicationContext(), datalist);
+                    emreAdaptor = new EmreAdaptor(getApplicationContext(), datalist,firstAmount,secondAmount);
                     recyclerView.setAdapter(emreAdaptor);
                     LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
                     linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -651,7 +653,7 @@ public class SevkiyatSecondStep extends AppCompatActivity {
             if (!empty) {
 
                 toneG.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD, 200);
-                emreAdaptor = new EmreAdaptor(getApplicationContext(), datalist);
+                emreAdaptor = new EmreAdaptor(getApplicationContext(), datalist,firstAmount,secondAmount);
                 recyclerView.setAdapter(emreAdaptor);
                 LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
                 linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -768,8 +770,8 @@ public class SevkiyatSecondStep extends AppCompatActivity {
                                     "SECONDUNITAMOUNT," + "WAREHOUSEID,PRODUCTID,BARCODEID,PALETID,ISOKEY)" +
                                     " values(" + "'" + uuıd + "'," +
                                     "'" + memberid + "','" + companiesid + "'," +
-                                    "'" + sevkNo + "'" + ",'" + datalist.get(i).getFirstamount() + "'," +
-                                    "'" + datalist.get(i).getSecondamount() + "'" + ",'" + sevkdepoid + "'," +
+                                    "'" + sevkNo + "'" + ",'" + firstAmount.get(i) + "'," +
+                                    "'" +secondAmount.get(i)+ "'" + ",'" + sevkdepoid + "'," +
                                     "'" + datalist.get(i).getProductid() + "'" +
                                     "," + "'" + datalist.get(i).getBarcodeid() + "','" + datalist.get(i)
                                     .getPaletid() + "','0')";
@@ -953,8 +955,7 @@ public class SevkiyatSecondStep extends AppCompatActivity {
         protected void onPostExecute(String r) {
             progressBar.setVisibility(View.GONE);
             if (isSuccess) {
-
-                emreAdaptor = new EmreAdaptor(getApplicationContext(), datalist);
+                emreAdaptor = new EmreAdaptor(getApplicationContext(), datalist,firstAmount,secondAmount);
                 recyclerView.setAdapter(emreAdaptor);
                 datalist.clear();
                 recyclerView.setAdapter(null);

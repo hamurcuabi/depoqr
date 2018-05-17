@@ -26,13 +26,16 @@ public class EmreAdaptor extends RecyclerView.Adapter<EmreAdaptor.MyViewHolder> 
 
     ArrayList<SevkiyatÜrünleriRecyclerView> datalist;
     LayoutInflater layoutInflater;
-    ArrayList<String> firstAmount=new ArrayList<>();
-    ArrayList<String> secondAmount=new ArrayList<>();
+    ArrayList<String> firstAmount;
+    ArrayList<String> secondAmount;
 
 
-    public EmreAdaptor(Context context, ArrayList<SevkiyatÜrünleriRecyclerView> data) {
+    public EmreAdaptor(Context context, ArrayList<SevkiyatÜrünleriRecyclerView> data,
+                       ArrayList<String> firstAmount, ArrayList<String> secondAmount) {
         layoutInflater = LayoutInflater.from(context);
         this.datalist = data;
+        this.firstAmount=firstAmount;
+        this.secondAmount=secondAmount;
         for(int i=0;i<data.size();i++){
             firstAmount.add(data.get(i).getFirstamount()+"");
             secondAmount.add(data.get(i).getSecondamount()+"");
@@ -91,6 +94,7 @@ public class EmreAdaptor extends RecyclerView.Adapter<EmreAdaptor.MyViewHolder> 
                         holder.checkBox.setChecked(true);  //bunu
                         holder.checkBox.setEnabled(true); //icindeki ture
                     //  datalist.get(position).setFakeFirst(Float.parseFloat(s.toString()));
+                        datalist.get(position).setFirstamount(Float.parseFloat(s.toString()));
                         firstAmount.set(position,s.toString());
                         datalist.get(position).setChecked(true);
 
@@ -140,6 +144,7 @@ public class EmreAdaptor extends RecyclerView.Adapter<EmreAdaptor.MyViewHolder> 
                         holder.checkBox.setChecked(true);  //bunu
                         holder.checkBox.setEnabled(true); //icindeki ture
                       //  datalist.get(position).setFakeSecond(Float.parseFloat(s.toString()));
+                        datalist.get(position).setSecondamount(Float.parseFloat(s.toString()));
                         secondAmount.set(position,s.toString());
                         datalist.get(position).setChecked(true);
 
