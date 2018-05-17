@@ -280,7 +280,8 @@
                 android:padding="10dp"
                 android:text="Direk Satış"
                 android:textSize="15sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:visibility="gone"/>
 
             <Button
                 android:id="@+id/btn_barkodSatis"
@@ -310,7 +311,7 @@
                 android:layout_marginLeft="5dp"
                 android:layout_marginStart="5dp"
                 android:layout_marginTop="5dp"
-                android:background="@drawable/deneme"
+                android:background="@drawable/deneme3"
                 android:drawableEnd="@drawable/ic_action_arrow"
                 android:drawableRight="@drawable/ic_action_arrow"
                 android:padding="10dp"

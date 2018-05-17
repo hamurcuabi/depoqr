@@ -126,7 +126,7 @@ public class PlasiyerSatisSec extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "Yanliş Ürün Kodu.", Toast.LENGTH_SHORT).show();
             }
         });
-        btn_satis.setOnClickListener(new View.OnClickListener() {
+        /*btn_satis.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (!tx_siparis.getText().toString().isEmpty()) {
@@ -152,14 +152,14 @@ public class PlasiyerSatisSec extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "MIKTAR BOŞ.", Toast.LENGTH_LONG).show();
 
 
-              /*  Intent intent = new Intent(PlasiyerSatisSec.this, PlasiyerProduct.class);
+               Intent intent = new Intent(PlasiyerSatisSec.this, PlasiyerProduct.class);
                 intent.putExtra("disable", tx_price.getText().toString());
                 intent.putExtra("disable", );
                 intent.putExtra("disable", );
                 intent.putExtra("disable", );
-                startActivity(intent);*/
+                startActivity(intent);
             }
-        });
+        });*/
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
