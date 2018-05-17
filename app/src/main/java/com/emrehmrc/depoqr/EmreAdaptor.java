@@ -2,6 +2,7 @@ package com.emrehmrc.depoqr;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -25,11 +26,28 @@ public class EmreAdaptor extends RecyclerView.Adapter<EmreAdaptor.MyViewHolder> 
 
     ArrayList<SevkiyatÜrünleriRecyclerView> datalist;
     LayoutInflater layoutInflater;
+    ArrayList<String> firstAmount=new ArrayList<>();
+    ArrayList<String> secondAmount=new ArrayList<>();
+
 
     public EmreAdaptor(Context context, ArrayList<SevkiyatÜrünleriRecyclerView> data) {
         layoutInflater = LayoutInflater.from(context);
         this.datalist = data;
+        for(int i=0;i<data.size();i++){
+            firstAmount.add(data.get(i).getFirstamount()+"");
+            secondAmount.add(data.get(i).getSecondamount()+"");
+        }
+        setHasStableIds(true);
 
+    }
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return position;
     }
 
 
@@ -42,14 +60,12 @@ public class EmreAdaptor extends RecyclerView.Adapter<EmreAdaptor.MyViewHolder> 
     }
 
     @Override
-    public void onBindViewHolder(final MyViewHolder holder, final int position) {
+    public void onBindViewHolder( final MyViewHolder holder, final int position) {
 
+        holder.setIsRecyclable(false);
+        holder.setData( datalist.get(position),position);
 
-        SevkiyatÜrünleriRecyclerView clicked = datalist.get(position);
-        holder.setData(clicked, position);
-        holder.checkBox.setChecked(clicked.isChecked());
-
-
+         holder.checkBox.setChecked( datalist.get(position).isChecked());
         final float deneme = datalist.get(position).getFirstamount();
         final float deneme2 = datalist.get(position).getSecondamount();
         holder.edtfirstamount.addTextChangedListener(new TextWatcher() {
@@ -60,10 +76,6 @@ public class EmreAdaptor extends RecyclerView.Adapter<EmreAdaptor.MyViewHolder> 
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
 
 
                 try {
@@ -73,12 +85,15 @@ public class EmreAdaptor extends RecyclerView.Adapter<EmreAdaptor.MyViewHolder> 
                         holder.checkBox.setEnabled(false);
                         datalist.get(position).setChecked(false);
 
-                    } else if (deneme >= Float.parseFloat(holder.edtfirstamount.getText().toString())) {
+
+                    } else if (deneme >=Float.parseFloat(holder.edtfirstamount.getText().toString())) {
                         holder.uyari1.setText("");
                         holder.checkBox.setChecked(true);  //bunu
                         holder.checkBox.setEnabled(true); //icindeki ture
-                        datalist.get(position).setFirstamount(Float.parseFloat(holder.edtfirstamount.getText().toString()));
+                    //  datalist.get(position).setFakeFirst(Float.parseFloat(s.toString()));
+                        firstAmount.set(position,s.toString());
                         datalist.get(position).setChecked(true);
+
 
                     }else {
                         holder.uyari1.setText("");//bunu
@@ -95,6 +110,14 @@ public class EmreAdaptor extends RecyclerView.Adapter<EmreAdaptor.MyViewHolder> 
                     datalist.get(position).setChecked(false);
                 }
 
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+
+
             }
         });
         holder.edtsecondamount.addTextChangedListener(new TextWatcher() {
@@ -105,11 +128,6 @@ public class EmreAdaptor extends RecyclerView.Adapter<EmreAdaptor.MyViewHolder> 
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
                 try {
                     if (deneme2 < Float.parseFloat(holder.edtsecondamount.getText().toString())) {
                         holder.uyari2.setText("MİKTAR AŞILDI!");
@@ -121,7 +139,8 @@ public class EmreAdaptor extends RecyclerView.Adapter<EmreAdaptor.MyViewHolder> 
                         holder.uyari2.setText("");
                         holder.checkBox.setChecked(true);  //bunu
                         holder.checkBox.setEnabled(true); //icindeki ture
-                        datalist.get(position).setSecondamount(Float.parseFloat(holder.edtsecondamount.getText().toString()));
+                      //  datalist.get(position).setFakeSecond(Float.parseFloat(s.toString()));
+                        secondAmount.set(position,s.toString());
                         datalist.get(position).setChecked(true);
 
                     }else {
@@ -138,6 +157,12 @@ public class EmreAdaptor extends RecyclerView.Adapter<EmreAdaptor.MyViewHolder> 
                     datalist.get(position).setChecked(false);
 
                 }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+
 
 
             }
@@ -148,7 +173,11 @@ public class EmreAdaptor extends RecyclerView.Adapter<EmreAdaptor.MyViewHolder> 
                 datalist.get(position).setChecked(!datalist.get(position).isChecked());
             }
         });
+
+
+
     }
+
 
     @Override
     public int getItemCount() {
@@ -162,6 +191,7 @@ public class EmreAdaptor extends RecyclerView.Adapter<EmreAdaptor.MyViewHolder> 
         TextView uniqcode, proname, firstunit, secondunit, firstamount, secondamount, barcodeid, uyari1, uyari2, txtfirst, txtsecond;
         EditText edtfirstamount, edtsecondamount;
         LinearLayout lnr1, lnr2, lnr3;
+
 
         public MyViewHolder(View itemView) {
             super(itemView);
@@ -193,20 +223,20 @@ public class EmreAdaptor extends RecyclerView.Adapter<EmreAdaptor.MyViewHolder> 
                 }
             });
             edtsecondamount = (EditText) itemView.findViewById(R.id.edtsecondtamount);
-
-
             edtsecondamount.setOnTouchListener(new View.OnTouchListener() {
+
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
+
                     v.setFocusable(true);
                     v.setFocusableInTouchMode(true);
                     return false;
                 }
             });
-
         }
 
-        public void setData(final SevkiyatÜrünleriRecyclerView clicked, int position) {
+        public void setData(final SevkiyatÜrünleriRecyclerView clicked,int position) {
+
 
             this.checkBox.setChecked(clicked.isChecked());
             this.uniqcode.setText(clicked.getUniqCode());
@@ -216,8 +246,8 @@ public class EmreAdaptor extends RecyclerView.Adapter<EmreAdaptor.MyViewHolder> 
             this.firstamount.setText(clicked.getFirstamount() + "");
             this.secondunit.setText(clicked.getSecondUnit());
             this.secondamount.setText(clicked.getSecondamount() + "");
-            this.edtfirstamount.setText(clicked.getFirstamount() + "");
-            this.edtsecondamount.setText(clicked.getSecondamount() + "");
+            this.edtfirstamount.setText(firstAmount.get(position));
+            this.edtsecondamount.setText(secondAmount.get(position));
             this.txtfirst.setText(clicked.getFirstUnit());
             this.txtsecond.setText(clicked.getSecondUnit());
             this.uyari1.setText(clicked.getUyari1());
@@ -226,6 +256,7 @@ public class EmreAdaptor extends RecyclerView.Adapter<EmreAdaptor.MyViewHolder> 
 
         }
     }
+
 }
 
 

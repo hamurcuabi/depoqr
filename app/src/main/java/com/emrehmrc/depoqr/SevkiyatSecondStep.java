@@ -656,6 +656,7 @@ public class SevkiyatSecondStep extends AppCompatActivity {
                 LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
                 linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
                 recyclerView.setLayoutManager(linearLayoutManager);
+                recyclerView.setHasFixedSize(true);
                 tx_productCount.setText("BARKOD SAYISI: "+count);
             } else {
                 if(madway){

@@ -22,6 +22,7 @@ public class SevkiyatÜrünleriRecyclerView {
     private float secondamount;
     private String prductionDate;
 
+
     public static ArrayList<SevkiyatÜrünleriRecyclerView> getData() {
 
         ArrayList<SevkiyatÜrünleriRecyclerView> datalist = new ArrayList<SevkiyatÜrünleriRecyclerView>();
