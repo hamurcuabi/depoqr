@@ -65,7 +65,8 @@ public class SarfSec extends AppCompatActivity {
     UUID uuid;
     CheckBox checkBoxall;
     int kodDevam;
-
+    ArrayList<Float> firstAmount=new ArrayList<>();
+    ArrayList<Float> secondAmount=new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -207,7 +208,7 @@ public class SarfSec extends AppCompatActivity {
                     }
                 }
 
-                emreAdaptor = new DepoTransferUrunAdapter(getApplicationContext(), datalist);
+                emreAdaptor = new DepoTransferUrunAdapter(getApplicationContext(), datalist,firstAmount,secondAmount);
                 recyclerView.setAdapter(emreAdaptor);
 
             }
@@ -375,17 +376,17 @@ public class SarfSec extends AppCompatActivity {
                 if (con == null) {
                     z = "Error in connection with SQL server";
                 } else {
-                    while (datalist.size() > 0) {
+                    for (int i = 0; i <datalist.size() ; i++)  {
                         if (datalist.get(i).isChecked()) {
                             if (!(secilenCari==null)) {
                                 if (aciklama==null) {
                                     UUID uuıd = UUID.randomUUID();
-                                    String query = "insert into CONSUMPTION (ID,WAREHOUSEID,CURENTID,MEMBEREMPLOYEEID,BARCODEID,FIRSTAMOUNT,SECONDAMOUNT,DATE,CODE) values ('" + uuıd + "','" + secilenDepoId + "','" + secilenCari + "','" + memberid + "','" + datalist.get(i).getBarcodeid() + "','" + datalist.get(i).getFirstamount() + "','" + datalist.get(i).getSecondamount() + "',GETDATE(),'"+kodDevam+"')";
+                                    String query = "insert into CONSUMPTION (ID,WAREHOUSEID,CURENTID,MEMBEREMPLOYEEID,BARCODEID,FIRSTAMOUNT,SECONDAMOUNT,DATE,CODE) values ('" + uuıd + "','" + secilenDepoId + "','" + secilenCari + "','" + memberid + "','" + datalist.get(i).getBarcodeid() + "','" + firstAmount.get(i) + "','" + secondAmount.get(i) + "',GETDATE(),'"+kodDevam+"')";
                                     PreparedStatement preparedStatement = con.prepareStatement(query);
                                     preparedStatement.executeUpdate();
                                 } else {
                                     UUID uuıd = UUID.randomUUID();
-                                    String query = "insert into CONSUMPTION (ID,WAREHOUSEID,CURENTID,MEMBEREMPLOYEEID,BARCODEID,FIRSTAMOUNT,SECONDAMOUNT,DATE,DESCRIPTION,CODE) values ('" + uuıd + "','" + secilenDepoId + "','" + secilenCari + "','" + memberid + "','" + datalist.get(i).getBarcodeid() + "','" + datalist.get(i).getFirstamount() + "','" + datalist.get(i).getSecondamount() + "',GETDATE(),'" + aciklama + "','"+kodDevam+"')";
+                                    String query = "insert into CONSUMPTION (ID,WAREHOUSEID,CURENTID,MEMBEREMPLOYEEID,BARCODEID,FIRSTAMOUNT,SECONDAMOUNT,DATE,DESCRIPTION,CODE) values ('" + uuıd + "','" + secilenDepoId + "','" + secilenCari + "','" + memberid + "','" + datalist.get(i).getBarcodeid() + "','" + firstAmount.get(i) + "','" + secondAmount.get(i) + "',GETDATE(),'" + aciklama + "','"+kodDevam+"')";
                                     PreparedStatement preparedStatement = con.prepareStatement(query);
                                     preparedStatement.executeUpdate();
                                 }
@@ -393,12 +394,12 @@ public class SarfSec extends AppCompatActivity {
                            else if (!(secilenPersonel==null)) {
                                 if (aciklama==null) {
                                     UUID uuıd = UUID.randomUUID();
-                                    String query = "insert into CONSUMPTION (ID,WAREHOUSEID,MEMBERID,MEMBEREMPLOYEEID,BARCODEID,FIRSTAMOUNT,SECONDAMOUNT,DATE,CODE) values ('" + uuıd + "','" + secilenDepoId + "','" + secilenPersonel + "','" + memberid + "','" + datalist.get(i).getBarcodeid() + "','" + datalist.get(i).getFirstamount() + "','" + datalist.get(i).getSecondamount() + "',GETDATE(),'"+kodDevam+"')";
+                                    String query = "insert into CONSUMPTION (ID,WAREHOUSEID,MEMBERID,MEMBEREMPLOYEEID,BARCODEID,FIRSTAMOUNT,SECONDAMOUNT,DATE,CODE) values ('" + uuıd + "','" + secilenDepoId + "','" + secilenPersonel + "','" + memberid + "','" + datalist.get(i).getBarcodeid() + "','" + firstAmount.get(i) + "','" + secondAmount.get(i) + "',GETDATE(),'"+kodDevam+"')";
                                     PreparedStatement preparedStatement = con.prepareStatement(query);
                                     preparedStatement.executeUpdate();
                                 } else {
                                     UUID uuıd = UUID.randomUUID();
-                                    String query = "insert into CONSUMPTION (ID,WAREHOUSEID,MEMBERID,MEMBEREMPLOYEEID,BARCODEID,FIRSTAMOUNT,SECONDAMOUNT,DATE,DESCRIPTION,CODE) values ('" + uuıd + "','" + secilenDepoId + "','" + secilenPersonel + "','" + memberid + "','" + datalist.get(i).getBarcodeid() + "','" + datalist.get(i).getFirstamount() + "','" + datalist.get(i).getSecondamount() + "',GETDATE(),'" + aciklama + "','"+kodDevam+"')";
+                                    String query = "insert into CONSUMPTION (ID,WAREHOUSEID,MEMBERID,MEMBEREMPLOYEEID,BARCODEID,FIRSTAMOUNT,SECONDAMOUNT,DATE,DESCRIPTION,CODE) values ('" + uuıd + "','" + secilenDepoId + "','" + secilenPersonel + "','" + memberid + "','" + datalist.get(i).getBarcodeid() + "','" + firstAmount.get(i) + "','" + secondAmount.get(i) + "',GETDATE(),'" + aciklama + "','"+kodDevam+"')";
                                     PreparedStatement preparedStatement = con.prepareStatement(query);
                                     preparedStatement.executeUpdate();
                                 }
@@ -406,18 +407,17 @@ public class SarfSec extends AppCompatActivity {
                             }else{
                                 if (aciklama==null) {
                                     UUID uuıd = UUID.randomUUID();
-                                    String query = "insert into CONSUMPTION (ID,WAREHOUSEID,MEMBEREMPLOYEEID,BARCODEID,FIRSTAMOUNT,SECONDAMOUNT,DATE,CODE) values ('" + uuıd + "','" + secilenDepoId + "','" + memberid + "','" + datalist.get(i).getBarcodeid() + "','" + datalist.get(i).getFirstamount() + "','" + datalist.get(i).getSecondamount() + "',GETDATE(),'"+kodDevam+"')";
+                                    String query = "insert into CONSUMPTION (ID,WAREHOUSEID,MEMBEREMPLOYEEID,BARCODEID,FIRSTAMOUNT,SECONDAMOUNT,DATE,CODE) values ('" + uuıd + "','" + secilenDepoId + "','" + memberid + "','" + datalist.get(i).getBarcodeid() + "','" + firstAmount.get(i) + "','" + secondAmount.get(i) + "',GETDATE(),'"+kodDevam+"')";
                                     PreparedStatement preparedStatement = con.prepareStatement(query);
                                     preparedStatement.executeUpdate();
                                 } else {
                                     UUID uuıd = UUID.randomUUID();
-                                    String query = "insert into CONSUMPTION (ID,WAREHOUSEID,MEMBEREMPLOYEEID,BARCODEID,FIRSTAMOUNT,SECONDAMOUNT,DATE,DESCRIPTION,CODE) values ('" + uuıd + "','" + secilenDepoId + "','" + memberid + "','" + datalist.get(i).getBarcodeid() + "','" + datalist.get(i).getFirstamount() + "','" + datalist.get(i).getSecondamount() + "',GETDATE(),'" + aciklama + "','"+kodDevam+"')";
+                                    String query = "insert into CONSUMPTION (ID,WAREHOUSEID,MEMBEREMPLOYEEID,BARCODEID,FIRSTAMOUNT,SECONDAMOUNT,DATE,DESCRIPTION,CODE) values ('" + uuıd + "','" + secilenDepoId + "','" + memberid + "','" + datalist.get(i).getBarcodeid() + "','" + firstAmount.get(i) + "','" + secondAmount.get(i) + "',GETDATE(),'" + aciklama + "','"+kodDevam+"')";
                                     PreparedStatement preparedStatement = con.prepareStatement(query);
                                     preparedStatement.executeUpdate();
                                 }
                             }
-                            datalist.remove(i);
-                        } else i++;
+                        }
                         hata = false;
                     }
                 }
@@ -446,7 +446,7 @@ public class SarfSec extends AppCompatActivity {
             progressBar.setVisibility(View.GONE);
             if (!empty) {
                 toneG.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD, 200);
-                emreAdaptor = new DepoTransferUrunAdapter(getApplicationContext(), datalist);
+                emreAdaptor = new DepoTransferUrunAdapter(getApplicationContext(), datalist,firstAmount,secondAmount);
                 recyclerView.setAdapter(emreAdaptor);
                 LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
                 linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -521,7 +521,7 @@ public class SarfSec extends AppCompatActivity {
             if (!empty) {
 
                 toneG.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD, 200);
-                emreAdaptor = new DepoTransferUrunAdapter(getApplicationContext(), datalist);
+                emreAdaptor = new DepoTransferUrunAdapter(getApplicationContext(), datalist,firstAmount,secondAmount);
                 recyclerView.setAdapter(emreAdaptor);
                 LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
                 linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);

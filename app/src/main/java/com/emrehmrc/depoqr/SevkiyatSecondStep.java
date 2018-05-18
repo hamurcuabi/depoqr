@@ -29,6 +29,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -74,10 +75,13 @@ public class SevkiyatSecondStep extends AppCompatActivity {
     UUID uuid;
     int i = 0;
     boolean madway = true;
-    TextView tx_productCount;
+    TextView tx_productCount, tx_birinciBirim, tx_ikinciBirim;
     int count;
-    ArrayList<String> firstAmount=new ArrayList<>();
-    ArrayList<String> secondAmount=new ArrayList<>();
+    ArrayList<Float> firstAmount = new ArrayList<>();
+    ArrayList<Float> secondAmount = new ArrayList<>();
+    float birinciBirim, ikinciBirim;
+    ImageView btn_calculate;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -97,6 +101,9 @@ public class SevkiyatSecondStep extends AppCompatActivity {
         toneG = new ToneGenerator(AudioManager.STREAM_ALARM, 100);
 
         connectionClass = new ConnectionClass();
+        tx_birinciBirim = (TextView) findViewById(R.id.tx_birinciBirim);
+        tx_ikinciBirim = (TextView) findViewById(R.id.tx_ikinciBirim);
+        btn_calculate = (ImageView) findViewById(R.id.btn_calculate);
         edtCode = (EditText) findViewById(R.id.edtCode);
         edtCode.setOnTouchListener(new View.OnTouchListener() {
 
@@ -114,6 +121,24 @@ public class SevkiyatSecondStep extends AppCompatActivity {
         btnqrread = (Button) findViewById(R.id.btnqrread);
         btnsend = (Button) findViewById(R.id.btnsend);
         spnPB = (Spinner) findViewById(R.id.spnPB);
+        btn_calculate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!datalist.isEmpty()) {
+                    birinciBirim = 0;
+                    ikinciBirim = 0;
+                    for (int i = 0; i < datalist.size(); i++) {
+                        if (datalist.get(i).isChecked()) {
+                            birinciBirim = birinciBirim + firstAmount.get(i);
+                            ikinciBirim = ikinciBirim + secondAmount.get(i);
+                        }
+                    }
+                    tx_birinciBirim.setText(birinciBirim + "");
+                    tx_ikinciBirim.setText(ikinciBirim + "");
+
+                }
+            }
+        });
         spnPB.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -160,7 +185,7 @@ public class SevkiyatSecondStep extends AppCompatActivity {
                     }
                 }
 
-                emreAdaptor = new EmreAdaptor(getApplicationContext(), datalist,firstAmount,secondAmount);
+                emreAdaptor = new EmreAdaptor(getApplicationContext(), datalist, firstAmount, secondAmount);
                 recyclerView.setAdapter(emreAdaptor);
 
             }
@@ -443,7 +468,7 @@ public class SevkiyatSecondStep extends AppCompatActivity {
         protected void onPostExecute(String r) {
             progressBar.setVisibility(View.GONE);
             if (!empty) {
-                madway =false;
+                madway = false;
                 if (way == 0) {
                     if (PorB.equals("P")) {
 
@@ -524,7 +549,7 @@ public class SevkiyatSecondStep extends AppCompatActivity {
                                 break;
                             }
                         }
-                        if (!same){
+                        if (!same) {
                             datalist.add(gecici);
                             count++;
                         }
@@ -556,16 +581,16 @@ public class SevkiyatSecondStep extends AppCompatActivity {
         protected void onPostExecute(String r) {
             progressBar.setVisibility(View.GONE);
             if (!exist) {
-                if(madway){
+                if (madway) {
                     Toast.makeText(getApplicationContext(), "BARKOD BULUNAMADI!", Toast.LENGTH_SHORT).show();
-                }else{
+                } else {
                     toneG.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD, 200);
-                    emreAdaptor = new EmreAdaptor(getApplicationContext(), datalist,firstAmount,secondAmount);
+                    emreAdaptor = new EmreAdaptor(getApplicationContext(), datalist, firstAmount, secondAmount);
                     recyclerView.setAdapter(emreAdaptor);
                     LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
                     linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
                     recyclerView.setLayoutManager(linearLayoutManager);
-                    tx_productCount.setText("BARKOD SAYISI: "+count);
+                    tx_productCount.setText("BARKOD SAYISI: " + count);
                 }
             } else {
                 if (way == 0) {
@@ -653,15 +678,15 @@ public class SevkiyatSecondStep extends AppCompatActivity {
             if (!empty) {
 
                 toneG.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD, 200);
-                emreAdaptor = new EmreAdaptor(getApplicationContext(), datalist,firstAmount,secondAmount);
+                emreAdaptor = new EmreAdaptor(getApplicationContext(), datalist, firstAmount, secondAmount);
                 recyclerView.setAdapter(emreAdaptor);
                 LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
                 linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
                 recyclerView.setLayoutManager(linearLayoutManager);
                 recyclerView.setHasFixedSize(true);
-                tx_productCount.setText("BARKOD SAYISI: "+count);
+                tx_productCount.setText("BARKOD SAYISI: " + count);
             } else {
-                if(madway){
+                if (madway) {
                     toneG.startTone(ToneGenerator.TONE_CDMA_CALL_SIGNAL_ISDN_PING_RING, 200);
                     Intent intent = new Intent(getBaseContext(), UyariBildirim.class);
                     intent.putExtra("UYARI", "DEPODA BULUNAMADI!");
@@ -705,7 +730,7 @@ public class SevkiyatSecondStep extends AppCompatActivity {
                                 break;
                             }
                         }
-                        if (!same){
+                        if (!same) {
                             datalist.add(gecici);
                             count++;
                         }
@@ -739,16 +764,16 @@ public class SevkiyatSecondStep extends AppCompatActivity {
         protected void onPostExecute(String r) {
             progressBar.setVisibility(View.GONE);
             //emreAdaptor = new EmreAdaptor(getApplicationContext(), datalist);
-           // recyclerView.setAdapter(emreAdaptor);
+            // recyclerView.setAdapter(emreAdaptor);
 
 
-            if (!hata){
+            if (!hata) {
                 datalist.clear();
                 recyclerView.setAdapter(null);
                 Toast.makeText(getApplicationContext(), "AKTARILDI!", Toast.LENGTH_SHORT).show();
                 tx_productCount.setText("");
-                count =0;
-            }else{
+                count = 0;
+            } else {
                 Toast.makeText(getApplicationContext(), "HATA!", Toast.LENGTH_SHORT).show();
 
             }
@@ -762,7 +787,7 @@ public class SevkiyatSecondStep extends AppCompatActivity {
                 if (con == null) {
                     z = "Error in connection with SQL server";
                 } else {
-                    while (datalist.size() > 0) {
+                    for (int i = 0; i < datalist.size(); i++) {
                         if (datalist.get(i).isChecked()) {
                             UUID uuıd = UUID.randomUUID();
                             String query = "insert into SENTFORWARDING" + " " +
@@ -771,14 +796,13 @@ public class SevkiyatSecondStep extends AppCompatActivity {
                                     " values(" + "'" + uuıd + "'," +
                                     "'" + memberid + "','" + companiesid + "'," +
                                     "'" + sevkNo + "'" + ",'" + firstAmount.get(i) + "'," +
-                                    "'" +secondAmount.get(i)+ "'" + ",'" + sevkdepoid + "'," +
+                                    "'" + secondAmount.get(i) + "'" + ",'" + sevkdepoid + "'," +
                                     "'" + datalist.get(i).getProductid() + "'" +
                                     "," + "'" + datalist.get(i).getBarcodeid() + "','" + datalist.get(i)
                                     .getPaletid() + "','0')";
-                            datalist.remove(i);
                             PreparedStatement preparedStatement = con.prepareStatement(query);
                             preparedStatement.executeUpdate();
-                        } else i++;
+                        }
                         hata = false;
                     }
 
@@ -815,10 +839,10 @@ public class SevkiyatSecondStep extends AppCompatActivity {
             progressBar.setVisibility(View.GONE);
             if (deneme)
                 Toast.makeText(getApplicationContext(), "AKTARILACAK ÜRÜN YOK!", Toast.LENGTH_SHORT).show();
-            else{
+            else {
                 Toast.makeText(getApplicationContext(), "AKTARILDI!", Toast.LENGTH_SHORT).show();
                 tx_productCount.setText("");
-                count=0;
+                count = 0;
                 datalist.clear();
                 recyclerView.setAdapter(null);
             }
@@ -833,7 +857,7 @@ public class SevkiyatSecondStep extends AppCompatActivity {
                     z = "Error in connection with SQL server";
                 } else {
                     if (!emptyArray2.isEmpty()) {
-                        while (datalist.size() > 0) {
+                        for (int i = 0; i < datalist.size(); i++) {
                             if (datalist.get(i).isChecked()) {
                                 if (emptyArray2.contains(datalist.get(i).getBarcodeid())) {
                                     UUID uuıd = UUID.randomUUID();
@@ -842,17 +866,16 @@ public class SevkiyatSecondStep extends AppCompatActivity {
                                             "SECONDUNITAMOUNT," + "WAREHOUSEID,PRODUCTID,BARCODEID,PALETID,ISOKEY)" +
                                             " values(" + "'" + uuıd + "'," +
                                             "'" + memberid + "','" + companiesid + "'," +
-                                            "'" + sevkNo + "'" + ",'" + datalist.get(i).getFirstamount() + "'," +
-                                            "'" + datalist.get(i).getSecondamount() + "'" + ",'" + sevkdepoid + "'," +
+                                            "'" + sevkNo + "'" + ",'" + firstAmount.get(i) + "'," +
+                                            "'" + secondAmount.get(i) + "'" + ",'" + sevkdepoid + "'," +
                                             "'" + datalist.get(i).getProductid() + "'" +
                                             "," + "'" + datalist.get(i).getBarcodeid() + "','" + datalist.get(i)
                                             .getPaletid() + "','0')";
                                     PreparedStatement preparedStatement = con.prepareStatement(query);
                                     preparedStatement.executeUpdate();
-                                    datalist.remove(i);
                                     deneme = false;
-                                } else i++;
-                            } else i++;
+                                }
+                            }
                         }
                     }
                 }
@@ -955,13 +978,13 @@ public class SevkiyatSecondStep extends AppCompatActivity {
         protected void onPostExecute(String r) {
             progressBar.setVisibility(View.GONE);
             if (isSuccess) {
-                emreAdaptor = new EmreAdaptor(getApplicationContext(), datalist,firstAmount,secondAmount);
+                emreAdaptor = new EmreAdaptor(getApplicationContext(), datalist, firstAmount, secondAmount);
                 recyclerView.setAdapter(emreAdaptor);
                 datalist.clear();
                 recyclerView.setAdapter(null);
                 Toast.makeText(SevkiyatSecondStep.this, "BAŞARIYLA SİLİNDİ", Toast.LENGTH_SHORT).show();
                 tx_productCount.setText("");
-                count =0;
+                count = 0;
 
             }
         }

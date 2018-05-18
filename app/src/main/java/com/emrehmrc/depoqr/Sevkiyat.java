@@ -21,6 +21,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
@@ -30,6 +31,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -61,15 +63,16 @@ public class Sevkiyat extends AppCompatActivity {
     String compId;
     AutoCompleteTextView sevkiyetNo;
     ImageView dropDown;
-    TextView sevkiyetPlaka;
+    TextView sevkiyetPlaka,sevkiyetCari;
     ArrayList<Depolar> depolars = new ArrayList<>();
     ArrayList<String> maxArray = new ArrayList<>();
-
+     ProgressBar pbbar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sevkiyat);
         sharedpreferences = getApplicationContext().getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
+        this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         memberid = sharedpreferences.getString("ID", null);
         compId = sharedpreferences.getString("Companiesid", null);
         animation = AnimationUtils.loadAnimation(this, R.anim.scale);
@@ -86,7 +89,9 @@ public class Sevkiyat extends AppCompatActivity {
         btnstart = (Button) findViewById(R.id.btnstart);
         btnstart2 = (Button) findViewById(R.id.btnstart2);
         sevkiyetPlaka = (TextView) findViewById(R.id.sevkiyetPlaka);
+        sevkiyetCari = (TextView) findViewById(R.id.sevkiyetCari);
         sevkiyetNo = (AutoCompleteTextView) findViewById(R.id.edtsevkiyatno2);
+        pbbar = (ProgressBar) findViewById(R.id.pbbar);
         dropDown = (ImageView) findViewById(R.id.btn_drop2);
         SevkiyetList sevkiyetList = new SevkiyetList();
         sevkiyetList.execute("");
@@ -220,10 +225,12 @@ public class Sevkiyat extends AppCompatActivity {
         protected void onPreExecute() {
             spndepo.setAdapter(null);
             depolars.clear();
+            pbbar.setVisibility(View.VISIBLE);
         }
 
         @Override
         protected void onPostExecute(String r) {
+            pbbar.setVisibility(View.GONE);
 
             ArrayAdapter<Depolar> adapter = new ArrayAdapter<Depolar>(getApplicationContext(), R.layout.specialspinner, depolars);
             adapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
@@ -291,10 +298,13 @@ public class Sevkiyat extends AppCompatActivity {
         @Override
         protected void onPreExecute() {
             empty = true;
+            pbbar.setVisibility(View.VISIBLE);
+
         }
 
         @Override
         protected void onPostExecute(String r) {
+            pbbar.setVisibility(View.GONE);
 
             if (!empty) {
                 SharedPreferences.Editor editor = sharedpreferences.edit();
@@ -396,7 +406,15 @@ public class Sevkiyat extends AppCompatActivity {
         Map<String, String> datanum = new HashMap<String, String>();
 
         @Override
+        protected void onPreExecute() {
+            pbbar.setVisibility(View.VISIBLE);
+
+        }
+
+        @Override
         protected void onPostExecute(String r) {
+            pbbar.setVisibility(View.GONE);
+
             FillMiktarType fillMiktarType = new FillMiktarType();
             fillMiktarType.execute("");
 
@@ -435,7 +453,14 @@ public class Sevkiyat extends AppCompatActivity {
         Map<String, String> datanum = new HashMap<String, String>();
 
         @Override
+        protected void onPreExecute() {
+            pbbar.setVisibility(View.VISIBLE);
+
+        }
+
+        @Override
         protected void onPostExecute(String r) {
+            pbbar.setVisibility(View.GONE);
             maxArray.clear();
             String[] from = {"A", "B", "C", "E", "T"};
             int[] views = {R.id.pcode, R.id.pname, R.id.pfirst, R.id.psecond, R.id.pType};
@@ -507,7 +532,15 @@ public class Sevkiyat extends AppCompatActivity {
         String z = "";
 
         @Override
+        protected void onPreExecute() {
+            pbbar.setVisibility(View.VISIBLE);
+
+        }
+
+        @Override
         protected void onPostExecute(String r) {
+            pbbar.setVisibility(View.GONE);
+
             if (z.equals("Başarılı")) {
                 TamamlaCS tamamlaCS = new TamamlaCS();
                 tamamlaCS.execute("");
@@ -545,7 +578,15 @@ public class Sevkiyat extends AppCompatActivity {
         String z = "";
 
         @Override
+        protected void onPreExecute() {
+            pbbar.setVisibility(View.VISIBLE);
+
+        }
+
+        @Override
         protected void onPostExecute(String r) {
+            pbbar.setVisibility(View.GONE);
+
             if (z.equals("Başarılı")) {
                 sevkiyetNo.setText("");
                 Toast.makeText(getApplicationContext(), "Sevkiyat Tamamlandı!", Toast.LENGTH_SHORT).show();
@@ -581,7 +622,14 @@ public class Sevkiyat extends AppCompatActivity {
         String z = "";
 
         @Override
+        protected void onPreExecute() {
+            pbbar.setVisibility(View.VISIBLE);
+
+        }
+
+        @Override
         protected void onPostExecute(String r) {
+            pbbar.setVisibility(View.GONE);
 
             ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_dropdown_item_1line, sevkiyetnoArray);
             sevkiyetNo.setAdapter(adapter);
@@ -614,12 +662,19 @@ public class Sevkiyat extends AppCompatActivity {
 
     public class FillPlaka extends AsyncTask<String, String, String> {
         String z = "";
-        String palaka;
+        String palaka,cari;
+
+        @Override
+        protected void onPreExecute() {
+            pbbar.setVisibility(View.VISIBLE);
+
+        }
 
         @Override
         protected void onPostExecute(String r) {
-            sevkiyetPlaka.setText("");
-            sevkiyetPlaka.append("PLAKA: " + palaka);
+            pbbar.setVisibility(View.GONE);
+            sevkiyetPlaka.setText("P: " + palaka);
+            sevkiyetCari.setText("C: "+ cari);
         }
 
         @Override
@@ -631,11 +686,12 @@ public class Sevkiyat extends AppCompatActivity {
                 if (con == null) {
                     z = "Error in connection with SQL server";
                 } else {
-                    String query = "SELECT PLAKA from VW_FORWARDINGPLAN where ISSAVE='TRUE' and ISDELETE ='FALSE' and COMPANIESID='" + companiesid + "' and ID = '" + fordid + "'";
+                    String query = "SELECT CURRENTNAME, PLAKA from VW_FORWARDINGPLAN where ISSAVE='TRUE' and ISDELETE ='FALSE' and COMPANIESID='" + companiesid + "' and ID = '" + fordid + "'";
                     PreparedStatement ps = con.prepareStatement(query);
                     ResultSet rs = ps.executeQuery();
                     while (rs.next()) {
                         palaka = rs.getString("PLAKA");
+                        cari = rs.getString("CURRENTNAME");
                     }
                     z = "Başarılı";
                 }
@@ -646,5 +702,6 @@ public class Sevkiyat extends AppCompatActivity {
             return z;
         }
     }
+
 }
 

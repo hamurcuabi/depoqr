@@ -19,13 +19,28 @@ public class SevkiyetTarihAdapter extends RecyclerView.Adapter<SevkiyetTarihAdap
 
     ArrayList<SevkiyatÜrünleriRecyclerView> datalist;
     LayoutInflater layoutInflater;
-
-    public SevkiyetTarihAdapter(Context context, ArrayList<SevkiyatÜrünleriRecyclerView> data) {
+    ArrayList<Float> firstAmount;
+    ArrayList<Float> secondAmount;
+    public SevkiyetTarihAdapter(Context context, ArrayList<SevkiyatÜrünleriRecyclerView> data,ArrayList<Float> firstAmount, ArrayList<Float> secondAmount) {
         layoutInflater = LayoutInflater.from(context);
         this.datalist = data;
-
+        this.firstAmount=firstAmount;
+        this.secondAmount=secondAmount;
+        for(int i=0;i<data.size();i++){
+            firstAmount.add(data.get(i).getFirstamount());
+            secondAmount.add(data.get(i).getSecondamount());
+        }
+        setHasStableIds(true);
+    }
+    @Override
+    public long getItemId(int position) {
+        return position;
     }
 
+    @Override
+    public int getItemViewType(int position) {
+        return position;
+    }
 
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -36,14 +51,12 @@ public class SevkiyetTarihAdapter extends RecyclerView.Adapter<SevkiyetTarihAdap
     }
 
     @Override
-    public void onBindViewHolder(final MyViewHolder holder, final int position) {
+    public void onBindViewHolder( final MyViewHolder holder, final int position) {
 
+        holder.setIsRecyclable(false);
+        holder.setData( datalist.get(position),position);
 
-        SevkiyatÜrünleriRecyclerView clicked = datalist.get(position);
-        holder.setData(clicked, position);
-        holder.checkBox.setChecked(clicked.isChecked());
-
-
+        holder.checkBox.setChecked( datalist.get(position).isChecked());
         final float deneme = datalist.get(position).getFirstamount();
         final float deneme2 = datalist.get(position).getSecondamount();
         holder.edtfirstamount.addTextChangedListener(new TextWatcher() {
@@ -54,10 +67,6 @@ public class SevkiyetTarihAdapter extends RecyclerView.Adapter<SevkiyetTarihAdap
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
 
 
                 try {
@@ -67,14 +76,18 @@ public class SevkiyetTarihAdapter extends RecyclerView.Adapter<SevkiyetTarihAdap
                         holder.checkBox.setEnabled(false);
                         datalist.get(position).setChecked(false);
 
-                    } else if (deneme >= Float.parseFloat(holder.edtfirstamount.getText().toString())) {
+
+                    } else if (deneme >=Float.parseFloat(holder.edtfirstamount.getText().toString())) {
                         holder.uyari1.setText("");
                         holder.checkBox.setChecked(true);  //bunu
                         holder.checkBox.setEnabled(true); //icindeki ture
-                        datalist.get(position).setFirstamount(Float.parseFloat(holder.edtfirstamount.getText().toString()));
+                        //  datalist.get(position).setFakeFirst(Float.parseFloat(s.toString()));
+                        // datalist.get(position).setFirstamount(Float.parseFloat(s.toString()));
+                        firstAmount.set(position, Float.valueOf(s.toString()));
                         datalist.get(position).setChecked(true);
 
-                    } else {
+
+                    }else {
                         holder.uyari1.setText("");//bunu
                         holder.checkBox.setEnabled(true); // bunu
                         holder.checkBox.setChecked(true); //bunu
@@ -87,8 +100,15 @@ public class SevkiyetTarihAdapter extends RecyclerView.Adapter<SevkiyetTarihAdap
                     holder.checkBox.setChecked(false);
                     holder.checkBox.setEnabled(false);
                     datalist.get(position).setChecked(false);
-
                 }
+
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+
 
             }
         });
@@ -100,11 +120,6 @@ public class SevkiyetTarihAdapter extends RecyclerView.Adapter<SevkiyetTarihAdap
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
                 try {
                     if (deneme2 < Float.parseFloat(holder.edtsecondamount.getText().toString())) {
                         holder.uyari2.setText("MİKTAR AŞILDI!");
@@ -116,9 +131,12 @@ public class SevkiyetTarihAdapter extends RecyclerView.Adapter<SevkiyetTarihAdap
                         holder.uyari2.setText("");
                         holder.checkBox.setChecked(true);  //bunu
                         holder.checkBox.setEnabled(true); //icindeki ture
-                        datalist.get(position).setSecondamount(Float.parseFloat(holder.edtsecondamount.getText().toString()));
+                        //  datalist.get(position).setFakeSecond(Float.parseFloat(s.toString()));
+                        //  datalist.get(position).setSecondamount(Float.parseFloat(s.toString()));
+                        secondAmount.set(position, Float.valueOf(s.toString()));
                         datalist.get(position).setChecked(true);
-                    } else {
+
+                    }else {
                         holder.uyari1.setText("");//bunu
                         holder.checkBox.setEnabled(true); // bunu
                         holder.checkBox.setChecked(true); //bunu
@@ -131,8 +149,13 @@ public class SevkiyetTarihAdapter extends RecyclerView.Adapter<SevkiyetTarihAdap
                     holder.checkBox.setEnabled(false);
                     datalist.get(position).setChecked(false);
 
-
                 }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+
 
 
             }
@@ -143,12 +166,17 @@ public class SevkiyetTarihAdapter extends RecyclerView.Adapter<SevkiyetTarihAdap
                 datalist.get(position).setChecked(!datalist.get(position).isChecked());
             }
         });
+
+
+
     }
+
 
     @Override
     public int getItemCount() {
         return datalist.size();
     }
+
 
 
     class MyViewHolder extends RecyclerView.ViewHolder {
@@ -203,8 +231,8 @@ public class SevkiyetTarihAdapter extends RecyclerView.Adapter<SevkiyetTarihAdap
             this.firstamount.setText(clicked.getFirstamount() + "");
             this.secondunit.setText(clicked.getSecondUnit());
             this.secondamount.setText(clicked.getSecondamount() + "");
-            this.edtfirstamount.setText(clicked.getFirstamount() + "");
-            this.edtsecondamount.setText(clicked.getSecondamount() + "");
+            this.edtfirstamount.setText(firstAmount.get(position) + "");
+            this.edtsecondamount.setText(secondAmount.get(position) + "");
             this.txtfirst.setText(clicked.getFirstUnit());
             this.txtsecond.setText(clicked.getSecondUnit());
             this.uyari1.setText(clicked.getUyari1());

@@ -90,17 +90,37 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:weightSum="2">
-
-            <TextView
-                android:id="@+id/sevkiyetPlaka"
+            <android.support.v7.widget.CardView
+                android:id="@+id/cardsp"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:padding="10dp"
-                android:text="PLAKA"
-                android:textColor="#000000"
-                android:textSize="15sp"
-                android:textStyle="bold" />
+                android:layout_height="wrap_content"
+                android:background="@color/appbackcolor"
+                android:layout_weight="1">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/appbackcolor"
+                android:orientation="vertical">
+                <TextView
+                    android:id="@+id/sevkiyetPlaka"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="PLAKA"
+                    android:textColor="@color/error"
+                    android:textStyle="bold" />
+                <TextView
+                    android:id="@+id/sevkiyetCari"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="CARI"
+                    android:textColor="@color/colorPrimary"
+                    android:textStyle="bold" />
+            </LinearLayout>
+            </android.support.v7.widget.CardView>
+
 
             <Spinner
                 android:id="@+id/spnDepo"
@@ -218,7 +238,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_above="@+id/ontbtn"
-                android:orientation="horizontal"
+                android:orientation="vertical"
                 android:weightSum="2">
 
                 <ProgressBar

@@ -83,6 +83,12 @@ public class DepoTransferUrun extends AppCompatActivity {
     RecyclerView recyclerView;
     SevkiyatÜrünleriRecyclerView gecici;
     CheckBox checkBoxall;
+    ArrayList<Float> firstAmount=new ArrayList<>();
+    ArrayList<Float> secondAmount=new ArrayList<>();
+    TextView tx_birinciBirim,tx_ikinciBirim,tx_barkodSayisi;
+    ImageView btn_calculate;
+    float birincibirim,ikincibirim;
+    int barkodsayisi;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -98,6 +104,10 @@ public class DepoTransferUrun extends AppCompatActivity {
         recyclerView = (RecyclerView) findViewById(R.id.recyclerview);
 
         datalist = new ArrayList<SevkiyatÜrünleriRecyclerView>();
+        tx_birinciBirim = (TextView) findViewById(R.id.tx_birinciBirim);
+        tx_ikinciBirim = (TextView) findViewById(R.id.tx_ikinciBirim);
+        tx_barkodSayisi = (TextView) findViewById(R.id.tx_barkodSayisi);
+        btn_calculate = (ImageView) findViewById(R.id.btn_calculate);
         btn_gir = (Button) findViewById(R.id.btn_gir);
         txtana = (TextView) findViewById(R.id.txtana);
         txthedef = (TextView) findViewById(R.id.txthedef);
@@ -125,7 +135,24 @@ public class DepoTransferUrun extends AppCompatActivity {
         same = false;
         FillList fillList = new FillList();
         fillList.execute("");
+        btn_calculate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!datalist.isEmpty()) {
+                    birincibirim = 0;
+                    ikincibirim = 0;
+                    for (int i = 0; i < datalist.size(); i++) {
+                        if (datalist.get(i).isChecked()) {
+                            birincibirim = birincibirim + firstAmount.get(i);
+                            ikincibirim = ikincibirim + secondAmount.get(i);
+                        }
+                    }
+                    tx_birinciBirim.setText(birincibirim + "");
+                    tx_ikinciBirim.setText(ikincibirim + "");
 
+                }
+            }
+        });
 
         btn_drop.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -140,6 +167,8 @@ public class DepoTransferUrun extends AppCompatActivity {
                 check = true;
                 recyclerView.setAdapter(null);
                 datalist.clear();
+                firstAmount.clear();
+                secondAmount.clear();
                 for (ProductsP productsP : products) {
                     if (productsP.getProductKod().equals(tx_urunkodu.getText().toString())) {
                         tx_urunadi.setText(productsP.getProductadi());
@@ -214,7 +243,7 @@ public class DepoTransferUrun extends AppCompatActivity {
                     }
                 }
 
-                emreAdaptor = new DepoTransferUrunAdapter(getApplicationContext(), datalist);
+                emreAdaptor = new DepoTransferUrunAdapter(getApplicationContext(), datalist,firstAmount,secondAmount);
                 recyclerView.setAdapter(emreAdaptor);
 
             }
@@ -410,15 +439,18 @@ public class DepoTransferUrun extends AppCompatActivity {
 
             empty = true;
             pbbar.setVisibility(View.VISIBLE);
+            birincibirim =0;
+            ikincibirim=0;
+            barkodsayisi=0;
         }
 
         @Override
         protected void onPostExecute(String r) {
             pbbar.setVisibility(View.GONE);
             if (!empty) {
-
+                tx_barkodSayisi.setText(barkodsayisi+"");
                 toneG.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD, 200);
-                emreAdaptor = new DepoTransferUrunAdapter(getApplicationContext(), datalist);
+                emreAdaptor = new DepoTransferUrunAdapter(getApplicationContext(), datalist,firstAmount,secondAmount);
                 recyclerView.setAdapter(emreAdaptor);
                 LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
                 linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -462,6 +494,7 @@ public class DepoTransferUrun extends AppCompatActivity {
                         gecici.setUyari2("");
                         datalist.add(gecici);
                         empty = false;
+                        barkodsayisi++;
                     }
                     z = "Başarılı";
                 }
@@ -482,6 +515,10 @@ public class DepoTransferUrun extends AppCompatActivity {
             if (resultCode == Activity.RESULT_OK) {
                 codeid = data.getStringExtra("codeid");
                 check = true;
+                firstAmount.clear();
+                secondAmount.clear();
+                datalist.clear();
+                recyclerView.setAdapter(null);
                 for (ProductsP productsP : products) {
                     if (productsP.getProductKod().equals(codeid)) {
                         tx_urunadi.setText(productsP.getProductadi());
@@ -541,7 +578,7 @@ public class DepoTransferUrun extends AppCompatActivity {
         @Override
         protected void onPostExecute(String r) {
             pbbar.setVisibility(View.GONE);
-            emreAdaptor = new DepoTransferUrunAdapter(getApplicationContext(), datalist);
+            emreAdaptor = new DepoTransferUrunAdapter(getApplicationContext(), datalist,firstAmount,secondAmount);
             recyclerView.setAdapter(emreAdaptor);
             if (!hata)
                 Toast.makeText(getApplicationContext(), "AKTARILDI!", Toast.LENGTH_SHORT).show();
@@ -556,16 +593,15 @@ public class DepoTransferUrun extends AppCompatActivity {
                 if (con == null) {
                     z = "Error in connection with SQL server";
                 } else {
-                    while (datalist.size() > 0) {
+                    for (int i = 0; i < datalist.size(); i++) {
                         if (datalist.get(i).isChecked()) {
                             paletsil = datalist.get(i).getPaletid();
                             barcodesil = datalist.get(i).getBarcodeid();
                             UUID uuıd = UUID.randomUUID();
-                            String query2 = "insert into WAREHOUSETRANSFER" + " values ('" + uuıd + "','" + memberid + "','" + barcodesil + "','" + paletsil + "','" + anadepoid + "','" + hedefdepoid + "','"+datalist.get(i).getFirstamount()+"','"+datalist.get(i).getSecondamount()+"',GETDATE())";
-                            datalist.remove(i);
+                            String query2 = "insert into WAREHOUSETRANSFER" + " values ('" + uuıd + "','" + memberid + "','" + barcodesil + "','" + paletsil + "','" + anadepoid + "','" + hedefdepoid + "','"+firstAmount.get(i)+"','"+secondAmount.get(i)+"',GETDATE())";
                             PreparedStatement preparedStatement = con.prepareStatement(query2);
                             preparedStatement.executeUpdate();
-                        } else i++;
+                        }
                         hata = false;
                     }
 

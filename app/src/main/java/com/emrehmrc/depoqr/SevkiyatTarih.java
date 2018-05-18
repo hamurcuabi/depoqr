@@ -40,6 +40,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 import static com.emrehmrc.depoqr.AnaSayfa.MyPREFERENCES;
@@ -61,7 +63,7 @@ public class SevkiyatTarih extends AppCompatActivity {
     AutoCompleteTextView tx_urunadi;
     EditText tx_urunkodu;
     String secilenUrun;
-    Button btn_gir, btnqrread,btnsend;
+    Button btn_gir, btnqrread, btnsend;
     ToneGenerator toneG;
     boolean empty;
     ProgressBar progressBar;
@@ -73,6 +75,13 @@ public class SevkiyatTarih extends AppCompatActivity {
     ArrayList<String> emptyArray = new ArrayList<>();
     ArrayList<String> emptyArray2 = new ArrayList<>();
     int i = 0;
+    ArrayList<Float> firstAmount = new ArrayList<>();
+    ArrayList<Float> secondAmount = new ArrayList<>();
+    float sevkGmiktar;
+    float yuklenen,toplam;
+    TextView tx_sevkGmiktar, tx_yuklenen, tx_toplam,tx_barkodsayisi;
+    ImageView btn_calculate;
+    int barkodsayisi;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,11 +114,31 @@ public class SevkiyatTarih extends AppCompatActivity {
         checkBoxall = (CheckBox) findViewById(R.id.checkBoxall);
         btnqrread = (Button) findViewById(R.id.btnqrread);
         btnsend = (Button) findViewById(R.id.btnsend);
-
+        tx_sevkGmiktar = (TextView) findViewById(R.id.tx_sevkGmiktar);
+        tx_yuklenen = (TextView) findViewById(R.id.tx_yuklenen);
+        tx_toplam = (TextView) findViewById(R.id.tx_toplam);
+        btn_calculate = (ImageView) findViewById(R.id.btn_calculate);
+        tx_barkodsayisi = (TextView) findViewById(R.id.tx_barkodsayisi);
         gelenSevk.setText(sevkNo);
         gelenDepo.setText(sevkdepoAd);
         FillList fillList = new FillList();
         fillList.execute("");
+        btn_calculate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(!tx_sevkGmiktar.getText().toString().isEmpty()){
+                    toplam= 0;
+                    for (int i = 0; i < datalist.size(); i++) {
+                        if (datalist.get(i).isChecked()) {
+                            toplam = toplam + firstAmount.get(i);
+                        }
+                    }
+                    tx_toplam.setText(toplam+"");
+                    yuklenen = yuklenen+toplam;
+                    tx_yuklenen.setText(yuklenen + "");
+                }
+            }
+        });
         btn_drop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -122,6 +151,8 @@ public class SevkiyatTarih extends AppCompatActivity {
                 check = true;
                 recyclerView.setAdapter(null);
                 datalist.clear();
+                firstAmount.clear();
+                secondAmount.clear();
                 for (ProductsP productsP : products) {
                     if (productsP.getProductKod().equals(tx_urunkodu.getText().toString())) {
                         tx_urunadi.setText(productsP.getProductadi());
@@ -179,7 +210,7 @@ public class SevkiyatTarih extends AppCompatActivity {
                     }
                 }
 
-                emreAdaptor = new SevkiyetTarihAdapter(getApplicationContext(), datalist);
+                emreAdaptor = new SevkiyetTarihAdapter(getApplicationContext(), datalist, firstAmount, secondAmount);
                 recyclerView.setAdapter(emreAdaptor);
 
             }
@@ -196,12 +227,12 @@ public class SevkiyatTarih extends AppCompatActivity {
         btnsend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!datalist.isEmpty()){
+                if (!datalist.isEmpty()) {
                     emptyArray.clear();
                     emptyArray2.clear();
                     IsSame ısSame = new IsSame();
                     ısSame.execute("");
-                }else{
+                } else {
                     Toast.makeText(SevkiyatTarih.this, "LİSTEDE ÜRÜN BULUNAMADI :(", Toast.LENGTH_SHORT).show();
 
                 }
@@ -209,6 +240,7 @@ public class SevkiyatTarih extends AppCompatActivity {
         });
 
     }
+
     @SuppressLint("NewApi")
     public class IsSame extends AsyncTask<String, String, String> {
         String z = "";
@@ -278,6 +310,7 @@ public class SevkiyatTarih extends AppCompatActivity {
             return z;
         }
     }
+
     @SuppressLint("NewApi")
     public class SendProductss extends AsyncTask<String, String, String> {
         String z = "";
@@ -313,7 +346,7 @@ public class SevkiyatTarih extends AppCompatActivity {
                     z = "Error in connection with SQL server";
                 } else {
                     if (!emptyArray2.isEmpty()) {
-                        while (datalist.size() > 0) {
+                        for (int i = 0; i < datalist.size(); i++) {
                             if (datalist.get(i).isChecked()) {
                                 if (emptyArray2.contains(datalist.get(i).getBarcodeid())) {
                                     UUID uuıd = UUID.randomUUID();
@@ -322,17 +355,16 @@ public class SevkiyatTarih extends AppCompatActivity {
                                             "SECONDUNITAMOUNT," + "WAREHOUSEID,PRODUCTID,BARCODEID,PALETID,ISOKEY)" +
                                             " values(" + "'" + uuıd + "'," +
                                             "'" + memberid + "','" + comid + "'," +
-                                            "'" + sevkId + "'" + ",'" + datalist.get(i).getFirstamount() + "'," +
-                                            "'" + datalist.get(i).getSecondamount() + "'" + ",'" + sevkdepoid + "'," +
+                                            "'" + sevkId + "'" + ",'" + firstAmount.get(i) + "'," +
+                                            "'" + secondAmount.get(i) + "'" + ",'" + sevkdepoid + "'," +
                                             "'" + datalist.get(i).getProductid() + "'" +
                                             "," + "'" + datalist.get(i).getBarcodeid() + "','" + datalist.get(i)
                                             .getPaletid() + "','0')";
                                     PreparedStatement preparedStatement = con.prepareStatement(query);
                                     preparedStatement.executeUpdate();
-                                    datalist.remove(i);
                                     deneme = false;
-                                } else i++;
-                            } else i++;
+                                }
+                            }
                         }
                     }
                 }
@@ -346,6 +378,7 @@ public class SevkiyatTarih extends AppCompatActivity {
             return z;
         }
     }
+
     @SuppressLint("NewApi")
     public class SendProducts extends AsyncTask<String, String, String> {
         String z = "";
@@ -361,7 +394,7 @@ public class SevkiyatTarih extends AppCompatActivity {
         @Override
         protected void onPostExecute(String r) {
             progressBar.setVisibility(View.GONE);
-            emreAdaptor = new SevkiyetTarihAdapter(getApplicationContext(), datalist);
+            emreAdaptor = new SevkiyetTarihAdapter(getApplicationContext(), datalist, firstAmount, secondAmount);
             recyclerView.setAdapter(emreAdaptor);
             if (!hata)
                 Toast.makeText(getApplicationContext(), "AKTARILDI!", Toast.LENGTH_SHORT).show();
@@ -376,7 +409,7 @@ public class SevkiyatTarih extends AppCompatActivity {
                 if (con == null) {
                     z = "Error in connection with SQL server";
                 } else {
-                    while (datalist.size() > 0) {
+                    for (int i = 0; i < datalist.size(); i++) {
                         if (datalist.get(i).isChecked()) {
                             UUID uuıd = UUID.randomUUID();
                             String query = "insert into SENTFORWARDING" + " " +
@@ -384,15 +417,15 @@ public class SevkiyatTarih extends AppCompatActivity {
                                     "SECONDUNITAMOUNT," + "WAREHOUSEID,PRODUCTID,BARCODEID,PALETID,ISOKEY)" +
                                     " values(" + "'" + uuıd + "'," +
                                     "'" + memberid + "','" + comid + "'," +
-                                    "'" + sevkId + "'" + ",'" + datalist.get(i).getFirstamount() + "'," +
-                                    "'" + datalist.get(i).getSecondamount() + "'" + ",'" + sevkdepoid + "'," +
+                                    "'" + sevkId + "'" + ",'" + firstAmount.get(i) + "'," +
+                                    "'" + secondAmount.get(i) + "'" + ",'" + sevkdepoid + "'," +
                                     "'" + datalist.get(i).getProductid() + "'" +
                                     "," + "'" + datalist.get(i).getBarcodeid() + "','" + datalist.get(i)
                                     .getPaletid() + "','0')";
-                            datalist.remove(i);
+
                             PreparedStatement preparedStatement = con.prepareStatement(query);
                             preparedStatement.executeUpdate();
-                        } else i++;
+                        }
                         hata = false;
                     }
 
@@ -428,7 +461,7 @@ public class SevkiyatTarih extends AppCompatActivity {
             progressBar.setVisibility(View.GONE);
             if (isSuccess) {
                 datalist.clear();
-                emreAdaptor = new SevkiyetTarihAdapter(getApplicationContext(), datalist);
+                emreAdaptor = new SevkiyetTarihAdapter(getApplicationContext(), datalist, firstAmount, secondAmount);
                 recyclerView.setAdapter(null);
 
                 Toast.makeText(SevkiyatTarih.this, "BAŞARIYLA SİLİNDİ", Toast.LENGTH_SHORT).show();
@@ -561,7 +594,7 @@ public class SevkiyatTarih extends AppCompatActivity {
                             "FIRSTUNITNAME,SECONDUNITNAME,\n" +
                             "SUM(WDIRECTION * FIRSTAMOUNT)  AS FIRSTAMOUNT, \n" +
                             "SUM(WDIRECTION * SECONDAMOUNT) AS SECONDAMOUNT \n" +
-                            "from VW_WAREHOUSESTOCKMOVEMENT where PRODUCTID IN (Select PRODUCTID from VW_FORWARDINGPRODUCTPLAN where FORWARDINGID ='"+sevkId+"') and\n" +
+                            "from VW_WAREHOUSESTOCKMOVEMENT where PRODUCTID IN (Select PRODUCTID from VW_FORWARDINGPRODUCTPLAN where FORWARDINGID ='" + sevkId + "') and\n" +
                             "(DESTINATIONWAREHOUSEID = \n" +
                             "'" + sevkdepoid + "' \n" +
                             "or SOURCEWAREHOUSEID = '" + sevkdepoid + "') \n" +
@@ -595,15 +628,17 @@ public class SevkiyatTarih extends AppCompatActivity {
 
             empty = true;
             progressBar.setVisibility(View.VISIBLE);
+            barkodsayisi=0;
         }
 
         @Override
         protected void onPostExecute(String r) {
             progressBar.setVisibility(View.GONE);
             if (!empty) {
-
+                GetMiktar getMiktar = new GetMiktar();
+                getMiktar.execute("");
                 toneG.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD, 200);
-                emreAdaptor = new SevkiyetTarihAdapter(getApplicationContext(), datalist);
+                emreAdaptor = new SevkiyetTarihAdapter(getApplicationContext(), datalist, firstAmount, secondAmount);
                 recyclerView.setAdapter(emreAdaptor);
                 LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
                 linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -647,6 +682,7 @@ public class SevkiyatTarih extends AppCompatActivity {
                         gecici.setUyari2("");
                         datalist.add(gecici);
                         empty = false;
+                        barkodsayisi++;
                     }
                     z = "Başarılı";
                 }
@@ -665,6 +701,8 @@ public class SevkiyatTarih extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         recyclerView.setAdapter(null);
         datalist.clear();
+        firstAmount.clear();
+        secondAmount.clear();
         if (requestCode == 1) {
             if (resultCode == Activity.RESULT_OK) {
                 codeid = data.getStringExtra("codeid");
@@ -780,5 +818,93 @@ public class SevkiyatTarih extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+    }
+
+    @SuppressLint("NewApi")
+    public class FillMiktar extends AsyncTask<String, String, String> {
+        String z = "";
+        Map<String, String> datanum = new HashMap<String, String>();
+
+        @Override
+        protected void onPostExecute(String r) {
+            tx_barkodsayisi.setText(barkodsayisi+"");
+            tx_sevkGmiktar.setText(sevkGmiktar + "");
+            tx_yuklenen.setText(yuklenen + "");
+            toplam= 0;
+            for (int i = 0; i < datalist.size(); i++) {
+                if (datalist.get(i).isChecked()) {
+                    toplam = toplam + firstAmount.get(i);
+                }
+            }
+            tx_toplam.setText(toplam+"");
+        }
+
+        @Override
+        protected String doInBackground(String... strings) {
+            try {
+                Connection con = connectionClass.CONN();
+                if (con == null) {
+                    z = "Error in connection with SQL server";
+                } else {
+                    String query = "Select FIRSTUNITAMOUNT from SENTFORWARDING where FORWARDINGID = '" + sevkId + "' and PRODUCTID IN (select PRODUCTID from VW_WAREHOUSESTOCKMOVEMENT where PRODUCTCODE = '" + secilenUrun + "')";
+                    PreparedStatement ps = con.prepareStatement(query);
+                    ResultSet rs = ps.executeQuery();
+                    while (rs.next()) {
+                        yuklenen = yuklenen + (rs.getFloat("FIRSTUNITAMOUNT"));
+                    }
+                    z = "Başarılı";
+
+                }
+            } catch (Exception ex) {
+                z = "Veri Çekme Hatası";
+            }
+            return z;
+        }
+    }
+
+    @SuppressLint("NewApi")
+    public class GetMiktar extends AsyncTask<String, String, String> {
+        String z = "";
+
+
+        @Override
+        protected void onPreExecute() {
+            empty = true;
+            yuklenen = 0;
+            sevkGmiktar = 0;
+        }
+
+        @Override
+        protected void onPostExecute(String r) {
+            FillMiktar fillMiktar = new FillMiktar();
+            fillMiktar.execute();
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            try {
+                Connection con = connectionClass.CONN();
+                if (con == null) {
+                    z = "Error in connection with SQL server";
+                } else {
+                    String query = "Select FORWARDINGAMOUNT from VW_FORWARDINGPRODUCTPLAN where ( " +
+                            "FORWARDINGNO='" + sevkNo + "'and " +
+                            "ISSAVE='TRUE' and ISDELETE ='FALSE' and COMPANIESID='" + comid + "' " + " )";
+
+                    PreparedStatement ps = con.prepareStatement(query);
+                    ResultSet rs = ps.executeQuery();
+
+                    if (rs.next()) {
+                        sevkGmiktar = rs.getFloat("FORWARDINGAMOUNT");
+                        empty = false;
+                    }
+                    z = "Başarılı";
+
+                }
+            } catch (Exception ex) {
+                z = "Veri Çekme Hatası";
+            }
+            return z;
+        }
     }
 }

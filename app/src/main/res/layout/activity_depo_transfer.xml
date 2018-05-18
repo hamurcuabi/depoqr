@@ -1,55 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/appbackcolor"
     android:orientation="vertical">
 
     <LinearLayout
         android:id="@+id/layoutdepo"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/last"
         android:background="#E0F7FA"
         android:orientation="vertical"
-       android:layout_above="@+id/last">
+        android:weightSum="2">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:gravity="center"
-            android:orientation="vertical"
-            android:padding="2dp">
-
-            <TextView
-
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="6dp"
-                android:layout_weight="1"
-                android:background="@drawable/deneme3"
-                android:padding="10dp"
-                android:text="ANA DEPO LİSTESİ"
-                android:textAlignment="center"
-                android:textColor="#ffffff"
-                android:textSize="24sp"
-                android:textStyle="bold"
-                android:visibility="gone" />
+            android:orientation="vertical">
 
             <EditText
-                android:textColorHint="@color/white"
                 android:id="@+id/edtana"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="6dp"
-                android:layout_weight="1"
-                android:background="@drawable/deneme3"
+                android:layout_height="45dp"
+                android:background="@color/zyonetim"
                 android:drawableRight="@drawable/action_search"
                 android:focusable="false"
-                android:hint="ANA DEPO LİSTESİ"
+                android:hint="ANA DEPO SEÇ"
                 android:padding="10dp"
                 android:textAlignment="center"
                 android:textColor="#ffffff"
+                android:textColorHint="@color/white"
                 android:textSize="24sp"
                 android:textStyle="bold" />
 
@@ -57,16 +41,66 @@
             <ListView
                 android:id="@+id/lstdepoana"
                 android:layout_width="match_parent"
-                android:layout_height="130dp"
+                android:layout_height="match_parent"
                 android:layout_marginTop="5dp"
-                android:layout_weight="2"
                 android:divider="#808080"
                 android:dividerHeight="1dp"
-                android:padding="2dp"
-                android:listSelector="@android:color/holo_red_dark">
+                android:listSelector="@android:color/holo_red_dark"
+                android:padding="2dp">
 
             </ListView>
         </LinearLayout>
+
+
+        <ProgressBar
+            android:id="@+id/pbbar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="gone" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+            <EditText
+                android:id="@+id/edthedef"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:background="@color/zyonetim"
+                android:drawableRight="@drawable/action_search"
+                android:focusable="false"
+                android:hint="HEDEF DEPO SEÇ"
+                android:padding="10dp"
+                android:textAlignment="center"
+                android:textColor="#ffffff"
+                android:textColorHint="@color/white"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+
+            <ListView
+                android:id="@+id/lstdepohedef"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="5dp"
+                android:divider="#808080"
+                android:dividerHeight="1dp"
+                android:listSelector="@android:color/holo_red_dark"
+                android:padding="2dp">
+
+            </ListView>
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/last"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        android:padding="2dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -108,105 +142,42 @@
                 android:textStyle="bold" />
         </LinearLayout>
 
-        <ProgressBar
-            android:id="@+id/pbbar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:visibility="gone" />
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
+            android:layout_alignParentBottom="true"
+            android:layout_gravity="center"
+            android:orientation="horizontal"
             android:padding="2dp">
 
+            <Button
 
-            <TextView
+                android:id="@+id/btnok"
+                style="@style/mybuttons"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="6dp"
+                android:layout_marginBottom="12dp"
                 android:layout_weight="1"
-                android:background="@drawable/deneme3"
-                android:padding="10dp"
-                android:text="HEDEF DEPO LİSTESİ"
-                android:textAlignment="center"
-                android:textColor="#ffffff"
-                android:textSize="24sp"
-                android:textStyle="bold"
-                android:visibility="gone" />
+                android:background="@drawable/deneme"
+                android:drawableRight="@drawable/nexti"
+                android:text="BARKOD TR."
+                android:textSize="18sp" />
 
-            <EditText
-                android:textColorHint="@color/white"
-                android:focusable="false"
-                android:id="@+id/edthedef"
+            <Button
+
+                android:id="@+id/btnok2"
+                style="@style/mybuttons"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="6dp"
+                android:layout_marginBottom="12dp"
                 android:layout_weight="1"
-                android:background="@drawable/deneme3"
-                android:drawableRight="@drawable/action_search"
-                android:hint="HEDEF DEPO LİSTESİ"
-                android:padding="10dp"
-                android:textAlignment="center"
-                android:textColor="#ffffff"
-                android:textSize="24sp"
-                android:textStyle="bold" />
-
-            <ListView
-
-                android:id="@+id/lstdepohedef"
-                android:layout_width="match_parent"
-                android:layout_height="130dp"
-                android:layout_marginTop="5dp"
-                android:layout_weight="2"
-                android:divider="#808080"
-                android:dividerHeight="1dp"
-                android:padding="2dp"
-                android:listSelector="@android:color/holo_red_dark">
-
-            </ListView>
+                android:background="@drawable/deneme"
+                android:drawableRight="@drawable/nexti"
+                android:text="ÜRÜN TR."
+                android:textSize="18sp" />
         </LinearLayout>
-
-
-
-
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:orientation="horizontal"
-        android:padding="2dp"
-        android:id="@+id/last"
-        android:layout_alignParentBottom="true">
-
-        <Button
-
-            android:drawableRight="@drawable/nexti"
-            android:layout_margin="6dp"
-            android:id="@+id/btnok"
-            style="@style/mybuttons"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="12dp"
-            android:layout_weight="1"
-            android:background="@drawable/deneme"
-            android:text="BARKOD TR."
-            android:textSize="18sp" />
-        <Button
-
-            android:drawableRight="@drawable/nexti"
-            android:layout_margin="6dp"
-            android:id="@+id/btnok2"
-            style="@style/mybuttons"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="12dp"
-            android:layout_weight="1"
-            android:background="@drawable/deneme"
-            android:text="ÜRÜN TR."
-            android:textSize="18sp" />
     </LinearLayout>
 
 </RelativeLayout>

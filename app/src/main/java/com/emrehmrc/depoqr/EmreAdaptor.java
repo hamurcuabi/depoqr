@@ -26,19 +26,20 @@ public class EmreAdaptor extends RecyclerView.Adapter<EmreAdaptor.MyViewHolder> 
 
     ArrayList<SevkiyatÜrünleriRecyclerView> datalist;
     LayoutInflater layoutInflater;
-    ArrayList<String> firstAmount;
-    ArrayList<String> secondAmount;
+    ArrayList<Float> firstAmount;
+    ArrayList<Float> secondAmount;
 
 
     public EmreAdaptor(Context context, ArrayList<SevkiyatÜrünleriRecyclerView> data,
-                       ArrayList<String> firstAmount, ArrayList<String> secondAmount) {
+                       ArrayList<Float> firstAmount, ArrayList<Float> secondAmount) {
         layoutInflater = LayoutInflater.from(context);
         this.datalist = data;
         this.firstAmount=firstAmount;
         this.secondAmount=secondAmount;
-        for(int i=0;i<data.size();i++){
-            firstAmount.add(data.get(i).getFirstamount()+"");
-            secondAmount.add(data.get(i).getSecondamount()+"");
+
+        for(int i = firstAmount.size();i<data.size();i++){
+            firstAmount.add(data.get(i).getFirstamount());
+            secondAmount.add(data.get(i).getSecondamount());
         }
         setHasStableIds(true);
 
@@ -94,8 +95,8 @@ public class EmreAdaptor extends RecyclerView.Adapter<EmreAdaptor.MyViewHolder> 
                         holder.checkBox.setChecked(true);  //bunu
                         holder.checkBox.setEnabled(true); //icindeki ture
                     //  datalist.get(position).setFakeFirst(Float.parseFloat(s.toString()));
-                        datalist.get(position).setFirstamount(Float.parseFloat(s.toString()));
-                        firstAmount.set(position,s.toString());
+                       // datalist.get(position).setFirstamount(Float.parseFloat(s.toString()));
+                        firstAmount.set(position, Float.valueOf(s.toString()));
                         datalist.get(position).setChecked(true);
 
 
@@ -144,8 +145,8 @@ public class EmreAdaptor extends RecyclerView.Adapter<EmreAdaptor.MyViewHolder> 
                         holder.checkBox.setChecked(true);  //bunu
                         holder.checkBox.setEnabled(true); //icindeki ture
                       //  datalist.get(position).setFakeSecond(Float.parseFloat(s.toString()));
-                        datalist.get(position).setSecondamount(Float.parseFloat(s.toString()));
-                        secondAmount.set(position,s.toString());
+                      //  datalist.get(position).setSecondamount(Float.parseFloat(s.toString()));
+                        secondAmount.set(position, Float.valueOf(s.toString()));
                         datalist.get(position).setChecked(true);
 
                     }else {
@@ -251,8 +252,8 @@ public class EmreAdaptor extends RecyclerView.Adapter<EmreAdaptor.MyViewHolder> 
             this.firstamount.setText(clicked.getFirstamount() + "");
             this.secondunit.setText(clicked.getSecondUnit());
             this.secondamount.setText(clicked.getSecondamount() + "");
-            this.edtfirstamount.setText(firstAmount.get(position));
-            this.edtsecondamount.setText(secondAmount.get(position));
+            this.edtfirstamount.setText(firstAmount.get(position) + "");
+            this.edtsecondamount.setText(secondAmount.get(position) + "");
             this.txtfirst.setText(clicked.getFirstUnit());
             this.txtsecond.setText(clicked.getSecondUnit());
             this.uyari1.setText(clicked.getUyari1());

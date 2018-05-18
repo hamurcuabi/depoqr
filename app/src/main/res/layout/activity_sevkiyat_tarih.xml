@@ -157,7 +157,74 @@
             </LinearLayout>
 
         </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:orientation="horizontal"
+        android:layout_margin="10dp"
+        android:weightSum="6">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Y.Emri:"
+            android:textColor="#000000"
+            android:textSize="15sp" />
+        <TextView
+            android:id="@+id/tx_sevkGmiktar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColor="@color/error"
+            android:textSize="15sp" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Y.Mıktarı:"
+            android:textColor="#000000"
+            android:textSize="15sp"
+            android:visibility="gone"/>
+        <TextView
+            android:id="@+id/tx_yuklenen"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColor="@color/error"
+            android:textSize="15sp"
+            android:visibility="gone"/>
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="toplam:"
+            android:textColor="#000000"
+            android:textSize="15sp" />
+        <TextView
+            android:id="@+id/tx_toplam"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColor="@color/error"
+            android:textSize="15sp" />
+        <ImageView
+            android:id="@+id/btn_calculate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_action_calculate"
+            android:layout_weight="1"
+            android:clickable="true"/>
+        <TextView
+            android:id="@+id/tx_barkodsayisi"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColor="@color/error"
+            android:textSize="15sp" />
+
+    </LinearLayout>
         <LinearLayout
             android:id="@+id/header"
             android:layout_width="fill_parent"
@@ -165,8 +232,7 @@
             android:layout_marginTop="5dp"
             android:background="@color/colorPrimary"
             android:orientation="horizontal"
-            android:layout_margin="10dp"
-            >
+            android:layout_margin="10dp">
 
             <CheckBox
                 android:id="@+id/checkBoxall"

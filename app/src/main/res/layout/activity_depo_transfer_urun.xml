@@ -1,14 +1,14 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/appbackcolor"
     android:orientation="vertical">
 
     <LinearLayout
 
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_alignParentTop="true"
         android:background="#E0F7FA"
         android:orientation="vertical"
@@ -18,8 +18,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
             android:background="@color/listesatir1"
+            android:orientation="horizontal"
             android:padding="2dp">
 
             <TextView
@@ -31,8 +31,8 @@
                 android:text="ANA DEPO SEÇİNİZ"
                 android:textAlignment="center"
                 android:textColor="@android:color/holo_red_dark"
-                android:textSize="18sp"
-                android:textStyle="bold"  />
+                android:textSize="15sp"
+                android:textStyle="bold" />
 
             <ImageView
 
@@ -49,12 +49,10 @@
                 android:text="HEDEF DEPO SEÇİNİZ"
                 android:textAlignment="center"
                 android:textColor="@android:color/holo_red_dark"
-                android:textSize="18sp"
+                android:textSize="15sp"
                 android:textStyle="bold" />
 
         </LinearLayout>
-
-
 
 
         <LinearLayout
@@ -170,18 +168,83 @@
                     android:text="AKTAR"
                     android:textSize="15sp" />
             </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:orientation="horizontal"
+                android:weightSum="6">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="1.B:"
+                    android:textColor="#000000"
+                    android:textSize="15sp" />
+                <TextView
+                    android:id="@+id/tx_birinciBirim"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textColor="@color/error"
+                    android:textSize="15sp" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Y.Mıktarı:"
+                    android:textColor="#000000"
+                    android:textSize="15sp"
+                    android:visibility="gone"/>
+                <TextView
+                    android:id="@+id/tx_yuklenen"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textColor="@color/error"
+                    android:textSize="15sp"
+                    android:visibility="gone"/>
 
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="2.B:"
+                    android:textColor="#000000"
+                    android:textSize="15sp" />
+                <TextView
+                    android:id="@+id/tx_ikinciBirim"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textColor="@color/error"
+                    android:textSize="15sp" />
+                <ImageView
+                    android:id="@+id/btn_calculate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_action_calculate"
+                    android:layout_weight="1"
+                    android:clickable="true"/>
+                <TextView
+                    android:id="@+id/tx_barkodSayisi"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textColor="@color/error"
+                    android:textSize="15sp" />
+
+            </LinearLayout>
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/header"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:layout_margin="10dp"
             android:layout_marginTop="5dp"
             android:background="@color/colorPrimary"
-            android:orientation="horizontal"
-            android:layout_margin="10dp"
-            >
+            android:orientation="horizontal">
 
             <CheckBox
                 android:id="@+id/checkBoxall"
@@ -235,7 +298,9 @@
 
 
             </LinearLayout>
+
         </LinearLayout>
+
         <ProgressBar
 
             android:id="@+id/pbbar"
@@ -243,7 +308,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:textColor="#ffffff"
-            android:visibility="gone"/>
+            android:visibility="gone" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recyclerview"
