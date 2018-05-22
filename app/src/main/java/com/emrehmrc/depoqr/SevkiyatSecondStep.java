@@ -770,6 +770,8 @@ public class SevkiyatSecondStep extends AppCompatActivity {
             if (!hata) {
                 datalist.clear();
                 recyclerView.setAdapter(null);
+                firstAmount.clear();
+                secondAmount.clear();
                 Toast.makeText(getApplicationContext(), "AKTARILDI!", Toast.LENGTH_SHORT).show();
                 tx_productCount.setText("");
                 count = 0;
@@ -845,6 +847,8 @@ public class SevkiyatSecondStep extends AppCompatActivity {
                 count = 0;
                 datalist.clear();
                 recyclerView.setAdapter(null);
+                firstAmount.clear();
+                secondAmount.clear();
             }
             // if (hata) Toast.makeText(getApplicationContext(), "HATA!", Toast.LENGTH_SHORT).show();
         }
@@ -982,6 +986,8 @@ public class SevkiyatSecondStep extends AppCompatActivity {
                 recyclerView.setAdapter(emreAdaptor);
                 datalist.clear();
                 recyclerView.setAdapter(null);
+                firstAmount.clear();
+                secondAmount.clear();
                 Toast.makeText(SevkiyatSecondStep.this, "BAŞARIYLA SİLİNDİ", Toast.LENGTH_SHORT).show();
                 tx_productCount.setText("");
                 count = 0;

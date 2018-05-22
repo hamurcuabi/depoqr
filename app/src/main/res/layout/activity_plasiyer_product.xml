@@ -77,14 +77,15 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:background="@color/colorPrimary"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            >
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:paddingLeft="5dp"
-                android:text="Ü.Kodu"
+                android:text="Ü.Adi"
                 android:textColor="#FFFFFF"
                 android:textSize="13sp"
                 android:textStyle="bold" />
@@ -113,7 +114,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="T.Tutar"
+                android:text="Toplam.T"
                 android:textColor="#FFFFFF"
                 android:textSize="13sp"
                 android:textStyle="bold" />
@@ -122,7 +123,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="KDV"
+                android:text="KDV.T"
                 android:textColor="#FFFFFF"
                 android:textSize="13sp"
                 android:textStyle="bold" />
@@ -131,7 +132,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="G.Tutar"
+                android:text="Genel.T"
                 android:textColor="#FFFFFF"
                 android:textSize="13sp"
                 android:textStyle="bold" />
@@ -139,7 +140,8 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:background="@color/lightgray">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -156,13 +158,12 @@
                     android:textColor="#ffffff"
                     android:visibility="gone" />
 
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/lst_products"
+                <ListView
+                    android:id="@+id/lst_plasiyer"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:divider="#808080"
                     android:dividerHeight="1dp"
-                    android:listSelector="@android:color/darker_gray"
                     android:scrollbarThumbVertical="@drawable/scrollbar_vertical_thumb" />
             </LinearLayout>
 

@@ -16,6 +16,7 @@ public class SarfAdapter extends BaseAdapter  {
     ArrayList<SarfListe.SarfAnaListeModel> beanList;
     private ArrayList<SarfListe.SarfAnaListeModel> mStringFilterList;
     private LayoutInflater inflater;
+    private final int[] bgColors = new int[] { R.color.list_bg_2, R.color.list_bg_1 };
 
 
     public SarfAdapter(Context context, ArrayList<SarfListe.SarfAnaListeModel> objectss) {
@@ -47,6 +48,8 @@ public class SarfAdapter extends BaseAdapter  {
         if (convertView == null) {
             convertView = inflater.inflate(R.layout.sarf_adapter_view, null);
         }
+        int colorPosition = position % bgColors.length;
+        convertView.setBackgroundResource(bgColors[colorPosition]);
         TextView txTarih = (TextView) convertView.findViewById(R.id.view_tarih);
         TextView txCariAdi = (TextView) convertView.findViewById(R.id.view_kullanici);
         TextView txToplamTutar = (TextView) convertView.findViewById(R.id.view_cariPersonel);

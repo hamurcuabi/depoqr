@@ -644,7 +644,7 @@ public class Sevkiyat extends AppCompatActivity {
                 if (con == null) {
                     z = "Error in connection with SQL server";
                 } else {
-                    String query = "SELECT FORWARDINGNO from VW_FORWARDINGPLAN where ISSAVE='TRUE' and STATU ='FALSE' and ISDELETE ='FALSE' and COMPANIESID='" + companiesid + "' ";
+                    String query = "SELECT FORWARDINGNO from VW_FORWARDINGPLAN where ISSAVE='TRUE' and STATU ='FALSE' and ISDELETE ='FALSE' and COMPANIESID='" + companiesid + "' order by FORWARDINGNO ";
                     PreparedStatement ps = con.prepareStatement(query);
                     ResultSet rs = ps.executeQuery();
                     while (rs.next()) {

@@ -1,23 +1,45 @@
 package com.emrehmrc.depoqr;
 
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.ActivityOptions;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.media.AudioManager;
+import android.media.ToneGenerator;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.EditText;
+import android.widget.ProgressBar;
+import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.UUID;
 
 import static com.emrehmrc.depoqr.AnaSayfa.MyPREFERENCES;
 
@@ -33,8 +55,26 @@ public class PlasiyerSatisThree extends AppCompatActivity {
     String incomingKod, incomingAd, incomingDepo, memberid, comid, incomingDepoId, incomingCariId, incomingReader;
     Vibrator vibrator;
     TextView gelenad, gelendepo;
-    Button btn_barcodeoku;
-
+    Button btnentercode, btnqrread, btnsend;
+    String birimFiyat, kdv, secilenUrun, PorB, secilenBarkod, PorB2;
+    String kdvDahil;
+    Spinner spnPB;
+    EditText edtCode;
+    boolean wayId;
+    ProgressBar pbbarS;
+    UUID uuid;
+    ToneGenerator toneG;
+    SevkiyatÜrünleriRecyclerView gecici;
+    ArrayList<SevkiyatÜrünleriRecyclerView> datalist;
+    RecyclerView recyclerview;
+    int count=0;
+    ArrayList<Float> firstAmount = new ArrayList<>();
+    ArrayList<Float> secondAmount = new ArrayList<>();
+    SevkiyetTarihAdapter emreAdaptor;
+    CheckBox checkBoxall;
+    ArrayList<String> ExistArray = new ArrayList<>();
+    ArrayList<String> NotExistArray = new ArrayList<>();
+String code;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,19 +94,137 @@ public class PlasiyerSatisThree extends AppCompatActivity {
         incomingCariId = sharedPreferences.getString("plasiyerCariId", null);
         incomingDepo = sharedPreferences.getString("plasiyerDepoAd", null);
         incomingDepoId = sharedPreferences.getString("plasiyerDepoId", null);
+        Intent incomingIntent = getIntent();
+        birimFiyat = incomingIntent.getStringExtra("BirimFiyat");
+        kdv = incomingIntent.getStringExtra("KDV");
+        kdvDahil = incomingIntent.getStringExtra("KDVDAHIL");
+        secilenUrun = incomingIntent.getStringExtra("secilenUrun");
+        datalist = new ArrayList<SevkiyatÜrünleriRecyclerView>();
+        toneG = new ToneGenerator(AudioManager.STREAM_ALARM, 100);
 
-        btn_barcodeoku = (Button) findViewById(R.id.btn_barcodoku);
+        btnentercode = (Button) findViewById(R.id.btnentercode);
+        btnqrread = (Button) findViewById(R.id.btnqrread);
         gelenad = (TextView) findViewById(R.id.gelenad2);
         gelendepo = (TextView) findViewById(R.id.gelendepo2);
-
+        spnPB = (Spinner) findViewById(R.id.spnPB);
+        edtCode = (EditText) findViewById(R.id.edtCode);
+        btnsend = (Button) findViewById(R.id.btnsend);
+        pbbarS = (ProgressBar) findViewById(R.id.pbbarS);
+        recyclerview = (RecyclerView) findViewById(R.id.recyclerview);
+        checkBoxall = (CheckBox) findViewById(R.id.checkBoxall);
         gelendepo.setText(incomingDepo);
         gelenad.setText(incomingAd);
 
-        btn_barcodeoku.setOnClickListener(new View.OnClickListener() {
+
+        spnPB.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                switch (position) {
+                    case 0:
+                        PorB = "P";
+                        edtCode.setHint("PALET...");
+
+                        break;
+                    case 1:
+                        PorB = "B";
+                        edtCode.setHint("BARKOD...");
+
+                        break;
+                    default:
+                        ;
+
+
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+
+        });
+        btnentercode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(PlasiyerSatisThree.this, CodeReader.class);
+                // check then fill the list
+                secilenBarkod = edtCode.getText().toString();
+                wayId = false;
+                if (PorB.equals("P")) {
+                    FillProducts fillProducts = new FillProducts();
+                    String g2 = "Select BARCODEID,BARCODENO,PRODUCTNAME,PALETID,PALETBARCODES,PRODUCTID," +
+                            "PRODUCTCODE, " +
+                            "FIRSTUNITNAME,SECONDUNITNAME,\n" +
+                            "SUM(WDIRECTION * FIRSTAMOUNT)  AS FIRSTAMOUNT, \n" +
+                            "SUM(WDIRECTION * SECONDAMOUNT) AS SECONDAMOUNT \n" +
+                            "from VW_WAREHOUSESTOCKMOVEMENT where  \n" +
+                            "PALETBARCODES = '" + secilenBarkod + "' and COMPANIESID = '" + comid + "'\n" +
+                            "group by BARCODEID,BARCODENO,PALETBARCODES,PRODUCTNAME,PALETID,PRODUCTID," +
+                            "PRODUCTCODE," +
+                            "FIRSTUNITNAME,SECONDUNITNAME\n" +
+                            "having SUM(WDIRECTION * FIRSTAMOUNT) != 0 or \n" +
+                            "SUM(WDIRECTION * SECONDAMOUNT) != 0";
+                    fillProducts.execute(g2);
+
+                } else if (PorB.equals("B")) {
+                    FillProducts fillProducts = new FillProducts();
+                    String g2 = "Select BARCODEID,BARCODENO,PRODUCTNAME,PALETID,PALETBARCODES,PRODUCTID," +
+                            "PRODUCTCODE, " +
+                            "FIRSTUNITNAME,SECONDUNITNAME,\n" +
+                            "SUM(WDIRECTION * FIRSTAMOUNT)  AS FIRSTAMOUNT, \n" +
+                            "SUM(WDIRECTION * SECONDAMOUNT) AS SECONDAMOUNT \n" +
+                            "from VW_WAREHOUSESTOCKMOVEMENT where \n" +
+                            "BARCODENO = '" + secilenBarkod + "' and COMPANIESID = '" + comid + "' \n" +
+                            "group by BARCODEID,BARCODENO,PALETBARCODES,PRODUCTNAME,PALETID,PRODUCTID," +
+                            "PRODUCTCODE," +
+                            "FIRSTUNITNAME,SECONDUNITNAME\n" +
+                            "having SUM(WDIRECTION * FIRSTAMOUNT) != 0 or \n" +
+                            "SUM(WDIRECTION * SECONDAMOUNT) != 0";
+                    fillProducts.execute(g2);
+
+
+                }
+            }
+        });
+        btnqrread.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(PlasiyerSatisThree.this, CodeReaderForSevkiyat.class);
                 startActivityForResult(i, 1);
+            }
+        });
+        btnsend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!datalist.isEmpty()) {
+                    ExistArray.clear();
+                    NotExistArray.clear();
+                    IsSame ısSame = new IsSame();
+                    ısSame.execute("");
+                } else {
+                    Toast.makeText(getApplicationContext(), "LİSTEDE ÜRÜN BULUNAMADI :(", Toast.LENGTH_SHORT).show();
+
+                }
+            }
+        });
+        checkBoxall.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+                int a = datalist.size();
+                if (isChecked) {
+                    for (int i = 0; i < a; i++) {
+                        datalist.get(i).setChecked(true);
+                    }
+
+                } else {
+                    for (int i = 0; i < a; i++) {
+                        datalist.get(i).setChecked(false);
+                    }
+                }
+
+                emreAdaptor = new SevkiyetTarihAdapter(getApplicationContext(), datalist, firstAmount, secondAmount);
+                recyclerview.setAdapter(emreAdaptor);
+
             }
         });
     }
@@ -96,17 +254,82 @@ public class PlasiyerSatisThree extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
     @Override
     public void onBackPressed() {
         super.onBackPressed();
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
+
         if (requestCode == 1) {
             if (resultCode == Activity.RESULT_OK) {
-                incomingReader = data.getStringExtra("codeid");
+                secilenBarkod = data.getStringExtra("codeid");
 
+
+                try {
+                    uuid = UUID.fromString(secilenBarkod);
+                    PorB2 = "fdsfds";
+
+                } catch (Exception ex) {
+                    PorB2 = secilenBarkod.substring(0, 1);
+                    secilenBarkod = secilenBarkod.substring(1, secilenBarkod.length());
+
+
+                }
+                if (PorB2.equals("P")) {
+                    FillProducts fillProducts = new FillProducts();
+                    String query = "Select BARCODEID,BARCODENO,PRODUCTNAME,PALETID,PALETBARCODES,PRODUCTID," +
+                            "PRODUCTCODE, " +
+                            "FIRSTUNITNAME,SECONDUNITNAME,\n" +
+                            "SUM(WDIRECTION * FIRSTAMOUNT)  AS FIRSTAMOUNT, \n" +
+                            "SUM(WDIRECTION * SECONDAMOUNT) AS SECONDAMOUNT \n" +
+                            "from VW_WAREHOUSESTOCKMOVEMENT where \n" +
+                            "PALETBARCODES = '" + secilenBarkod + "' and COMPANIESID = '" + comid + "' \n" +
+                            "group by BARCODEID,BARCODENO,PALETBARCODES,PRODUCTNAME,PALETID,PRODUCTID," +
+                            "PRODUCTCODE," +
+                            "FIRSTUNITNAME,SECONDUNITNAME\n" +
+                            "having SUM(WDIRECTION * FIRSTAMOUNT) != 0 or \n" +
+                            "SUM(WDIRECTION * SECONDAMOUNT) != 0";
+                    fillProducts.execute(query);
+
+                } else if (PorB2.equals("B")) {
+                    FillProducts fillProducts = new FillProducts();
+                    String query = "Select BARCODEID,BARCODENO,PRODUCTNAME,PALETID,PALETBARCODES,PRODUCTID," +
+                            "PRODUCTCODE, " +
+                            "FIRSTUNITNAME,SECONDUNITNAME,\n" +
+                            "SUM(WDIRECTION * FIRSTAMOUNT)  AS FIRSTAMOUNT, \n" +
+                            "SUM(WDIRECTION * SECONDAMOUNT) AS SECONDAMOUNT \n" +
+                            "from VW_WAREHOUSESTOCKMOVEMENT where  \n" +
+                            "BARCODENO = '" + secilenBarkod + "' and COMPANIESID = '" + comid + "' \n" +
+                            "group by BARCODEID,BARCODENO,PALETBARCODES,PRODUCTNAME,PALETID,PRODUCTID," +
+                            "PRODUCTCODE," +
+                            "FIRSTUNITNAME,SECONDUNITNAME\n" +
+                            "having SUM(WDIRECTION * FIRSTAMOUNT) != 0 or \n" +
+                            "SUM(WDIRECTION * SECONDAMOUNT) != 0";
+                    fillProducts.execute(query);
+
+
+                } else {
+
+                    FillProducts fillProducts = new FillProducts();
+                    String query = "Select BARCODEID,BARCODENO,PRODUCTNAME,PALETID,PALETBARCODES,PRODUCTID," +
+                            "PRODUCTCODE, " +
+                            "FIRSTUNITNAME,SECONDUNITNAME,\n" +
+                            "SUM(WDIRECTION * FIRSTAMOUNT)  AS FIRSTAMOUNT, \n" +
+                            "SUM(WDIRECTION * SECONDAMOUNT) AS SECONDAMOUNT \n" +
+                            "from VW_WAREHOUSESTOCKMOVEMENT where \n" +
+                            "(PALETID='" + uuid + "' or BARCODEID='" + uuid + "') and COMPANIESID = '" + comid + "'\n" +
+                            "group by BARCODEID,BARCODENO,PALETBARCODES,PRODUCTNAME,PALETID,PRODUCTID," +
+                            "PRODUCTCODE," +
+                            "FIRSTUNITNAME,SECONDUNITNAME\n" +
+                            "having SUM(WDIRECTION * FIRSTAMOUNT) != 0 or \n" +
+                            "SUM(WDIRECTION * SECONDAMOUNT) != 0";
+                    fillProducts.execute(query);
+
+                }
             }
             if (resultCode == Activity.RESULT_CANCELED) {
                 //Write your code if there's no result
@@ -114,5 +337,472 @@ public class PlasiyerSatisThree extends AppCompatActivity {
         }
     }
 
+    @SuppressLint("NewApi")
+    public class FillProducts extends AsyncTask<String, String, String> {
+        String z = "";
+        boolean empty;
 
+        @Override
+        protected void onPreExecute() {
+
+            empty = true;
+            pbbarS.setVisibility(View.VISIBLE);
+        }
+
+        @Override
+        protected void onPostExecute(String r) {
+
+            pbbarS.setVisibility(View.GONE);
+
+            if (!empty) {
+                if (!wayId) {
+                    if (PorB.equals("P")) {
+                        FillProductsSec fillProducts = new FillProductsSec();
+
+                        String g2 = "Select PRODUCTIONDATE,BARCODEID,BARCODENO,PRODUCTNAME,PALETID,PALETBARCODES,PRODUCTID," +
+                                "PRODUCTCODE, " +
+                                "FIRSTUNITNAME,SECONDUNITNAME,\n" +
+                                "SUM(WDIRECTION * FIRSTAMOUNT)  AS FIRSTAMOUNT, \n" +
+                                "SUM(WDIRECTION * SECONDAMOUNT) AS SECONDAMOUNT \n" +
+                                "from VW_WAREHOUSESTOCKMOVEMENT where  \n" +
+                                "PALETBARCODES = '" + secilenBarkod + "' and PRODUCTCODE ='"+secilenUrun+"' and COMPANIESID = '" + comid + "'\n" +
+                                "group by PRODUCTIONDATE,BARCODEID,BARCODENO,PALETBARCODES,PRODUCTNAME,PALETID,PRODUCTID," +
+                                "PRODUCTCODE," +
+                                "FIRSTUNITNAME,SECONDUNITNAME\n" +
+                                "having SUM(WDIRECTION * FIRSTAMOUNT) != 0 or \n" +
+                                "SUM(WDIRECTION * SECONDAMOUNT) != 0 order by PRODUCTIONDATE";
+                        fillProducts.execute(g2);
+
+
+                    } else if (PorB.equals("B")) {
+                        FillProductsSec fillProducts = new FillProductsSec();
+
+                        String g2 = "Select PRODUCTIONDATE,BARCODEID,BARCODENO,PRODUCTNAME,PALETID,PALETBARCODES,PRODUCTID," +
+                                "PRODUCTCODE, " +
+                                "FIRSTUNITNAME,SECONDUNITNAME,\n" +
+                                "SUM(WDIRECTION * FIRSTAMOUNT)  AS FIRSTAMOUNT, \n" +
+                                "SUM(WDIRECTION * SECONDAMOUNT) AS SECONDAMOUNT \n" +
+                                "from VW_WAREHOUSESTOCKMOVEMENT where PRODUCTCODE ='"+secilenUrun+"' and \n" +
+                                "BARCODENO = '" + secilenBarkod + "' and COMPANIESID = '" + comid + "'\n" +
+                                "group by PRODUCTIONDATE,BARCODEID,BARCODENO,PALETBARCODES,PRODUCTNAME,PALETID,PRODUCTID," +
+                                "PRODUCTCODE," +
+                                "FIRSTUNITNAME,SECONDUNITNAME\n" +
+                                "having SUM(WDIRECTION * FIRSTAMOUNT) != 0 or \n" +
+                                "SUM(WDIRECTION * SECONDAMOUNT) != 0 order by PRODUCTIONDATE";
+                        fillProducts.execute(g2);
+
+                    }
+                }
+
+                if (wayId) {
+                    if (PorB2.equals("P")) {
+                        FillProductsSec fillProducts = new FillProductsSec();
+
+                        String query = "Select PRODUCTIONDATE,BARCODEID,BARCODENO,PRODUCTNAME,PALETID,PALETBARCODES,PRODUCTID," +
+                                "PRODUCTCODE, " +
+                                "FIRSTUNITNAME,SECONDUNITNAME,\n" +
+                                "SUM(WDIRECTION * FIRSTAMOUNT)  AS FIRSTAMOUNT, \n" +
+                                "SUM(WDIRECTION * SECONDAMOUNT) AS SECONDAMOUNT \n" +
+                                "from VW_WAREHOUSESTOCKMOVEMENT where PRODUCTCODE ='"+secilenUrun+"' and \n" +
+                                "PALETBARCODES = '" + secilenBarkod + "' and COMPANIESID = '" + comid + "' \n" +
+                                "group by PRODUCTIONDATE,BARCODEID,BARCODENO,PALETBARCODES,PRODUCTNAME,PALETID,PRODUCTID," +
+                                "PRODUCTCODE," +
+                                "FIRSTUNITNAME,SECONDUNITNAME\n" +
+                                "having SUM(WDIRECTION * FIRSTAMOUNT) != 0 or \n" +
+                                "SUM(WDIRECTION * SECONDAMOUNT) != 0 order by PRODUCTIONDATE";
+                        fillProducts.execute(query);
+
+
+                    } else if (PorB2.equals("B")) {
+                        FillProductsSec fillProducts = new FillProductsSec();
+
+                        String query = "Select PRODUCTIONDATE,BARCODEID,BARCODENO,PRODUCTNAME,PALETID,PALETBARCODES,PRODUCTID," +
+                                "PRODUCTCODE, " +
+                                "FIRSTUNITNAME,SECONDUNITNAME,\n" +
+                                "SUM(WDIRECTION * FIRSTAMOUNT)  AS FIRSTAMOUNT, \n" +
+                                "SUM(WDIRECTION * SECONDAMOUNT) AS SECONDAMOUNT \n" +
+                                "from VW_WAREHOUSESTOCKMOVEMENT where PRODUCTCODE ='"+secilenUrun+"' and \n" +
+                                "BARCODENO = '" + secilenBarkod + "' and COMPANIESID = '" + comid + "' \n" +
+                                "group by PRODUCTIONDATE,BARCODEID,BARCODENO,PALETBARCODES,PRODUCTNAME,PALETID,PRODUCTID," +
+                                "PRODUCTCODE," +
+                                "FIRSTUNITNAME,SECONDUNITNAME\n" +
+                                "having SUM(WDIRECTION * FIRSTAMOUNT) != 0 or \n" +
+                                "SUM(WDIRECTION * SECONDAMOUNT) != 0 order by PRODUCTIONDATE";
+                        fillProducts.execute(query);
+
+
+                    } else {
+
+                        FillProductsSec fillProducts = new FillProductsSec();
+                        String query = "Select PRODUCTIONDATE,BARCODEID,BARCODENO,PRODUCTNAME,PALETID,PALETBARCODES,PRODUCTID," +
+                                "PRODUCTCODE, " +
+                                "FIRSTUNITNAME,SECONDUNITNAME,\n" +
+                                "SUM(WDIRECTION * FIRSTAMOUNT)  AS FIRSTAMOUNT, \n" +
+                                "SUM(WDIRECTION * SECONDAMOUNT) AS SECONDAMOUNT \n" +
+                                "from VW_WAREHOUSESTOCKMOVEMENT where PRODUCTCODE ='"+secilenUrun+"' and \n" +
+                                "(PALETID='" + uuid + "' or BARCODEID='" + uuid + "') and COMPANIESID = '" + comid + "' \n" +
+                                "group by PRODUCTIONDATE,BARCODEID,BARCODENO,PALETBARCODES,PRODUCTNAME,PALETID,PRODUCTID," +
+                                "PRODUCTCODE," +
+                                "FIRSTUNITNAME,SECONDUNITNAME\n" +
+                                "having SUM(WDIRECTION * FIRSTAMOUNT) != 0 or \n" +
+                                "SUM(WDIRECTION * SECONDAMOUNT) != 0 order by PRODUCTIONDATE";
+                        fillProducts.execute(query);
+
+                    }
+
+                }
+
+            } else {
+                Toast.makeText(getApplicationContext(), "BARKOD BULUNAMADI!", Toast.LENGTH_SHORT).show();
+            }
+
+        }
+
+
+        @Override
+        protected String doInBackground(String... params) {
+
+            try {
+                Connection con = connectionClass.CONN();
+                if (con == null) {
+                    z = "Error in connection with SQL server";
+                } else {
+                    PreparedStatement ps = con.prepareStatement(params[0]);
+                    ResultSet rs = ps.executeQuery();
+
+                    if (rs.next()) {
+                        empty = false;
+                    } else {
+                        empty = true;
+                    }
+                    z = "Başarılı";
+                }
+            } catch (Exception ex) {
+                z = "Veri Çekme Hatası";
+                ex.printStackTrace();
+
+            }
+            return z;
+        }
+    }
+
+    @SuppressLint("NewApi")
+    public class FillProductsSec extends AsyncTask<String, String, String> {
+        String z = "";
+        boolean empty;
+        @Override
+        protected void onPreExecute() {
+
+            empty = true;
+            pbbarS.setVisibility(View.VISIBLE);
+        }
+
+        @Override
+        protected void onPostExecute(String r) {
+            pbbarS.setVisibility(View.GONE);
+            if (!empty) {
+                toneG.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD, 200);
+                emreAdaptor = new SevkiyetTarihAdapter(getApplicationContext(), datalist, firstAmount, secondAmount);
+                recyclerview.setAdapter(emreAdaptor);
+                LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
+                linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+                recyclerview.setLayoutManager(linearLayoutManager);
+
+            } else {
+                toneG.startTone(ToneGenerator.TONE_CDMA_CALL_SIGNAL_ISDN_PING_RING, 200);
+                Intent intent = new Intent(getBaseContext(), UyariBildirim.class);
+                intent.putExtra("UYARI", "BU BARKOD ÜRÜNE AIT DEGIL!");
+                startActivity(intent);
+            }
+
+        }
+
+
+        @Override
+        protected String doInBackground(String... params) {
+
+            try {
+                Connection con = connectionClass.CONN();
+                if (con == null) {
+                    z = "Error in connection with SQL server";
+                } else {
+                    PreparedStatement ps = con.prepareStatement(params[0]);
+                    ResultSet rs = ps.executeQuery();
+
+                    while (rs.next()) {
+                        gecici = new SevkiyatÜrünleriRecyclerView();
+                        boolean same = false;
+                        gecici.setChecked(true);
+                        gecici.setName(rs.getString("PRODUCTNAME"));
+                        gecici.setFirstUnit(rs.getString("FIRSTUNITNAME"));
+                        gecici.setSecondUnit(rs.getString("SECONDUNITNAME"));
+                        gecici.setFirstamount(Float.parseFloat(rs.getString("FIRSTAMOUNT")));
+                        gecici.setSecondamount(Float.parseFloat(rs.getString("SECONDAMOUNT")));
+                        gecici.setPaletid(rs.getString("PALETID"));
+                        gecici.setUniqCode(rs.getString("BARCODENO"));
+                        gecici.setProductid(rs.getString("PRODUCTID"));
+                        gecici.setBarcodeid(rs.getString("BARCODEID"));
+                        gecici.setPrductionDate(rs.getString("PRODUCTIONDATE"));
+                        gecici.setUyari1("");
+                        gecici.setUyari2("");
+                        for (int j = 0; j < datalist.size(); j++) {
+                            if (datalist.get(j).getBarcodeid().equals(gecici.getBarcodeid())) {
+                                same = true;
+                                break;
+                            }
+                        }
+                        if (!same) {
+                            datalist.add(gecici);
+                            count++;
+                        }
+                        empty = false;
+                    }
+                    z = "Başarılı";
+                }
+            } catch (Exception ex) {
+                z = "Veri Çekme Hatası";
+                ex.printStackTrace();
+
+            }
+            return z;
+        }
+
+    }
+
+    @SuppressLint("NewApi")
+    public class IsSame extends AsyncTask<String, String, String> {
+        String z = "";
+
+
+        @Override
+        protected void onPreExecute() {
+            pbbarS.setVisibility(View.VISIBLE);
+        }
+
+        @Override
+        protected void onPostExecute(String r) {
+            pbbarS.setVisibility(View.GONE);
+
+            if (!ExistArray.isEmpty()) {
+                AlertDialog.Builder builder2 = new AlertDialog.Builder(PlasiyerSatisThree.this);
+                builder2.setTitle("UYARI!");
+                builder2.setMessage("SATIŞTA AYNI BARKOD BULUNDU SİLİNSİN Mİ?");
+                builder2.setNegativeButton("EVET", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        DeletePro deletePro = new DeletePro();
+                        deletePro.execute("");
+                    }
+                });
+                builder2.setPositiveButton("HAYIR, Eklemek istiyorum", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        SayiGetir sayiGetir = new SayiGetir();
+                        sayiGetir.execute("");
+
+                    }
+                });
+                builder2.show();
+            } else {
+                SayiGetir sayiGetir = new SayiGetir();
+                sayiGetir.execute("");
+            }
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            try {
+                Connection con = connectionClass.CONN();
+                if (con == null) {
+                    z = "Error in connection with SQL server";
+                } else {
+                    for (int j = 0; j < datalist.size(); j++) {
+                        if (datalist.get(j).isChecked()) {
+                            String q = "Select * from VW_WAREHOUSEPLASIERDETAIL where BARCODEID='" + datalist.get(j).getBarcodeid() + "' ";
+                            PreparedStatement ps = con.prepareStatement(q);
+                            ResultSet rs = ps.executeQuery();
+                            if (rs.next()) {
+                                ExistArray.add(datalist.get(j).getBarcodeid());
+
+                            } else {
+                                NotExistArray.add(datalist.get(j).getBarcodeid());
+                            }
+                            z = "Başarılı";
+                        }
+                    }
+                }
+
+            } catch (Exception ex) {
+                z = "Veri Çekme Hatası";
+                ex.printStackTrace();
+
+            }
+            return z;
+        }
+    }
+    @RequiresApi(api = Build.VERSION_CODES.CUPCAKE)
+    public class DeletePro extends AsyncTask<String, String, String> {
+
+
+        String z = "";
+        Boolean isSuccess = false;
+
+        @Override
+        protected void onPreExecute() {
+            pbbarS.setVisibility(View.VISIBLE);
+        }
+
+        @Override
+        protected void onPostExecute(String r) {
+            pbbarS.setVisibility(View.GONE);
+            if (isSuccess) {
+                datalist.clear();
+                emreAdaptor = new SevkiyetTarihAdapter(getApplicationContext(), datalist, firstAmount, secondAmount);
+                recyclerview.setAdapter(null);
+
+                Toast.makeText(PlasiyerSatisThree.this, "BAŞARIYLA SİLİNDİ", Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+
+            try {
+                Connection con = connectionClass.CONN();
+                if (con == null) {
+                    z = "Error in connection with SQL server";
+                } else {
+                    for (int j = 0; j < ExistArray.size(); j++) {
+                        String query = "Delete  from SENTFORWARDING where  BARCODEID='" + ExistArray.get(j) + "'";
+                        PreparedStatement preparedStatement = con.prepareStatement(query);
+                        preparedStatement.executeUpdate();
+                        isSuccess = true;
+                    }
+
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                isSuccess = false;
+                z = "SQL HATASI!";
+            }
+
+            return z;
+        }
+
+    }
+    @SuppressLint("NewApi")
+    public class SendProductss extends AsyncTask<String, String, String> {
+        String z = "";
+        boolean hata;
+        int i = 0;
+        boolean deneme = true;
+
+        @Override
+        protected void onPreExecute() {
+            pbbarS.setVisibility(View.VISIBLE);
+            hata = false;
+
+        }
+
+        @Override
+        protected void onPostExecute(String r) {
+            pbbarS.setVisibility(View.GONE);
+            if (deneme)
+                Toast.makeText(getApplicationContext(), "AKTARILACAK ÜRÜN YOK!", Toast.LENGTH_SHORT).show();
+            else {
+                Toast.makeText(getApplicationContext(), "AKTARILDI!", Toast.LENGTH_SHORT).show();
+                datalist.clear();
+                recyclerview.setAdapter(null);
+                firstAmount.clear();
+                secondAmount.clear();
+            }
+            // if (hata) Toast.makeText(getApplicationContext(), "HATA!", Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            try {
+                Connection con = connectionClass.CONN();
+                if (con == null) {
+                    z = "Error in connection with SQL server";
+                } else {
+                    if (!ExistArray.isEmpty()) {
+
+                        for (int i = 0; i < datalist.size(); i++) {
+                            if (datalist.get(i).isChecked()) {
+                                if (NotExistArray.contains(datalist.get(i).getBarcodeid())) {
+                                    UUID uuıd = UUID.randomUUID();
+                                    String query = "insert into WAREHOUSEPLASIERDETAIL (ID,WAREHOUSEID,FIRSTAMOUNT,SECONDAMOUNT,ISKDV,KDVRATE,UNITPRICE,DATE,ISOKEY,BARCODEID,CODE,MEMBERID)" +
+                                            "values('"+uuıd+"','"+incomingDepoId+"','"+firstAmount.get(i)+"','"+secondAmount.get(i)+"','"+kdvDahil+"','"+kdv+"','"+birimFiyat+"',GETDATE(),0,'"+datalist.get(i).getBarcodeid()+"','"+code+"','"+memberid+"')";
+                                    PreparedStatement preparedStatement = con.prepareStatement(query);
+                                    preparedStatement.executeUpdate();
+                                    deneme = false;
+                                }
+                            }
+                        }
+                    }else{
+
+                        for (int i = 0; i < datalist.size(); i++) {
+                            if (datalist.get(i).isChecked()) {
+                                    UUID uuıd = UUID.randomUUID();
+                                    String query = "insert into WAREHOUSEPLASIERDETAIL (ID,WAREHOUSEID,FIRSTAMOUNT,SECONDAMOUNT,ISKDV,KDVRATE,UNITPRICE,DATE,ISOKEY,BARCODEID,CODE,MEMBERID)" +
+                                            "values('"+uuıd+"','"+incomingDepoId+"','"+firstAmount.get(i)+"','"+secondAmount.get(i)+"','"+kdvDahil+"','"+kdv+"','"+birimFiyat+"',GETDATE(),0,'"+datalist.get(i).getBarcodeid()+"','"+code+"','"+memberid+"')";
+                                    PreparedStatement preparedStatement = con.prepareStatement(query);
+                                    preparedStatement.executeUpdate();
+                                    deneme = false;
+                            }
+                        }
+                    }
+                }
+            } catch (Exception ex) {
+                z = "Veri Çekme Hatası";
+                hata = true;
+                ex.printStackTrace();
+
+
+            }
+            return z;
+        }
+    }
+    public class SayiGetir extends AsyncTask<String, String, String> {
+        String w = "";
+        boolean exist = false;
+
+        @Override
+        protected void onPreExecute() {
+            pbbarS.setVisibility(View.VISIBLE);
+
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            pbbarS.setVisibility(View.GONE);
+            SendProductss sendProducts2 = new SendProductss();
+            sendProducts2.execute("");
+        }
+
+        @Override
+        protected String doInBackground(String... strings) {
+            try {
+                Connection con = connectionClass.CONN();
+                if (con == null) {
+                    w = "Error in connection with SQL server";
+                } else {
+                    String query = "select ISNULL(MAX(CONVERT(int,CODE)),1000)+1 as CODE from WAREHOUSEPLASIERDETAIL";
+                    PreparedStatement ps = con.prepareStatement(query);
+                    ResultSet rs = ps.executeQuery();
+
+                    while (rs.next()) {
+                        code = rs.getString("CODE");
+
+                    }
+                    w = "Başarılı";
+                }
+            } catch (Exception ex) {
+                w = "Veri Çekme Hatası";
+
+            }
+            return w;
+        }
+    }
 }
+
+

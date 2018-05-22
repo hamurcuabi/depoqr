@@ -1,5 +1,6 @@
 package com.emrehmrc.depoqr;
 
+
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.ActivityOptions;
@@ -12,33 +13,32 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.RecyclerView;
-import android.view.Gravity;
+import android.view.ContextThemeWrapper;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.PopupMenu;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.UUID;
 
 import static com.emrehmrc.depoqr.AnaSayfa.MyPREFERENCES;
 
-public class PlasiyerProduct extends AppCompatActivity {
+public class PlasiyerProduct extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener {
     ActionBar ab;
     ConnectionClass connectionClass;
     SharedPreferences sharedPreferences;
@@ -50,8 +50,12 @@ public class PlasiyerProduct extends AppCompatActivity {
     TextView cariAdi, depo;
     LinearLayout relativeLayout3, lastGG;
     Button btn_direkSatis, btn_barkodSatis, btn_tamamla;
-    RecyclerView lst_products;
-
+    ListView lst_plasiyer;
+    String secilenSatis, secilenSatisAdi;
+    PlasiyerProductAdapter adapter;
+    UUID uuid ;
+    String plasiyerCode;
+    ArrayList<String> updateArray = new ArrayList<>();
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,7 +70,7 @@ public class PlasiyerProduct extends AppCompatActivity {
         btn_direkSatis = (Button) findViewById(R.id.btn_direkSatis);
         relativeLayout3 = (LinearLayout) findViewById(R.id.relativeLayout3);
         lastGG = (LinearLayout) findViewById(R.id.lastGG);
-        lst_products = (RecyclerView) findViewById(R.id.lst_products);
+        lst_plasiyer = (ListView) findViewById(R.id.lst_plasiyer);
         btn_tamamla = (Button) findViewById(R.id.btn_tamamla);
         memberid = sharedPreferences.getString("ID", null);
         comid = sharedPreferences.getString("Companiesid", null);
@@ -79,7 +83,7 @@ public class PlasiyerProduct extends AppCompatActivity {
         disable = incomingIntent.getStringExtra("disable");
         cariAdi.setText(incomingCariAd);
         depo.setText(secilendepo);
-
+        uuid = UUID.randomUUID();
         if (disable.equals("disable")) {
             relativeLayout3.setVisibility(View.GONE);
             lastGG.setVisibility(View.GONE);
@@ -95,20 +99,20 @@ public class PlasiyerProduct extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(PlasiyerProduct.this, PlasiyerSatisSec.class);
 
-                startActivity(intent);
+                startActivityForResult(intent,1);
             }
         });
         btn_direkSatis.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(PlasiyerProduct.this, PlasiyerSatisSec.class);
-                startActivity(intent);
+                startActivityForResult(intent,1);
             }
         });
         btn_tamamla.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (lst_products == null) {
+                if (lst_plasiyer == null) {
                     Toast.makeText(getApplicationContext(), "Satış Bulunamadı.", Toast.LENGTH_LONG).show();
                 } else {
                     AlertDialog.Builder builder2 = new AlertDialog.Builder(PlasiyerProduct.this);
@@ -116,7 +120,7 @@ public class PlasiyerProduct extends AppCompatActivity {
                     builder2.setMessage("Satışı tamamlamak istediğinizden emin misiniz?");
                     builder2.setNegativeButton("EVET", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
-                            Tamamla tamamla = new Tamamla();
+                            PlasiyerCodeGenerater tamamla = new PlasiyerCodeGenerater();
                             tamamla.execute("");
                         }
                     });
@@ -130,6 +134,8 @@ public class PlasiyerProduct extends AppCompatActivity {
                 }
             }
         });
+        FillList fillList = new FillList();
+        fillList.execute("");
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -161,26 +167,29 @@ public class PlasiyerProduct extends AppCompatActivity {
         super.onBackPressed();
     }
 
-    public class FillList extends AsyncTask<String, String, String> {
+    @Override
+    public boolean onMenuItemClick(MenuItem menuItem) {
+        switch (menuItem.getItemId()) {
+            case R.id.menu_Sil:
+                DeleteChild silenecekler = new DeleteChild();
+                silenecekler.execute("");
+                return true;
+            case R.id.menu_duzenle:
+                Intent intent = new Intent(PlasiyerProduct.this, PlasiyerProductDetails.class);
+                intent.putExtra("secilenSatis", secilenSatis);
+                intent.putExtra("secilenSatisAdi", secilenSatisAdi);
 
-        @Override
-        protected void onPreExecute() {
-            progressBar.setVisibility(View.VISIBLE);
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            progressBar.setVisibility(View.GONE);
-        }
-
-        @Override
-        protected String doInBackground(String... strings) {
-            return null;
+                startActivityForResult(intent, 1);
+                return true;
+            default:
+                return false;
         }
     }
 
-    public class Tamamla extends AsyncTask<String, String, String> {
-
+    public class FillList extends AsyncTask<String, String, String> {
+        String w = "";
+        ArrayList<PlasiyerProductModel> plasiyerArray = new ArrayList<PlasiyerProductModel>();
+        boolean exist = false;
 
         @Override
         protected void onPreExecute() {
@@ -190,11 +199,421 @@ public class PlasiyerProduct extends AppCompatActivity {
         @Override
         protected void onPostExecute(String s) {
             progressBar.setVisibility(View.GONE);
+            if (exist) {
+                adapter = new PlasiyerProductAdapter(getApplicationContext(), plasiyerArray);
+                lst_plasiyer.setAdapter(adapter);
+                lst_plasiyer.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+                    @Override
+                    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                        PlasiyerProductModel plasiyerListModel;
+                        plasiyerListModel = (PlasiyerProductModel) lst_plasiyer.getItemAtPosition(position);
+                        secilenSatis = plasiyerListModel.getKod();
+                        secilenSatisAdi = plasiyerListModel.getProductName();
+                        Context wrapper = new ContextThemeWrapper(PlasiyerProduct.this, R.style.YOURSTYLE);
+                        PopupMenu popup = new PopupMenu(wrapper, view);
+
+                        popup.setOnMenuItemClickListener((PopupMenu.OnMenuItemClickListener) PlasiyerProduct.this);
+                        popup.inflate(R.menu.poupup);
+                        popup.show();
+                        return true;
+                    }
+                });
+            }
         }
 
         @Override
         protected String doInBackground(String... strings) {
-            return null;
+            try {
+                Connection con = connectionClass.CONN();
+                if (con == null) {
+                    w = "Error in connection with SQL server";
+                } else {
+                    String query = "select CODE,PRODUCTNAME,UNITPRICE,SUM(FIRSTAMOUNT) as AMOUNT,SUM(TOTAL) as TOTAL, SUM(KDVTOTAL) as KDVTOTAL , SUM(GENERALTOTAL) as GENERALTOTAL  from vw_WAREHOUSEPLASIERDETAIL where COMPANIESID = '" + comid + "' and ISOKEY = '0' group by CODE,PRODUCTNAME,UNITPRICE";
+                    PreparedStatement ps = con.prepareStatement(query);
+                    ResultSet rs = ps.executeQuery();
+
+                    while (rs.next()) {
+                        exist = true;
+                        plasiyerArray.add(new PlasiyerProductModel(rs.getString("CODE")
+                                , rs.getString("PRODUCTNAME")
+                                , rs.getString("UNITPRICE")
+                                , rs.getString("AMOUNT")
+                                , rs.getString("TOTAL"), rs.getString("KDVTOTAL"), rs.getString("GENERALTOTAL")));
+                    }
+                    w = "Başarılı";
+                }
+            } catch (Exception ex) {
+                w = "Veri Çekme Hatası";
+
+            }
+            return w;
+        }
+    }
+
+    public class PlasiyerCodeGenerater extends AsyncTask<String, String, String> {
+        String w = "";
+        String count;
+        @Override
+        protected void onPreExecute() {
+            progressBar.setVisibility(View.VISIBLE);
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            progressBar.setVisibility(View.GONE);
+            String user = memberid.charAt(0)+""+memberid.charAt(memberid.length()-1);
+            plasiyerCode = incomingCariKod +"-"+ count +""+ user;
+            SendProducts sendProducts = new SendProducts();
+            sendProducts.execute("");
+        }
+
+        @Override
+        protected String doInBackground(String... strings) {
+            try {
+                Connection con = connectionClass.CONN();
+                if (con == null) {
+                    w = "Error in connection with SQL server";
+                } else {
+                    String query = "select ISNULL(count(*),1) as COUNT from WAREHOUSEPLASIER where CURRENTID='"+incomingCariId+"'";
+                    PreparedStatement ps = con.prepareStatement(query);
+                    ResultSet rs = ps.executeQuery();
+
+                    while (rs.next()) {
+                        count = rs.getString("COUNT");
+
+                    }
+                    w = "Başarılı";
+                }
+            } catch (Exception ex) {
+                w = "Veri Çekme Hatası";
+
+            }
+            return w;
+        }
+    }
+
+    @SuppressLint("NewApi")
+    public class SendProducts extends AsyncTask<String, String, String> {
+        String z = "";
+        boolean hata;
+        int i = 0;
+
+        @Override
+        protected void onPreExecute() {
+            progressBar.setVisibility(View.VISIBLE);
+            hata = false;
+
+        }
+
+        @Override
+        protected void onPostExecute(String r) {
+            progressBar.setVisibility(View.GONE);
+            if (!hata) {
+                UpdatePlasiyer updatePlasiyer = new UpdatePlasiyer();
+                updatePlasiyer.execute("");
+            } else {
+                Toast.makeText(getApplicationContext(), "HATA!", Toast.LENGTH_SHORT).show();
+
+            }
+
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            try {
+                Connection con = connectionClass.CONN();
+                if (con == null) {
+                    z = "Error in connection with SQL server";
+                } else {
+                        String query = "insert into WAREHOUSEPLASIER (ID,PLASIERCODE,WAREHOUSEID,MEMBERID,CURRENTID,ISDELETE,DATE) " +
+                                "values ('"+uuid+"','"+plasiyerCode+"','"+secilendepoId+"','"+memberid+"','"+incomingCariId+"',0,GETDATE())";
+                        PreparedStatement preparedStatement = con.prepareStatement(query);
+                        preparedStatement.executeUpdate();
+                    hata = false;
+
+                }
+            } catch (Exception ex) {
+                z = "Veri Çekme Hatası";
+                ex.printStackTrace();
+            }
+            return z;
+        }
+    }
+
+    @SuppressLint("NewApi")
+    public class UpdatePlasiyer extends AsyncTask<String, String, String> {
+        String z = "";
+        boolean hata;
+        int i = 0;
+
+        @Override
+        protected void onPreExecute() {
+            progressBar.setVisibility(View.VISIBLE);
+            hata = false;
+
+        }
+
+        @Override
+        protected void onPostExecute(String r) {
+            progressBar.setVisibility(View.GONE);
+
+            if (!hata) {
+                UpdatePlasiyerSon updatePlasiyerSon = new UpdatePlasiyerSon();
+                updatePlasiyerSon.execute("");
+
+            } else {
+                Toast.makeText(getApplicationContext(), "HATA!", Toast.LENGTH_SHORT).show();
+
+            }
+
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            try {
+                Connection con = connectionClass.CONN();
+                if (con == null) {
+                    z = "Error in connection with SQL server";
+                } else {
+                    String query = "select ID from WAREHOUSEPLASIERDETAIL where MEMBERID = '"+memberid+"' and ISOKEY = 0";
+                    PreparedStatement ps = con.prepareStatement(query);
+                    ResultSet rs = ps.executeQuery();
+                    while (rs.next()) {
+                        updateArray.add(rs.getString("ID"));
+
+                    }
+                }
+            } catch (Exception ex) {
+                z = "Veri Çekme Hatası";
+                ex.printStackTrace();
+            }
+            return z;
+        }
+    }
+    @SuppressLint("NewApi")
+    public class UpdatePlasiyerSon extends AsyncTask<String, String, String> {
+        String z = "";
+        boolean hata;
+        int i = 0;
+
+        @Override
+        protected void onPreExecute() {
+            progressBar.setVisibility(View.VISIBLE);
+            hata = false;
+
+        }
+
+        @Override
+        protected void onPostExecute(String r) {
+            progressBar.setVisibility(View.GONE);
+
+            if (!hata) {
+                Toast.makeText(getApplicationContext(), "AKTARILDI!", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(getApplicationContext(), "HATA!", Toast.LENGTH_SHORT).show();
+
+            }
+
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            try {
+                Connection con = connectionClass.CONN();
+                if (con == null) {
+                    z = "Error in connection with SQL server";
+                } else {
+                    for (int j = 0; j <updateArray.size() ; j++) {
+                        String query = "UPDATE WAREHOUSEPLASIERDETAIL SET WAREHOUSEPLASIERID='"+uuid+"', ISOKEY = 1 where ID = '"+updateArray.get(j)+"'";
+                        PreparedStatement preparedStatement = con.prepareStatement(query);
+                        preparedStatement.executeUpdate();
+                    }
+
+                }
+            } catch (Exception ex) {
+                z = "Veri Çekme Hatası";
+                ex.printStackTrace();
+            }
+            return z;
+        }
+    }
+    public static class PlasiyerProductModel {
+
+        public String getKod() {
+            return kod;
+        }
+
+        public void setKod(String kod) {
+            this.kod = kod;
+        }
+
+        public String getProductName() {
+            return productName;
+        }
+
+        public void setProductName(String productName) {
+            this.productName = productName;
+        }
+
+        public String getMiktar() {
+            return miktar;
+        }
+
+        public void setMiktar(String miktar) {
+            this.miktar = miktar;
+        }
+
+        public String getToplamTutar() {
+            return toplamTutar;
+        }
+
+        public void setToplamTutar(String toplamTutar) {
+            this.toplamTutar = toplamTutar;
+        }
+
+        public String getKdv() {
+            return kdv;
+        }
+
+        public void setKdv(String kdv) {
+            this.kdv = kdv;
+        }
+
+        public String getGenelTutar() {
+            return genelTutar;
+        }
+
+        public void setGenelTutar(String genelTutar) {
+            this.genelTutar = genelTutar;
+        }
+
+        public String getFiyat() {
+            return fiyat;
+        }
+
+        public void setFiyat(String fiyat) {
+            this.fiyat = fiyat;
+        }
+
+        public PlasiyerProductModel(String kod, String productName, String fiyat, String miktar, String toplamTutar, String kdv, String genelTutar) {
+            this.kod = kod;
+            this.productName = productName;
+            this.fiyat = fiyat;
+            this.miktar = miktar;
+            this.toplamTutar = toplamTutar;
+            this.kdv = kdv;
+            this.genelTutar = genelTutar;
+        }
+
+        String kod;
+        String productName;
+        String fiyat;
+        String miktar;
+        String toplamTutar;
+        String kdv;
+        String genelTutar;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.CUPCAKE)
+    public class DeletePro extends AsyncTask<String, String, String> {
+
+
+        String z = "";
+        Boolean isSuccess = false;
+
+        @Override
+        protected void onPreExecute() {
+            progressBar.setVisibility(View.VISIBLE);
+        }
+
+        @Override
+        protected void onPostExecute(String r) {
+            progressBar.setVisibility(View.GONE);
+            if (isSuccess) {
+
+            }
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+
+            try {
+                Connection con = connectionClass.CONN();
+                if (con == null) {
+                    z = "Error in connection with SQL server";
+                } else {
+
+                    String query = "Delete  from WAREHOUSEPLASIERDETAIL where COMPANIESID = '" + comid + "' and ISOKEY='0' and MEMBERID='"+memberid+"' ";
+                    PreparedStatement preparedStatement = con.prepareStatement(query);
+                    preparedStatement.executeUpdate();
+                    isSuccess = true;
+
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                isSuccess = false;
+                z = "SQL HATASI!";
+            }
+
+            return z;
+        }
+
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.CUPCAKE)
+    public class DeleteChild extends AsyncTask<String, String, String> {
+
+
+        String z = "";
+        Boolean isSuccess = false;
+
+        @Override
+        protected void onPreExecute() {
+            progressBar.setVisibility(View.VISIBLE);
+        }
+
+        @Override
+        protected void onPostExecute(String r) {
+            progressBar.setVisibility(View.GONE);
+            if (isSuccess) {
+                Toast.makeText(PlasiyerProduct.this, "BAŞARIYLA SİLİNDİ", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(PlasiyerProduct.this, "HATA", Toast.LENGTH_SHORT).show();
+
+            }
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+
+            try {
+                Connection con = connectionClass.CONN();
+                if (con == null) {
+                    z = "Error in connection with SQL server";
+                } else {
+
+                    String query = "Delete  from WAREHOUSEPLASIERDETAIL where CODE = '" + secilenSatis + "' ";
+                    PreparedStatement preparedStatement = con.prepareStatement(query);
+                    preparedStatement.executeUpdate();
+                    isSuccess = true;
+
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                isSuccess = false;
+                z = "SQL HATASI!";
+            }
+
+            return z;
+        }
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 1) {
+            FillList fillList = new FillList();
+            fillList.execute("");
         }
     }
 }

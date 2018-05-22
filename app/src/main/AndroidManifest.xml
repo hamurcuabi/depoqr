@@ -111,7 +111,7 @@
         <activity android:name=".PlasiyerSatisDirek" />
         <activity android:name=".SarfListe" />
         <activity android:name=".SarfDuzenle" />
-        <activity android:name=".PlasiyerSatisBarkod"></activity>
+        <activity android:name=".PlasiyerProductDetails"></activity>
     </application>
 
 </manifest>

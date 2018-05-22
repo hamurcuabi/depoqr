@@ -15,6 +15,7 @@ public class SarfDuzenleAdapter extends BaseAdapter {
     ArrayList<SarfDuzenle.SarfProducts> beanList;
     private ArrayList<SarfDuzenle.SarfProducts> mStringFilterList;
     private LayoutInflater inflater;
+    private final int[] bgColors = new int[] { R.color.list_bg_2, R.color.list_bg_1 };
 
     public SarfDuzenleAdapter(Context context, ArrayList<SarfDuzenle.SarfProducts> objectss) {
         this.context = context;
@@ -45,6 +46,8 @@ public class SarfDuzenleAdapter extends BaseAdapter {
         if (convertView == null) {
             convertView = inflater.inflate(R.layout.sarf_view, null);
         }
+        int colorPosition = position % bgColors.length;
+        convertView.setBackgroundResource(bgColors[colorPosition]);
         TextView txProductName = (TextView) convertView.findViewById(R.id.view_productname);
         TextView txBarkodeNo = (TextView) convertView.findViewById(R.id.view_barkodeNo);
         TextView txFirstAmount = (TextView) convertView.findViewById(R.id.view_firstamount);

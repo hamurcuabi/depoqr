@@ -48,8 +48,8 @@ public class PlasiyerSatisSec extends AppCompatActivity {
     ConnectionClass connectionClass;
     SharedPreferences sharedPreferences;
     Bundle bundle;
-    TextView tx_depono, tx_cariadi, tx_urunkodu, tx_iskdv, tx_typeName, tx_moneyType, tx_productCount, tx_toplam, tx_genelToplam;
-    EditText tx_price, tx_kdv, tx_siparis;
+    TextView tx_depono, tx_cariadi, tx_urunkodu, tx_iskdv, tx_typeName, tx_moneyType, tx_productCount, tx_toplam;
+    EditText tx_price, tx_kdv;
     String incomingKod, incomingAd, incomingDepo, memberid, comid, incomingDepoId, secilenUrun, incomingCariId, priceId;
     AutoCompleteTextView tx_urunadi;
     ImageView btn_drop;
@@ -61,8 +61,7 @@ public class PlasiyerSatisSec extends AppCompatActivity {
     String deneme;
     ArrayList<ProductsP> products = new ArrayList<>();
     boolean check = true;
-    ImageView btn_hesapla;
-    float toplam, genelToplam;
+    float genelToplam;
     int productCount;
     Button btn_satis;
 
@@ -93,6 +92,8 @@ public class PlasiyerSatisSec extends AppCompatActivity {
         tx_moneyType = (TextView) findViewById(R.id.tx_moneyTeype);
         tx_productCount = (TextView) findViewById(R.id.tx_productCount);
         btn_gir = (Button) findViewById(R.id.btn_gir);
+        btn_satis = (Button) findViewById(R.id.btn_satis);
+
         incomingAd = sharedPreferences.getString("plasiyerCariAd", null);
         incomingKod = sharedPreferences.getString("plasiyerCariKod", null);
         incomingCariId = sharedPreferences.getString("plasiyerCariId", null);
@@ -126,40 +127,36 @@ public class PlasiyerSatisSec extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "Yanliş Ürün Kodu.", Toast.LENGTH_SHORT).show();
             }
         });
-        /*btn_satis.setOnClickListener(new View.OnClickListener() {
+        btn_satis.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!tx_siparis.getText().toString().isEmpty()) {
-                    float siparis = Float.valueOf(tx_siparis.getText().toString());
-                    if (siparis >= 0) {
-                        float kdv, fiyat;
-                        if (!tx_kdv.getText().toString().isEmpty()) {
-                            if (!tx_price.getText().toString().isEmpty()) {
-                                fiyat = Float.valueOf(tx_price.getText().toString());
-                                kdv = Float.valueOf(tx_kdv.getText().toString());
-                                if (fiyat >= 0 && kdv >= 0) {
 
+                float kdv, fiyat;
+                if (!tx_kdv.getText().toString().isEmpty()) {
+                    if (!tx_price.getText().toString().isEmpty()) {
+                        fiyat = Float.valueOf(tx_price.getText().toString());
+                        kdv = Float.valueOf(tx_kdv.getText().toString());
+                        if (fiyat >= 0 && kdv >= 0) {
+                            Intent intent = new Intent(PlasiyerSatisSec.this, PlasiyerSatisThree.class);
+                            intent.putExtra("BirimFiyat", tx_price.getText().toString());
+                            intent.putExtra("KDV", tx_kdv.getText().toString());
+                            intent.putExtra("secilenUrun", secilenUrun);
+                            if (tx_iskdv.getText().toString().equals("EVET")) {
+                                intent.putExtra("KDVDAHIL", "1");
+                            } else intent.putExtra("KDVDAHIL", "0");
 
-                                } else
-                                    Toast.makeText(getApplicationContext(), "HATA, KDV VE BIRIM FIYAT SIFIRDAN BÜYÜK OLMALI! .", Toast.LENGTH_LONG).show();
-                            } else
-                                Toast.makeText(getApplicationContext(), "BIRIM FIYAT BOŞ GIRILEMEZ.", Toast.LENGTH_LONG).show();
+                            startActivity(intent);
+
                         } else
-                            Toast.makeText(getApplicationContext(), "KDV BOŞ GIRILEMEZ.", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplicationContext(), "HATA, KDV VE BIRIM FIYAT SIFIRDAN BÜYÜK OLMALI! .", Toast.LENGTH_LONG).show();
                     } else
-                        Toast.makeText(getApplicationContext(), "HATA, MIKTAR SIFIRDAN BÜYÜK OLMALI! .", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), "BIRIM FIYAT BOŞ GIRILEMEZ.", Toast.LENGTH_LONG).show();
                 } else
-                    Toast.makeText(getApplicationContext(), "MIKTAR BOŞ.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "KDV BOŞ GIRILEMEZ.", Toast.LENGTH_LONG).show();
 
-
-               Intent intent = new Intent(PlasiyerSatisSec.this, PlasiyerProduct.class);
-                intent.putExtra("disable", tx_price.getText().toString());
-                intent.putExtra("disable", );
-                intent.putExtra("disable", );
-                intent.putExtra("disable", );
-                startActivity(intent);
             }
-        });*/
+        });
+
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -263,6 +260,7 @@ public class PlasiyerSatisSec extends AppCompatActivity {
         String z = "";
         String birim;
         float birimcount;
+
         @Override
         protected void onPostExecute(String r) {
             String gecici = Float.toString(birimcount);
@@ -272,6 +270,7 @@ public class PlasiyerSatisSec extends AppCompatActivity {
             checkNewestCurrent.execute("");
 
         }
+
         @Override
         protected String doInBackground(String... params) {
             try {
@@ -287,7 +286,7 @@ public class PlasiyerSatisSec extends AppCompatActivity {
                             "from VW_WAREHOUSESTOCKMOVEMENT where\n" +
                             "(DESTINATIONWAREHOUSEID = \n" +
                             "'" + incomingDepoId + "' \n" +
-                            "or SOURCEWAREHOUSEID = '" + incomingDepoId + "') and PRODUCTCODE = '"+secilenUrun+"' \n" +
+                            "or SOURCEWAREHOUSEID = '" + incomingDepoId + "') and PRODUCTCODE = '" + secilenUrun + "' \n" +
                             "group by BARCODEID,BARCODENO,PALETBARCODES,PRODUCTNAME,PALETID,PRODUCTID," +
                             "PRODUCTCODE," +
                             "FIRSTUNITNAME,SECONDUNITNAME\n" +
@@ -296,8 +295,8 @@ public class PlasiyerSatisSec extends AppCompatActivity {
                     PreparedStatement ps = con.prepareStatement(query);
                     ResultSet rs = ps.executeQuery();
                     while (rs.next()) {
-                       birimcount = birimcount+rs.getFloat("FIRSTAMOUNT");
-                       birim = rs.getString("FIRSTUNITNAME");
+                        birimcount = birimcount + rs.getFloat("FIRSTAMOUNT");
+                        birim = rs.getString("FIRSTUNITNAME");
                     }
                     z = "Başarılı";
                 }
@@ -483,9 +482,9 @@ public class PlasiyerSatisSec extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(String s) {
-            if(modelProductInfo.getMoneyunit().isEmpty()){
+            if (modelProductInfo.getMoneyunit().isEmpty()) {
                 tx_moneyType.setText("TL");
-            }else tx_moneyType.setText(modelProductInfo.getMoneyunit());
+            } else tx_moneyType.setText(modelProductInfo.getMoneyunit());
         }
 
         @Override

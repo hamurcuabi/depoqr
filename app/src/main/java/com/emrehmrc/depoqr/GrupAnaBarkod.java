@@ -73,7 +73,7 @@ public class GrupAnaBarkod extends AppCompatActivity {
     ArrayList<String> findPArray = new ArrayList<>();
     List<Map<String, String>> prolist = new ArrayList<Map<String, String>>();
     String secilenBarkod;
-
+String depoName;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -154,6 +154,15 @@ public class GrupAnaBarkod extends AppCompatActivity {
                         Intent i = new Intent(getApplicationContext(), GrupBarkod.class);
 
                         i.putExtra("anabarkod", anabarkod);
+                        if(findPArray.isEmpty()){
+                            i.putExtra("depoName", "ggwp");
+                            i.putExtra("depoid", "ggwp");
+                        }else{
+                            i.putExtra("depoName", depoName);
+                            i.putExtra("depoid", depoid);
+                        }
+
+
                         startActivity(i);
                     } else {
 
@@ -320,7 +329,7 @@ public class GrupAnaBarkod extends AppCompatActivity {
         protected void onPreExecute() {
             isEmpty = true;
             pbbar.setVisibility(View.VISIBLE);
-
+            findPArray.clear();
         }
 
         @Override
@@ -365,12 +374,14 @@ public class GrupAnaBarkod extends AppCompatActivity {
                 if (con == null) {
                     z = "Error in connection with SQL server";
                 } else {
-                    String query = "SELECT ID from GROUPBARCODE  where PARENTID IN(Select ID from VW_BARCODE where BARCODENO='" + secilenBarkod + "')  ";
+                    String query = "SELECT * from VW_GROUPBARCODE  where PARENTID IN(Select ID from VW_BARCODE where BARCODENO='" + secilenBarkod + "')  ";
                     PreparedStatement ps = con.prepareStatement(query);
                     ResultSet rs = ps.executeQuery();
 
                     while (rs.next()) {
                         findPArray.add(rs.getString("ID"));
+                        depoid = rs.getString("WAREHOUSEID");
+                        depoName = rs.getString("PARENTWAREHOUSENAME");
                         isEmpty = false;
 
                     }

@@ -19,6 +19,7 @@ public class DepoListesiAdapter extends BaseAdapter implements Filterable {
     private ArrayList<DepoListesiModel> mStringFilterList;
     private LayoutInflater inflater;
     ValueFilter valueFilter;
+    private final int[] bgColors = new int[] { R.color.list_bg_2, R.color.list_bg_1 };
 
     public DepoListesiAdapter(@NonNull Context context, @NonNull ArrayList<DepoListesiModel> objectss) {
         this.context = context;
@@ -49,6 +50,8 @@ public class DepoListesiAdapter extends BaseAdapter implements Filterable {
         if (convertView == null) {
             convertView = inflater.inflate(R.layout.depolistesi_view, null);
         }
+        int colorPosition = position % bgColors.length;
+        convertView.setBackgroundResource(bgColors[colorPosition]);
         TextView txName = (TextView) convertView.findViewById(R.id.inputad);
         TextView txKod = (TextView) convertView.findViewById(R.id.inputkod);
         TextView txfirst = (TextView) convertView.findViewById(R.id.inputfirst);

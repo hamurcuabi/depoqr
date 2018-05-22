@@ -21,6 +21,7 @@ public class PlasiyerListAdapter extends BaseAdapter implements Filterable {
     private ArrayList<PlasiyerListModel> mStringFilterList;
     private LayoutInflater inflater;
     ValueFilter valueFilter;
+    private final int[] bgColors = new int[] { R.color.list_bg_2, R.color.list_bg_1 };
 
     public PlasiyerListAdapter(@NonNull Context context, @NonNull ArrayList<PlasiyerListModel> objectss) {
         this.context = context;
@@ -53,6 +54,8 @@ public class PlasiyerListAdapter extends BaseAdapter implements Filterable {
         if (convertView == null) {
             convertView = inflater.inflate(R.layout.plasiyer_adapter_view, null);
         }
+        int colorPosition = position % bgColors.length;
+        convertView.setBackgroundResource(bgColors[colorPosition]);
         TextView txTarih = (TextView) convertView.findViewById(R.id.view_tarih);
         TextView txCariAdi = (TextView) convertView.findViewById(R.id.view_cariadi);
         TextView txToplamTutar = (TextView) convertView.findViewById(R.id.view_toplamtutar);

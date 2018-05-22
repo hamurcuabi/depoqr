@@ -549,6 +549,7 @@ public class SarfSec extends AppCompatActivity {
                     ResultSet rs = ps.executeQuery();
 
                     while (rs.next()) {
+                        boolean same = false;
                         gecici = new SevkiyatÜrünleriRecyclerView();
                         gecici.setChecked(true);
                         gecici.setName(rs.getString("PRODUCTNAME"));
@@ -563,7 +564,15 @@ public class SarfSec extends AppCompatActivity {
                         gecici.setPrductionDate(rs.getString("PRODUCTIONDATE"));
                         gecici.setUyari1("");
                         gecici.setUyari2("");
-                        datalist.add(gecici);
+                        for (int j = 0; j < datalist.size(); j++) {
+                            if (datalist.get(j).getBarcodeid().equals(gecici.getBarcodeid())) {
+                                same = true;
+                                break;
+                            }
+                        }
+                        if (!same) {
+                            datalist.add(gecici);
+                        }
                         empty = false;
                     }
                     z = "Başarılı";
