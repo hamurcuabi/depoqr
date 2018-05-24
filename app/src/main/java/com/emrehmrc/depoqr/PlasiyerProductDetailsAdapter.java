@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 public class PlasiyerProductDetailsAdapter extends BaseAdapter {
@@ -55,12 +56,12 @@ public class PlasiyerProductDetailsAdapter extends BaseAdapter {
 
         PlasiyerProductDetails.PlasiyerProductDetailModel bean = beanList.get(position);
         view_name.setText(bean.getBarkod());
-        view_fiyat.setText(bean.getFiyat());
-        view_miktar.setText(bean.getMiktar());
+        view_fiyat.setText("" + new DecimalFormat("##.##").format(bean.getFiyat()));
+        view_miktar.setText("" + new DecimalFormat("##.##").format(bean.getMiktar()));
 
-        view_toplamtutar.setText(bean.getToplamTutar());
-        view_kdv.setText(bean.getKdv());
-        view_geneltutar.setText(bean.getGenelTutar());
+        view_toplamtutar.setText("" + new DecimalFormat("##.##").format(bean.getToplamTutar()));
+        view_kdv.setText("" + new DecimalFormat("##.##").format(bean.getKdv()));
+        view_geneltutar.setText("" + new DecimalFormat("##.##").format(bean.getGenelTutar()));
         return convertView;
     }
 }

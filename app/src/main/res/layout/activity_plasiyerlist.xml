@@ -14,40 +14,6 @@
         android:orientation="vertical"
         android:layout_above="@+id/lastGG"
         android:layout_marginBottom="10dp">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingLeft="5dp"
-            android:paddingRight="5dp">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="3"
-                android:text="Cari ARA:"
-                android:textColor="#000000"
-                android:textSize="17sp"
-                android:textStyle="bold"/>
-
-            <EditText
-                android:id="@+id/CariArama"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:layout_weight="1"
-                android:textColor="@color/error"
-                android:imeOptions="actionDone"
-                android:inputType=""
-                android:maxLines="1"
-                android:padding="5dp"
-                android:singleLine="true"
-                android:textSize="17sp"
-                android:textStyle="bold"
-                android:hint="Cari Adı.."
-                android:textColorHint="@color/error" />
-
-        </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -89,6 +55,71 @@
                 android:clickable="true"
                 android:src="@drawable/ic_action_filter"
                 android:layout_marginLeft="10dp" />
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingBottom="5dp"
+            android:weightSum="1"
+            android:layout_marginTop="5dp"
+            android:paddingRight="5dp"
+            android:paddingLeft="2dp">
+
+            <TextView
+                android:id="@+id/btn_tarih"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:background="@color/zyonetim"
+                android:entries="@array/deposec"
+                android:maxLines="1"
+                android:padding="5dp"
+                android:popupBackground="@color/zyonetim"
+                android:singleLine="true"
+                android:textColor="#ffffff"
+                android:textSize="17sp"
+                android:text="Tarih"
+                android:textStyle="bold"
+                android:textAlignment="center"
+                android:clickable="true"/>
+
+
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="3"
+                android:text="Cari ARA:"
+                android:textColor="#000000"
+                android:textSize="17sp"
+                android:textStyle="bold"
+                android:padding="5dp"/>
+
+            <EditText
+                android:id="@+id/CariArama"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:textColor="@color/error"
+                android:imeOptions="actionDone"
+                android:inputType=""
+                android:maxLines="1"
+                android:padding="5dp"
+                android:singleLine="true"
+                android:textSize="17sp"
+                android:textStyle="bold"
+                android:hint="Cari Adı.."
+                android:textColorHint="@color/error" />
 
         </LinearLayout>
 
@@ -246,7 +277,8 @@
             android:textSize="15sp"
             android:textStyle="bold"
             android:layout_marginLeft="5dp"
-            android:layout_marginStart="5dp" />
+            android:layout_marginStart="5dp"
+            android:visibility="gone"/>
     </LinearLayout>
 
 </RelativeLayout>

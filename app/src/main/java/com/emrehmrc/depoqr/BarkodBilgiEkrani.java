@@ -341,7 +341,7 @@ public class BarkodBilgiEkrani extends AppCompatActivity {
                 if (con == null) {
                     z = "Error in connection with SQL server";
                 } else {
-                    String query = "SELECT * from VW_PALETBARCODE where ISDELETE = '0' and COMPANIESID = '" + comid + "' and BARCODEID ='" + secilenProductId + "'  ";
+                    String query = "SELECT *,CONVERT(NVARCHAR(10),PRODUCTDATE,104) as DATE1 from VW_PALETBARCODE where ISDELETE = '0' and COMPANIESID = '" + comid + "' and BARCODEID ='" + secilenProductId + "'  ";
                     PreparedStatement ps = con.prepareStatement(query);
                     ResultSet rs = ps.executeQuery();
 
@@ -349,7 +349,7 @@ public class BarkodBilgiEkrani extends AppCompatActivity {
                         productName = rs.getString("PRODUCTNAME");
                         productCode = rs.getString("PRODUCTCODE");
                         productDetails = rs.getString("DESCRIPTION");
-                        productDate = rs.getString("PRODUCTDATE");
+                        productDate = rs.getString("DATE1");
                         first = rs.getFloat("FIRSTUNITAMOUNT");
                         firstAmount = rs.getString("FIRSTUNITNAME");
                         secod = rs.getFloat("SECONDUNITAMOUNT");

@@ -2,6 +2,7 @@ package com.emrehmrc.depoqr;
 
 import android.annotation.TargetApi;
 import android.app.ActivityOptions;
+import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -23,15 +24,18 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import static com.emrehmrc.depoqr.AnaSayfa.MyPREFERENCES;
 
@@ -48,7 +52,9 @@ public class SarfListe extends AppCompatActivity implements PopupMenu.OnMenuItem
     String secilenSarf;
     ArrayList<String> silinecekArray = new ArrayList<String>();
     Button btn_ekle;
-
+    TextView btn_tarih;
+    private DatePickerDialog.OnDateSetListener mDateSetListener;
+    String date;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,6 +72,7 @@ public class SarfListe extends AppCompatActivity implements PopupMenu.OnMenuItem
         pbbarP = (ProgressBar) findViewById(R.id.pbbarP);
         lst_sarf = (ListView) findViewById(R.id.lst_Cari);
         btn_ekle = (Button) findViewById(R.id.btn_yeniSatis);
+        btn_tarih = (TextView) findViewById(R.id.btn_tarih);
         FillList fillList = new FillList();
         fillList.execute("");
 
@@ -76,6 +83,38 @@ public class SarfListe extends AppCompatActivity implements PopupMenu.OnMenuItem
                 startActivity(intent);
             }
         });
+        btn_tarih.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Calendar cal = Calendar.getInstance();
+                int year = cal.get(Calendar.YEAR);
+                int month = cal.get(Calendar.MONTH);
+                int day = cal.get(Calendar.DAY_OF_MONTH);
+
+                DatePickerDialog dialog = new DatePickerDialog(SarfListe.this, android.app.AlertDialog.THEME_DEVICE_DEFAULT_LIGHT, mDateSetListener, year,month,day);
+                // dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                dialog.show();
+            }
+        });
+        mDateSetListener = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+                month = month + 1;
+                date = day + "." + month + "." + year;
+                if(month<10){
+                    String str1 = String.format("%02d", month);
+                    date = day + "." + str1 + "." + year;
+                }
+                if(day<10){
+                    String str2 = String.format("%02d", day);
+                    date = str2 + "." + month + "." + year;
+                }
+                btn_tarih.setText(date);
+                if(!(lst_sarf==null)){
+                    adapter.getFilter().filter(btn_tarih.getText().toString());
+                }
+            }
+        };
     }
 
     public class FillList extends AsyncTask<String, String, String> {

@@ -92,6 +92,7 @@ public class PlasiyerSatis extends AppCompatActivity {
                 editor.putString("plasiyerDepoAd", secilendepo );
                 editor.putString("plasiyerDepoId", secilendepoId );
                 editor.commit();
+                finish();
                 startActivity(intent);
 
             }

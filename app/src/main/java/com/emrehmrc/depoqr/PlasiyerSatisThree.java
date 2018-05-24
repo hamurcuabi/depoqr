@@ -30,6 +30,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -74,7 +75,13 @@ public class PlasiyerSatisThree extends AppCompatActivity {
     CheckBox checkBoxall;
     ArrayList<String> ExistArray = new ArrayList<>();
     ArrayList<String> NotExistArray = new ArrayList<>();
-String code;
+    int memberCount;
+    int code;
+    TextView tx_birinciBirim,tx_ikinciBirim,tx_barkodSayisi;
+    float birinciBirim,ikinciBirim;
+    ImageView btn_calculate;
+    int recode;
+    String codelast;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -101,7 +108,10 @@ String code;
         secilenUrun = incomingIntent.getStringExtra("secilenUrun");
         datalist = new ArrayList<SevkiyatÜrünleriRecyclerView>();
         toneG = new ToneGenerator(AudioManager.STREAM_ALARM, 100);
-
+        tx_birinciBirim = (TextView) findViewById(R.id.tx_birinciBirim);
+        tx_ikinciBirim = (TextView) findViewById(R.id.tx_ikinciBirim);
+        tx_barkodSayisi = (TextView) findViewById(R.id.tx_barkodSayisi);
+        btn_calculate = (ImageView) findViewById(R.id.btn_calculate);
         btnentercode = (Button) findViewById(R.id.btnentercode);
         btnqrread = (Button) findViewById(R.id.btnqrread);
         gelenad = (TextView) findViewById(R.id.gelenad2);
@@ -225,6 +235,22 @@ String code;
                 emreAdaptor = new SevkiyetTarihAdapter(getApplicationContext(), datalist, firstAmount, secondAmount);
                 recyclerview.setAdapter(emreAdaptor);
 
+            }
+        });
+      CountGetir countGetir = new CountGetir();
+      countGetir.execute("");
+        btn_calculate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                birinciBirim = 0;
+                ikinciBirim = 0;
+                tx_barkodSayisi.setText(datalist.size()+"");
+                for (int i = 0; i < datalist.size(); i++) {
+                    birinciBirim = birinciBirim+ datalist.get(i).getFirstamount();
+                    ikinciBirim = ikinciBirim + datalist.get(i).getSecondamount();
+                }
+                tx_birinciBirim.setText(birinciBirim+"");
+                tx_ikinciBirim.setText(ikinciBirim+"");
             }
         });
     }
@@ -616,7 +642,7 @@ String code;
                 } else {
                     for (int j = 0; j < datalist.size(); j++) {
                         if (datalist.get(j).isChecked()) {
-                            String q = "Select * from VW_WAREHOUSEPLASIERDETAIL where BARCODEID='" + datalist.get(j).getBarcodeid() + "' ";
+                            String q = "Select * from VW_WAREHOUSEPLASIERDETAIL where BARCODEID='" + datalist.get(j).getBarcodeid() + "' and ISOKEY ='0' ";
                             PreparedStatement ps = con.prepareStatement(q);
                             ResultSet rs = ps.executeQuery();
                             if (rs.next()) {
@@ -713,6 +739,11 @@ String code;
                 recyclerview.setAdapter(null);
                 firstAmount.clear();
                 secondAmount.clear();
+               /* Intent intent = new Intent(PlasiyerSatisThree.this,PlasiyerList.class);
+                finish();
+                startActivity(intent);*/
+                finish();
+                onBackPressed();
             }
             // if (hata) Toast.makeText(getApplicationContext(), "HATA!", Toast.LENGTH_SHORT).show();
         }
@@ -730,8 +761,9 @@ String code;
                             if (datalist.get(i).isChecked()) {
                                 if (NotExistArray.contains(datalist.get(i).getBarcodeid())) {
                                     UUID uuıd = UUID.randomUUID();
-                                    String query = "insert into WAREHOUSEPLASIERDETAIL (ID,WAREHOUSEID,FIRSTAMOUNT,SECONDAMOUNT,ISKDV,KDVRATE,UNITPRICE,DATE,ISOKEY,BARCODEID,CODE,MEMBERID)" +
-                                            "values('"+uuıd+"','"+incomingDepoId+"','"+firstAmount.get(i)+"','"+secondAmount.get(i)+"','"+kdvDahil+"','"+kdv+"','"+birimFiyat+"',GETDATE(),0,'"+datalist.get(i).getBarcodeid()+"','"+code+"','"+memberid+"')";
+                                    String query = "insert into WAREHOUSEPLASIERDETAIL (ID,WAREHOUSEID,FIRSTAMOUNT,SECONDAMOUNT,ISKDV,KDVRATE,UNITPRICE,DATE,ISOKEY,BARCODEID,CODE,MEMBERID,RECODE)" +
+                                            "values('"+uuıd+"','"+incomingDepoId+"','"+firstAmount.get(i)+"','"+secondAmount.get(i)+"','"+kdvDahil+"','"+kdv+"','"+birimFiyat+"',GETDATE(),0,'"+datalist.get(i).getBarcodeid()+"','"+codelast+"','"+memberid+"','"+recode+"')";
+
                                     PreparedStatement preparedStatement = con.prepareStatement(query);
                                     preparedStatement.executeUpdate();
                                     deneme = false;
@@ -743,8 +775,8 @@ String code;
                         for (int i = 0; i < datalist.size(); i++) {
                             if (datalist.get(i).isChecked()) {
                                     UUID uuıd = UUID.randomUUID();
-                                    String query = "insert into WAREHOUSEPLASIERDETAIL (ID,WAREHOUSEID,FIRSTAMOUNT,SECONDAMOUNT,ISKDV,KDVRATE,UNITPRICE,DATE,ISOKEY,BARCODEID,CODE,MEMBERID)" +
-                                            "values('"+uuıd+"','"+incomingDepoId+"','"+firstAmount.get(i)+"','"+secondAmount.get(i)+"','"+kdvDahil+"','"+kdv+"','"+birimFiyat+"',GETDATE(),0,'"+datalist.get(i).getBarcodeid()+"','"+code+"','"+memberid+"')";
+                                    String query = "insert into WAREHOUSEPLASIERDETAIL (ID,WAREHOUSEID,FIRSTAMOUNT,SECONDAMOUNT,ISKDV,KDVRATE,UNITPRICE,DATE,ISOKEY,BARCODEID,CODE,MEMBERID,RECODE)" +
+                                            "values('"+uuıd+"','"+incomingDepoId+"','"+firstAmount.get(i)+"','"+secondAmount.get(i)+"','"+kdvDahil+"','"+kdv+"','"+birimFiyat+"',GETDATE(),0,'"+datalist.get(i).getBarcodeid()+"','"+codelast+"','"+memberid+"','"+recode+"')";
                                     PreparedStatement preparedStatement = con.prepareStatement(query);
                                     preparedStatement.executeUpdate();
                                     deneme = false;
@@ -762,7 +794,7 @@ String code;
             return z;
         }
     }
-    public class SayiGetir extends AsyncTask<String, String, String> {
+    public class CountGetir extends AsyncTask<String, String, String> {
         String w = "";
         boolean exist = false;
 
@@ -775,6 +807,51 @@ String code;
         @Override
         protected void onPostExecute(String s) {
             pbbarS.setVisibility(View.GONE);
+        }
+
+        @Override
+        protected String doInBackground(String... strings) {
+            try {
+                Connection con = connectionClass.CONN();
+                if (con == null) {
+                    w = "Error in connection with SQL server";
+                } else {
+                    String query = "select BARKODCOUNT from MEMBER where ID = '"+memberid+"' ";
+                    PreparedStatement ps = con.prepareStatement(query);
+                    ResultSet rs = ps.executeQuery();
+
+                    if (rs.next()) {
+                        memberCount = rs.getInt("BARKODCOUNT");
+
+                    }
+                    w = "Başarılı";
+                }
+            } catch (Exception ex) {
+                w = "Veri Çekme Hatası";
+
+            }
+            return w;
+        }
+    }
+
+    public class SayiGetir extends AsyncTask<String, String, String> {
+        String w = "";
+        boolean exist = false;
+
+        @Override
+        protected void onPreExecute() {
+            pbbarS.setVisibility(View.VISIBLE);
+            recode=0;
+            code =0;
+
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            pbbarS.setVisibility(View.GONE);
+            recode = code;
+            codelast = memberCount +""+code;
+            //code = memberCount+code;
             SendProductss sendProducts2 = new SendProductss();
             sendProducts2.execute("");
         }
@@ -786,12 +863,12 @@ String code;
                 if (con == null) {
                     w = "Error in connection with SQL server";
                 } else {
-                    String query = "select ISNULL(MAX(CONVERT(int,CODE)),1000)+1 as CODE from WAREHOUSEPLASIERDETAIL";
+                    String query = "select ISNULL(MAX(CONVERT(int,RECODE)),1000)+1 as RECODE from WAREHOUSEPLASIERDETAIL";
                     PreparedStatement ps = con.prepareStatement(query);
                     ResultSet rs = ps.executeQuery();
 
-                    while (rs.next()) {
-                        code = rs.getString("CODE");
+                    if (rs.next()) {
+                        code = rs.getInt("RECODE");
 
                     }
                     w = "Başarılı";

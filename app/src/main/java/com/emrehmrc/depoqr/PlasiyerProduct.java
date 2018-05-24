@@ -33,6 +33,7 @@ import android.widget.Toast;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.UUID;
 
@@ -56,6 +57,10 @@ public class PlasiyerProduct extends AppCompatActivity implements PopupMenu.OnMe
     UUID uuid ;
     String plasiyerCode;
     ArrayList<String> updateArray = new ArrayList<>();
+    String memberCount;
+    TextView tx_toplamToplam,tx_kdvToplam,tx_genelToplam;
+    float toplamToplam,kdvToplam,genelToplam;
+    ArrayList<String> silinecekArray = new ArrayList<>();
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,6 +77,10 @@ public class PlasiyerProduct extends AppCompatActivity implements PopupMenu.OnMe
         lastGG = (LinearLayout) findViewById(R.id.lastGG);
         lst_plasiyer = (ListView) findViewById(R.id.lst_plasiyer);
         btn_tamamla = (Button) findViewById(R.id.btn_tamamla);
+        tx_toplamToplam = (TextView) findViewById(R.id.tx_toplamToplam);
+        tx_kdvToplam = (TextView) findViewById(R.id.tx_kdvToplam);
+        tx_genelToplam = (TextView) findViewById(R.id.tx_genelToplam);
+
         memberid = sharedPreferences.getString("ID", null);
         comid = sharedPreferences.getString("Companiesid", null);
         Intent incomingIntent = getIntent();
@@ -85,7 +94,7 @@ public class PlasiyerProduct extends AppCompatActivity implements PopupMenu.OnMe
         depo.setText(secilendepo);
         uuid = UUID.randomUUID();
         if (disable.equals("disable")) {
-            relativeLayout3.setVisibility(View.GONE);
+           // relativeLayout3.setVisibility(View.GONE);
             lastGG.setVisibility(View.GONE);
         }
         connectionClass = new ConnectionClass();
@@ -134,8 +143,10 @@ public class PlasiyerProduct extends AppCompatActivity implements PopupMenu.OnMe
                 }
             }
         });
-        FillList fillList = new FillList();
-        fillList.execute("");
+        DeletePro deletePro = new DeletePro();
+        deletePro.execute("");
+        CountGetir countGetir = new CountGetir();
+        countGetir.execute("");
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -193,11 +204,19 @@ public class PlasiyerProduct extends AppCompatActivity implements PopupMenu.OnMe
 
         @Override
         protected void onPreExecute() {
+            plasiyerArray.clear();
+            lst_plasiyer.setAdapter(null);
             progressBar.setVisibility(View.VISIBLE);
+            toplamToplam=0;
+            genelToplam=0;
+            kdvToplam=0;
         }
 
         @Override
         protected void onPostExecute(String s) {
+            tx_genelToplam.setText("" + new DecimalFormat("##.##").format(genelToplam));
+            tx_kdvToplam.setText("" + new DecimalFormat("##.##").format(kdvToplam));
+            tx_toplamToplam.setText("" + new DecimalFormat("##.##").format(toplamToplam));
             progressBar.setVisibility(View.GONE);
             if (exist) {
                 adapter = new PlasiyerProductAdapter(getApplicationContext(), plasiyerArray);
@@ -234,11 +253,14 @@ public class PlasiyerProduct extends AppCompatActivity implements PopupMenu.OnMe
 
                     while (rs.next()) {
                         exist = true;
+                        toplamToplam = toplamToplam + rs.getFloat("TOTAL");
+                        kdvToplam = kdvToplam + rs.getFloat("KDVTOTAL");
+                        genelToplam = genelToplam + rs.getFloat("GENERALTOTAL");
                         plasiyerArray.add(new PlasiyerProductModel(rs.getString("CODE")
                                 , rs.getString("PRODUCTNAME")
-                                , rs.getString("UNITPRICE")
-                                , rs.getString("AMOUNT")
-                                , rs.getString("TOTAL"), rs.getString("KDVTOTAL"), rs.getString("GENERALTOTAL")));
+                                , rs.getFloat("UNITPRICE")
+                                , rs.getFloat("AMOUNT")
+                                , rs.getFloat("TOTAL"), rs.getFloat("KDVTOTAL"), rs.getFloat("GENERALTOTAL")));
                     }
                     w = "Başarılı";
                 }
@@ -261,8 +283,7 @@ public class PlasiyerProduct extends AppCompatActivity implements PopupMenu.OnMe
         @Override
         protected void onPostExecute(String s) {
             progressBar.setVisibility(View.GONE);
-            String user = memberid.charAt(0)+""+memberid.charAt(memberid.length()-1);
-            plasiyerCode = incomingCariKod +"-"+ count +""+ user;
+            plasiyerCode = incomingCariKod +"-"+ count +""+ memberCount;
             SendProducts sendProducts = new SendProducts();
             sendProducts.execute("");
         }
@@ -408,7 +429,10 @@ public class PlasiyerProduct extends AppCompatActivity implements PopupMenu.OnMe
             progressBar.setVisibility(View.GONE);
 
             if (!hata) {
-                Toast.makeText(getApplicationContext(), "AKTARILDI!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "TAMANLANDI!", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(PlasiyerProduct.this,PlasiyerList.class);
+                startActivity(intent);
+                finish();
             } else {
                 Toast.makeText(getApplicationContext(), "HATA!", Toast.LENGTH_SHORT).show();
 
@@ -437,82 +461,6 @@ public class PlasiyerProduct extends AppCompatActivity implements PopupMenu.OnMe
             return z;
         }
     }
-    public static class PlasiyerProductModel {
-
-        public String getKod() {
-            return kod;
-        }
-
-        public void setKod(String kod) {
-            this.kod = kod;
-        }
-
-        public String getProductName() {
-            return productName;
-        }
-
-        public void setProductName(String productName) {
-            this.productName = productName;
-        }
-
-        public String getMiktar() {
-            return miktar;
-        }
-
-        public void setMiktar(String miktar) {
-            this.miktar = miktar;
-        }
-
-        public String getToplamTutar() {
-            return toplamTutar;
-        }
-
-        public void setToplamTutar(String toplamTutar) {
-            this.toplamTutar = toplamTutar;
-        }
-
-        public String getKdv() {
-            return kdv;
-        }
-
-        public void setKdv(String kdv) {
-            this.kdv = kdv;
-        }
-
-        public String getGenelTutar() {
-            return genelTutar;
-        }
-
-        public void setGenelTutar(String genelTutar) {
-            this.genelTutar = genelTutar;
-        }
-
-        public String getFiyat() {
-            return fiyat;
-        }
-
-        public void setFiyat(String fiyat) {
-            this.fiyat = fiyat;
-        }
-
-        public PlasiyerProductModel(String kod, String productName, String fiyat, String miktar, String toplamTutar, String kdv, String genelTutar) {
-            this.kod = kod;
-            this.productName = productName;
-            this.fiyat = fiyat;
-            this.miktar = miktar;
-            this.toplamTutar = toplamTutar;
-            this.kdv = kdv;
-            this.genelTutar = genelTutar;
-        }
-
-        String kod;
-        String productName;
-        String fiyat;
-        String miktar;
-        String toplamTutar;
-        String kdv;
-        String genelTutar;
-    }
 
     @RequiresApi(api = Build.VERSION_CODES.CUPCAKE)
     public class DeletePro extends AsyncTask<String, String, String> {
@@ -524,14 +472,14 @@ public class PlasiyerProduct extends AppCompatActivity implements PopupMenu.OnMe
         @Override
         protected void onPreExecute() {
             progressBar.setVisibility(View.VISIBLE);
+
         }
 
         @Override
         protected void onPostExecute(String r) {
             progressBar.setVisibility(View.GONE);
-            if (isSuccess) {
-
-            }
+            FillList fillList = new FillList();
+            fillList.execute("");
         }
 
         @Override
@@ -543,7 +491,7 @@ public class PlasiyerProduct extends AppCompatActivity implements PopupMenu.OnMe
                     z = "Error in connection with SQL server";
                 } else {
 
-                    String query = "Delete  from WAREHOUSEPLASIERDETAIL where COMPANIESID = '" + comid + "' and ISOKEY='0' and MEMBERID='"+memberid+"' ";
+                    String query = "Delete  from WAREHOUSEPLASIERDETAIL where ISOKEY='0' and MEMBERID='"+memberid+"' ";
                     PreparedStatement preparedStatement = con.prepareStatement(query);
                     preparedStatement.executeUpdate();
                     isSuccess = true;
@@ -562,21 +510,22 @@ public class PlasiyerProduct extends AppCompatActivity implements PopupMenu.OnMe
 
     @RequiresApi(api = Build.VERSION_CODES.CUPCAKE)
     public class DeleteChild extends AsyncTask<String, String, String> {
-
-
         String z = "";
         Boolean isSuccess = false;
 
         @Override
         protected void onPreExecute() {
             progressBar.setVisibility(View.VISIBLE);
+            silinecekArray.clear();
         }
 
         @Override
         protected void onPostExecute(String r) {
             progressBar.setVisibility(View.GONE);
             if (isSuccess) {
-                Toast.makeText(PlasiyerProduct.this, "BAŞARIYLA SİLİNDİ", Toast.LENGTH_SHORT).show();
+                DeleteChild2 deletePro = new DeleteChild2();
+                deletePro.execute("");
+
             } else {
                 Toast.makeText(PlasiyerProduct.this, "HATA", Toast.LENGTH_SHORT).show();
 
@@ -592,10 +541,14 @@ public class PlasiyerProduct extends AppCompatActivity implements PopupMenu.OnMe
                     z = "Error in connection with SQL server";
                 } else {
 
-                    String query = "Delete  from WAREHOUSEPLASIERDETAIL where CODE = '" + secilenSatis + "' ";
-                    PreparedStatement preparedStatement = con.prepareStatement(query);
-                    preparedStatement.executeUpdate();
-                    isSuccess = true;
+                    String query = "select ID from WAREHOUSEPLASIERDETAIL where CODE='"+secilenSatis+"'";
+                    PreparedStatement ps = con.prepareStatement(query);
+                    ResultSet rs = ps.executeQuery();
+
+                    while (rs.next()) {
+                        silinecekArray.add(rs.getString("ID"));
+                        isSuccess = true;
+                    }
 
                 }
             } catch (Exception ex) {
@@ -608,12 +561,98 @@ public class PlasiyerProduct extends AppCompatActivity implements PopupMenu.OnMe
         }
 
     }
+    @RequiresApi(api = Build.VERSION_CODES.CUPCAKE)
+    public class DeleteChild2 extends AsyncTask<String, String, String> {
 
+
+        String z = "";
+        Boolean isSuccess = false;
+
+        @Override
+        protected void onPreExecute() {
+            progressBar.setVisibility(View.VISIBLE);
+
+        }
+
+        @Override
+        protected void onPostExecute(String r) {
+            progressBar.setVisibility(View.GONE);
+            if(isSuccess){
+                Toast.makeText(PlasiyerProduct.this, "Silindi", Toast.LENGTH_SHORT).show();
+                FillList fillList = new FillList();
+                fillList.execute("");
+            }
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+
+            try {
+                Connection con = connectionClass.CONN();
+                if (con == null) {
+                    z = "Error in connection with SQL server";
+                } else {
+                    for (int i = 0; i <silinecekArray.size() ; i++) {
+                        String query = "Delete  from WAREHOUSEPLASIERDETAIL where ID ='"+silinecekArray.get(i)+"' ";
+                        PreparedStatement preparedStatement = con.prepareStatement(query);
+                        preparedStatement.executeUpdate();
+                        isSuccess = true;
+                    }
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                isSuccess = false;
+                z = "SQL HATASI!";
+            }
+
+            return z;
+        }
+
+    }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == 1) {
             FillList fillList = new FillList();
             fillList.execute("");
+        }
+    }
+    public class CountGetir extends AsyncTask<String, String, String> {
+        String w = "";
+        boolean exist = false;
+
+        @Override
+        protected void onPreExecute() {
+            progressBar.setVisibility(View.VISIBLE);
+
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            progressBar.setVisibility(View.GONE);
+        }
+
+        @Override
+        protected String doInBackground(String... strings) {
+            try {
+                Connection con = connectionClass.CONN();
+                if (con == null) {
+                    w = "Error in connection with SQL server";
+                } else {
+                    String query = "select BARKODCOUNT from MEMBER where ID = '"+memberid+"' ";
+                    PreparedStatement ps = con.prepareStatement(query);
+                    ResultSet rs = ps.executeQuery();
+
+                    if (rs.next()) {
+                        memberCount = rs.getString("BARKODCOUNT");
+
+                    }
+                    w = "Başarılı";
+                }
+            } catch (Exception ex) {
+                w = "Veri Çekme Hatası";
+
+            }
+            return w;
         }
     }
 }

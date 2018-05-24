@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.emrehmrc.depoqr.PlasiyerList.PlasiyerListModel;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 public class PlasiyerListAdapter extends BaseAdapter implements Filterable {
@@ -65,9 +66,9 @@ public class PlasiyerListAdapter extends BaseAdapter implements Filterable {
         PlasiyerListModel bean = beanList.get(position);
         txTarih.setText(bean.getCariTarih());
         txCariAdi.setText(bean.getCariAdi());
-        txToplamTutar.setText("" + bean.getToplamTutar());
-        txGenelTuatar.setText("" + bean.getGenelTutar());
-        txKdv.setText("" + bean.getKdv());
+        txToplamTutar.setText("" + new DecimalFormat("##.##").format(bean.getToplamTutar()));
+        txGenelTuatar.setText("" +new DecimalFormat("##.##").format(bean.getGenelTutar()));
+        txKdv.setText("" + new DecimalFormat("##.##").format(bean.getKdv()));
         return convertView;
     }
 
@@ -88,7 +89,20 @@ public class PlasiyerListAdapter extends BaseAdapter implements Filterable {
                 for (int i = 0; i < mStringFilterList.size(); i++) {
                     if ((mStringFilterList.get(i).getCariAdi().toUpperCase()).contains(constraint.toString().toUpperCase())) {
 
-                        PlasiyerListModel bean = new PlasiyerListModel(mStringFilterList.get(i).getPlasiyercode()
+                        PlasiyerListModel bean = new PlasiyerListModel(mStringFilterList.get(i).getId(),mStringFilterList.get(i).getPlasiyercode()
+                                , mStringFilterList.get(i).getCariTarih()
+                                , mStringFilterList.get(i).getCariAdi()
+                                , mStringFilterList.get(i).getToplamTutar()
+                                , mStringFilterList.get(i).getKdv()
+                                , mStringFilterList.get(i).getGenelTutar()
+                                ,mStringFilterList.get(i).getDepoName());
+                        filterList.add(bean);
+                    }
+                }
+                for (int i = 0; i < mStringFilterList.size(); i++) {
+                    if ((mStringFilterList.get(i).getCariTarih().toUpperCase()).contains(constraint.toString().toUpperCase())) {
+
+                        PlasiyerListModel bean = new PlasiyerListModel(mStringFilterList.get(i).getId(),mStringFilterList.get(i).getPlasiyercode()
                                 , mStringFilterList.get(i).getCariTarih()
                                 , mStringFilterList.get(i).getCariAdi()
                                 , mStringFilterList.get(i).getToplamTutar()

@@ -138,13 +138,13 @@ public class BarkodBilgiEkraniSec extends AppCompatActivity {
                 if (con == null) {
                     z = "Error in connection with SQL server";
                 } else {
-                    String query = "SELECT DATE, MEMBERNAME, WAREHOUSENAME from VW_WAREHOUSESTOCKMOVEMENT where COMPANIESID = '" + comid + "' and BARCODEID ='" + secilenProductId + "' and ( MOVEID = '3' or MOVEID ='7') order by DATE  ";
+                    String query = "SELECT DATE, MEMBERNAME, WAREHOUSENAME,CONVERT(NVARCHAR(10),DATE,104) as DATE1 from VW_WAREHOUSESTOCKMOVEMENT where COMPANIESID = '" + comid + "' and BARCODEID ='" + secilenProductId + "' and ( MOVEID = '3' or MOVEID ='7') order by DATE  ";
                     PreparedStatement ps = con.prepareStatement(query);
                     ResultSet rs = ps.executeQuery();
 
                     while (rs.next()) {
                         datanum = new HashMap<>();
-                        datanum.put("A", rs.getString("DATE"));
+                        datanum.put("A", rs.getString("DATE1"));
                         datanum.put("B", rs.getString("MEMBERNAME"));
                         datanum.put("C", rs.getString("WAREHOUSENAME"));
                         malkbulModelArrayList.add(datanum);
@@ -197,13 +197,13 @@ public class BarkodBilgiEkraniSec extends AppCompatActivity {
                 if (con == null) {
                     z = "Error in connection with SQL server";
                 } else {
-                    String query = "SELECT whsm.DATE, whsm.MEMBERNAME, whsm.FORWARID,fp.CURRENTNAME,fp.FORWARDINGNO  from VW_WAREHOUSESTOCKMOVEMENT as whsm INNER JOIN VW_FORWARDINGPLAN as fp ON fp.ID=whsm.FORWARID where whsm.COMPANIESID = '" + comid + "' and ( whsm.MOVEID = '1' or whsm.MOVEID = '8' ) and whsm.BARCODEID ='" + secilenProductId + "' order by whsm.DATE";
+                    String query = "SELECT whsm.DATE, whsm.MEMBERNAME, whsm.FORWARID,fp.CURRENTNAME,fp.FORWARDINGNO,CONVERT(NVARCHAR(10),whsm.DATE,104) as DATE1  from VW_WAREHOUSESTOCKMOVEMENT as whsm INNER JOIN VW_FORWARDINGPLAN as fp ON fp.ID=whsm.FORWARID where whsm.COMPANIESID = '" + comid + "' and ( whsm.MOVEID = '1' or whsm.MOVEID = '8' ) and whsm.BARCODEID ='" + secilenProductId + "' order by whsm.DATE";
                     PreparedStatement ps = con.prepareStatement(query);
                     ResultSet rs = ps.executeQuery();
 
                     while (rs.next()) {
                         datanum = new HashMap<>();
-                        datanum.put("A", rs.getString("DATE"));
+                        datanum.put("A", rs.getString("DATE1"));
                         datanum.put("B", rs.getString("MEMBERNAME"));
                         datanum.put("C", rs.getString("FORWARDINGNO"));
                         datanum.put("D", rs.getString("CURRENTNAME"));
@@ -250,13 +250,13 @@ public class BarkodBilgiEkraniSec extends AppCompatActivity {
                 if (con == null) {
                     z = "Error in connection with SQL server";
                 } else {
-                    String query = " SELECT DATE, MEMBERNAME, SOURCEWAREHOUSENAME, DESTINATIONWAREHOUSENAME from VW_WAREHOUSETRANSFER where COMPANIESID = '" + comid + "' and BARCODEID = '"+secilenProductId+"' order by DATE ";
+                    String query = " SELECT DATE, MEMBERNAME, SOURCEWAREHOUSENAME, DESTINATIONWAREHOUSENAME,CONVERT(NVARCHAR(10),DATE,104) as DATE1 from VW_WAREHOUSETRANSFER where COMPANIESID = '" + comid + "' and BARCODEID = '"+secilenProductId+"' order by DATE ";
                     PreparedStatement ps = con.prepareStatement(query);
                     ResultSet rs = ps.executeQuery();
 
                     while (rs.next()) {
                         datanum = new HashMap<>();
-                        datanum.put("A", rs.getString("DATE"));
+                        datanum.put("A", rs.getString("DATE1"));
                         datanum.put("B", rs.getString("MEMBERNAME"));
                         datanum.put("C", rs.getString("SOURCEWAREHOUSENAME"));
                         datanum.put("D", rs.getString("DESTINATIONWAREHOUSENAME"));

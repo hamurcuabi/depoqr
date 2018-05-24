@@ -119,9 +119,26 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:orientation="horizontal">
-
-
                         <AutoCompleteTextView
+                            android:id="@+id/tx_productName2"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:background="@drawable/deneme3"
+                            android:entries="@array/deposec"
+                            android:hint="Ürün Kodu Veya Adı.."
+                            android:imeOptions="actionDone"
+                            android:maxLines="1"
+                            android:padding="5dp"
+                            android:singleLine="true"
+                            android:textColor="#ffffff"
+                            android:textSize="17sp"
+                            android:layout_marginRight="10dp"
+                            android:popupBackground="@color/white"
+                            android:visibility="gone"/>
+
+
+                        <EditText
                             android:id="@+id/tx_productName"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
@@ -144,7 +161,8 @@
                             android:layout_height="wrap_content"
                             android:src="@drawable/ic_action_filter"
                             android:clickable="true"
-                            android:focusable="true" />
+                            android:focusable="true"
+                            android:visibility="gone"/>
 
                     </LinearLayout>
 

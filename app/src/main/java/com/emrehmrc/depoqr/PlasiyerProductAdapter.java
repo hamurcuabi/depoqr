@@ -7,17 +7,18 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 public class PlasiyerProductAdapter extends BaseAdapter{
     private Context context;
-    ArrayList<PlasiyerProduct.PlasiyerProductModel> beanList;
-    private ArrayList<PlasiyerProduct.PlasiyerProductModel> mStringFilterList;
+    ArrayList<PlasiyerProductModel> beanList;
+    private ArrayList<PlasiyerProductModel> mStringFilterList;
     private LayoutInflater inflater;
     private int[] colors = new int[] { 0x304267B2, 0x300000FF };
     private final int[] bgColors = new int[] { R.color.list_bg_2, R.color.list_bg_1 };
 
-    public PlasiyerProductAdapter(Context context, ArrayList<PlasiyerProduct.PlasiyerProductModel> objectss) {
+    public PlasiyerProductAdapter(Context context, ArrayList<PlasiyerProductModel> objectss) {
         this.context = context;
         mStringFilterList = objectss;
         this.beanList = objectss;
@@ -57,14 +58,14 @@ public class PlasiyerProductAdapter extends BaseAdapter{
         TextView view_kdv = (TextView) convertView.findViewById(R.id.view_kdv);
         TextView view_geneltutar = (TextView) convertView.findViewById(R.id.view_geneltutar);
 
-        PlasiyerProduct.PlasiyerProductModel bean = beanList.get(position);
+       PlasiyerProductModel bean = beanList.get(position);
         view_name.setText(bean.getProductName());
-        view_fiyat.setText(bean.getFiyat());
-        view_miktar.setText(bean.getMiktar());
+        view_fiyat.setText("" + new DecimalFormat("##.##").format(bean.getFiyat()));
+        view_miktar.setText("" + new DecimalFormat("##.##").format(bean.getMiktar()));
 
-        view_toplamtutar.setText(bean.getToplamTutar());
-        view_kdv.setText(bean.getKdv());
-        view_geneltutar.setText(bean.getGenelTutar());
+        view_toplamtutar.setText("" + new DecimalFormat("##.##").format(bean.getToplamTutar()));
+        view_kdv.setText("" + new DecimalFormat("##.##").format(bean.getKdv()));
+        view_geneltutar.setText("" + new DecimalFormat("##.##").format(bean.getGenelTutar()));
         return convertView;
     }
 }

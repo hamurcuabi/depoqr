@@ -169,13 +169,13 @@ public class SarfDuzenle extends AppCompatActivity implements PopupMenu.OnMenuIt
                 if (con == null) {
                     w = "Error in connection with SQL server";
                 } else {
-                    String query = " select * from VW_CONSUMPTION where COMPANIESID = '" + comid + "' and CODE = '" + secilenSarf + "'";
+                    String query = " select *,CONVERT(NVARCHAR(10),DATE,104) as DATE1 from VW_CONSUMPTION where COMPANIESID = '" + comid + "' and CODE = '" + secilenSarf + "'";
                     PreparedStatement ps = con.prepareStatement(query);
                     ResultSet rs = ps.executeQuery();
 
                     while (rs.next()) {
                         barkodsayisi++;
-                        tarih = rs.getString("DATE");
+                        tarih = rs.getString("DATE1");
                         kullaici = rs.getString("MEMBEREMPLOYEENAME");
                         aciklama = rs.getString("DESCRIPTION");
                         exist = true;

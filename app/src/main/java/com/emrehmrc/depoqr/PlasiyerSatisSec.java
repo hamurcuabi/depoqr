@@ -144,7 +144,7 @@ public class PlasiyerSatisSec extends AppCompatActivity {
                             if (tx_iskdv.getText().toString().equals("EVET")) {
                                 intent.putExtra("KDVDAHIL", "1");
                             } else intent.putExtra("KDVDAHIL", "0");
-
+                            finish();
                             startActivity(intent);
 
                         } else

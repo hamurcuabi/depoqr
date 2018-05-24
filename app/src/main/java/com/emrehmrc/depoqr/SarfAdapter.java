@@ -11,12 +11,13 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-public class SarfAdapter extends BaseAdapter  {
+public class SarfAdapter extends BaseAdapter implements Filterable {
     private Context context;
     ArrayList<SarfListe.SarfAnaListeModel> beanList;
     private ArrayList<SarfListe.SarfAnaListeModel> mStringFilterList;
     private LayoutInflater inflater;
     private final int[] bgColors = new int[] { R.color.list_bg_2, R.color.list_bg_1 };
+    ValueFilter valueFilter;
 
 
     public SarfAdapter(Context context, ArrayList<SarfListe.SarfAnaListeModel> objectss) {
@@ -59,5 +60,47 @@ public class SarfAdapter extends BaseAdapter  {
         txCariAdi.setText(bean.getUserName());
         txToplamTutar.setText(bean.getCurrentName());
         return convertView;
+    }
+    @Override
+    public Filter getFilter() {
+        if (valueFilter == null) {
+            valueFilter = new ValueFilter();
+        }
+        return valueFilter;
+    }
+
+    private class ValueFilter extends Filter {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            FilterResults results = new FilterResults();
+            if (constraint != null && constraint.length() > 0) {
+                ArrayList<SarfListe.SarfAnaListeModel> filterList = new ArrayList<SarfListe.SarfAnaListeModel>();
+                for (int i = 0; i < mStringFilterList.size(); i++) {
+                    if ((mStringFilterList.get(i).getDate().toUpperCase()).contains(constraint.toString().toUpperCase())) {
+
+                        SarfListe.SarfAnaListeModel bean = new SarfListe.SarfAnaListeModel(mStringFilterList.get(i).getSarfNo()
+                                , mStringFilterList.get(i).getUserName()
+                                , mStringFilterList.get(i).getCurrentName()
+                                , mStringFilterList.get(i).getDate());
+                        filterList.add(bean);
+                    }
+                }
+                results.count = filterList.size();
+                results.values = filterList;
+            } else {
+                results.count = mStringFilterList.size();
+                results.values = mStringFilterList;
+            }
+
+
+            return results;
+
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            beanList = (ArrayList<SarfListe.SarfAnaListeModel>) results.values;
+            notifyDataSetChanged();
+        }
     }
 }

@@ -104,6 +104,7 @@ public class PlasiyerProductDetails extends AppCompatActivity   implements  Popu
         @Override
         protected void onPreExecute() {
             progressBar.setVisibility(View.VISIBLE);
+            listView.setAdapter(null);
         }
 
         @Override
@@ -145,9 +146,9 @@ public class PlasiyerProductDetails extends AppCompatActivity   implements  Popu
                         exist = true;
                         plasiyerArray.add(new PlasiyerProductDetailModel(rs.getString("ID")
                                 ,rs.getString("BARCODENO")
-                                ,rs.getString("UNITPRICE")
-                                ,rs.getString("FIRSTAMOUNT")
-                                ,rs.getString("TOTAL"),rs.getString("KDVTOTAL"),rs.getString("GENERALTOTAL")));
+                                ,rs.getFloat("UNITPRICE")
+                                ,rs.getFloat("FIRSTAMOUNT")
+                                ,rs.getFloat("TOTAL"),rs.getFloat("KDVTOTAL"),rs.getFloat("GENERALTOTAL")));
                     }
                     w = "Başarılı";
                 }
@@ -172,7 +173,15 @@ public class PlasiyerProductDetails extends AppCompatActivity   implements  Popu
     }
 
     public static class PlasiyerProductDetailModel{
-        public PlasiyerProductDetailModel(String id, String barkod, String fiyat, String miktar, String toplamTutar, String kdv, String genelTutar) {
+        String id;
+        String barkod;
+        float fiyat;
+        float miktar;
+        float toplamTutar;
+        float kdv;
+        float genelTutar;
+
+        public PlasiyerProductDetailModel(String id, String barkod, float fiyat, float miktar, float toplamTutar, float kdv, float genelTutar) {
             this.id = id;
             this.barkod = barkod;
             this.fiyat = fiyat;
@@ -198,53 +207,45 @@ public class PlasiyerProductDetails extends AppCompatActivity   implements  Popu
             this.barkod = barkod;
         }
 
-        public String getFiyat() {
+        public float getFiyat() {
             return fiyat;
         }
 
-        public void setFiyat(String fiyat) {
+        public void setFiyat(float fiyat) {
             this.fiyat = fiyat;
         }
 
-        public String getMiktar() {
+        public float getMiktar() {
             return miktar;
         }
 
-        public void setMiktar(String miktar) {
+        public void setMiktar(float miktar) {
             this.miktar = miktar;
         }
 
-        public String getToplamTutar() {
+        public float getToplamTutar() {
             return toplamTutar;
         }
 
-        public void setToplamTutar(String toplamTutar) {
+        public void setToplamTutar(float toplamTutar) {
             this.toplamTutar = toplamTutar;
         }
 
-        public String getKdv() {
+        public float getKdv() {
             return kdv;
         }
 
-        public void setKdv(String kdv) {
+        public void setKdv(float kdv) {
             this.kdv = kdv;
         }
 
-        public String getGenelTutar() {
+        public float getGenelTutar() {
             return genelTutar;
         }
 
-        public void setGenelTutar(String genelTutar) {
+        public void setGenelTutar(float genelTutar) {
             this.genelTutar = genelTutar;
         }
-
-        String id;
-        String barkod;
-        String fiyat;
-        String miktar;
-        String toplamTutar;
-        String kdv;
-        String genelTutar;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.CUPCAKE)

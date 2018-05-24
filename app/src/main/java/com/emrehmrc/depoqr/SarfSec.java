@@ -217,14 +217,16 @@ public class SarfSec extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (!datalist.isEmpty()) {
-                    SayiGetir sayiGetir = new SayiGetir();
-                    sayiGetir.execute("");
+                    SendProducts sendProducts = new SendProducts();
+                    sendProducts.execute("");
+
                 }
             }
         });
         FillList fillList = new FillList();
         fillList.execute("");
-
+        SayiGetir sayiGetir = new SayiGetir();
+        sayiGetir.execute("");
     }
 
 
@@ -307,8 +309,7 @@ public class SarfSec extends AppCompatActivity {
         protected void onPostExecute(String s) {
             progressBar.setVisibility(View.GONE);
                 kodDevam++;
-                SendProducts sendProducts = new SendProducts();
-                sendProducts.execute("");
+
         }
 
         @Override
@@ -361,6 +362,8 @@ public class SarfSec extends AppCompatActivity {
             if (!hata) {
                 datalist.clear();
                 recyclerView.setAdapter(null);
+                firstAmount.clear();
+                secondAmount.clear();
                 Toast.makeText(getApplicationContext(), "AKTARILDI!", Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(getApplicationContext(), "HATA!", Toast.LENGTH_SHORT).show();

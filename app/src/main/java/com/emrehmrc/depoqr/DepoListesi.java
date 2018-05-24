@@ -12,6 +12,8 @@ import android.os.Vibrator;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,6 +22,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -43,8 +46,10 @@ public class DepoListesi extends AppCompatActivity {
     ArrayAdapter<Depolar> adapterDepo;
     ArrayAdapter<String> adapterName;
     ArrayList<Depolar> depolars = new ArrayList<>();
-    AutoCompleteTextView tx_deposec, tx_productName;
-    ImageView btn_drop, btn_filter;
+    AutoCompleteTextView tx_deposec;
+    EditText tx_productName;
+    ImageView btn_drop;
+    //ImageView  btn_filter;
     Button btn_depoAra;
     ProgressBar pbbarP;
     ArrayList<DepoListesiModel> products = new ArrayList<>();
@@ -67,11 +72,11 @@ public class DepoListesi extends AppCompatActivity {
         ab.setTitle("Depo Listesi");
         ab.setBackgroundDrawable(getResources().getDrawable(R.drawable.arkaplan));
         tx_deposec = (AutoCompleteTextView) findViewById(R.id.tx_deposec);
-        tx_productName = (AutoCompleteTextView) findViewById(R.id.tx_productName);
+        tx_productName = (EditText) findViewById(R.id.tx_productName);
         btn_drop = (ImageView) findViewById(R.id.btn_drop);
         btn_depoAra = (Button) findViewById(R.id.btn_depoAra);
         pbbarP = (ProgressBar) findViewById(R.id.pbbarP);
-        btn_filter = (ImageView) findViewById(R.id.btn_filter);
+        //btn_filter = (ImageView) findViewById(R.id.btn_filter);
         lst_prdoucts = (ListView) findViewById(R.id.lst_prdoucts);
         FillListDepo fillListDepo = new FillListDepo();
         fillListDepo.execute("");
@@ -109,7 +114,7 @@ public class DepoListesi extends AppCompatActivity {
 
             }
         });
-        btn_filter.setOnClickListener(new View.OnClickListener() {
+       /* btn_filter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String nameCode;
@@ -124,7 +129,7 @@ public class DepoListesi extends AppCompatActivity {
                 } else
                     Toast.makeText(DepoListesi.this, "Ürün Ismi veya Kodu Giriniz!", Toast.LENGTH_LONG).show();
             }
-        });
+        });*/
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -277,8 +282,24 @@ public class DepoListesi extends AppCompatActivity {
                 }
                 adapter = new DepoListesiAdapter(getApplicationContext(), products);
                 lst_prdoucts.setAdapter(adapter);
-                adapterName = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_dropdown_item_1line, nameArray);
-                tx_productName.setAdapter(adapterName);
+             // adapterName = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_dropdown_item_1line, nameArray);
+                //tx_productName.setAdapter(adapterName);
+                tx_productName.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                      adapter.getFilter().filter(s.toString());
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable s) {
+
+                    }
+                });
 
             } else
                 Toast.makeText(DepoListesi.this, "Depoda Ürün Bulunamadı!", Toast.LENGTH_LONG).show();
@@ -292,15 +313,15 @@ public class DepoListesi extends AppCompatActivity {
                 if (con == null) {
                     z = "Error in connection with SQL server";
                 } else {
-                    String query = "Select PRODUCTNAME,PRODUCTID,PRODUCTCODE, FIRSTUNITNAME,SECONDUNITNAME, SUM(WDIRECTION * FIRSTAMOUNT)  AS FIRSTAMOUNT, SUM(WDIRECTION * SECONDAMOUNT) AS SECONDAMOUNT from VW_WAREHOUSESTOCKMOVEMENT where (DESTINATIONWAREHOUSEID = '" + getSecilenDepoId + "' or SOURCEWAREHOUSEID = '" + getSecilenDepoId + "') group by BARCODEID,BARCODENO,PALETBARCODES,PRODUCTNAME,PALETID,PRODUCTID,PRODUCTCODE,FIRSTUNITNAME,SECONDUNITNAME having SUM(WDIRECTION * FIRSTAMOUNT) != 0 or SUM(WDIRECTION * SECONDAMOUNT) != 0";
+                    String query = "Select PRODUCTNAME,PRODUCTID,PRODUCTCODE, FIRSTUNITNAME,SECONDUNITNAME, SUM(WDIRECTION * FIRSTAMOUNT)  AS FIRSTAMOUNT, SUM(WDIRECTION * SECONDAMOUNT) AS SECONDAMOUNT from VW_WAREHOUSESTOCKMOVEMENT where (DESTINATIONWAREHOUSEID = '" + getSecilenDepoId + "' or SOURCEWAREHOUSEID = '" + getSecilenDepoId + "') group by BARCODEID,BARCODENO,PALETBARCODES,PRODUCTNAME,PALETID,PRODUCTID,PRODUCTCODE,FIRSTUNITNAME,SECONDUNITNAME having SUM(WDIRECTION * FIRSTAMOUNT) != 0 or SUM(WDIRECTION * SECONDAMOUNT) != 0 order by PRODUCTNAME";
                     PreparedStatement ps = con.prepareStatement(query);
                     ResultSet rs = ps.executeQuery();
 
                     while (rs.next()) {
                         products.add(new DepoListesiModel(rs.getString("PRODUCTNAME"), rs.getString("PRODUCTCODE"), rs.getFloat("FIRSTAMOUNT"), rs.getFloat("SECONDAMOUNT"), rs.getString("FIRSTUNITNAME"), rs.getString("SECONDUNITNAME")));
                         check = true;
-                        nameArray.add(rs.getString("PRODUCTNAME"));
-                        codeArray.add(rs.getString("PRODUCTCODE"));
+                       // nameArray.add(rs.getString("PRODUCTNAME"));
+                       // codeArray.add(rs.getString("PRODUCTCODE"));
                     }
                     z = "Başarılı";
                 }
