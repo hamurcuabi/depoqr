@@ -19,7 +19,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
 
-            android:background="@color/listesatir1"
+            android:background="@color/zyonetim"
             android:padding="2dp">
 
             <TextView
@@ -30,7 +30,7 @@
                 android:padding="10dp"
                 android:text="ANA DEPO SEÇİNİZ"
                 android:textAlignment="center"
-                android:textColor="@android:color/holo_red_dark"
+                android:textColor="@android:color/white"
                 android:textSize="18sp"
                 android:textStyle="bold"  />
 
@@ -48,7 +48,7 @@
                 android:padding="10dp"
                 android:text="HEDEF DEPO SEÇİNİZ"
                 android:textAlignment="center"
-                android:textColor="@android:color/holo_red_dark"
+                android:textColor="@android:color/white"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 

@@ -429,7 +429,7 @@ public class PlasiyerSatisSec extends AppCompatActivity {
                 MoneyType Type = new MoneyType();
                 Type.execute("");
             } else {
-                Toast.makeText(getApplicationContext(), "Hata.", Toast.LENGTH_SHORT).show();
+              //  Toast.makeText(getApplicationContext(), "Hata.", Toast.LENGTH_SHORT).show();
                 tx_iskdv.setText("EVET");
                 tx_iskdv.setOnClickListener(new View.OnClickListener() {
                     @Override

@@ -216,7 +216,8 @@
                 android:singleLine="true"
                 android:textColor="@android:color/holo_red_dark"
                 android:textSize="20sp"
-                android:textStyle="bold"/>
+                android:textStyle="bold"
+                android:selectAllOnFocus="true"/>
 
             <TextView
                 android:id="@+id/tx_moneyTeype"
@@ -261,7 +262,8 @@
                 android:singleLine="true"
                 android:textColor="@android:color/holo_red_dark"
                 android:textSize="20sp"
-                android:textStyle="bold"/>
+                android:textStyle="bold"
+                android:selectAllOnFocus="true"/>
 
         </LinearLayout>
 

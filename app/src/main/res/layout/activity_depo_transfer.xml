@@ -9,7 +9,7 @@
     <LinearLayout
         android:id="@+id/layoutdepo"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_above="@+id/last"
         android:background="#E0F7FA"
         android:orientation="vertical"
@@ -17,10 +17,11 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
             android:orientation="vertical">
+
 
             <EditText
                 android:id="@+id/edtana"
@@ -36,7 +37,6 @@
                 android:textColorHint="@color/white"
                 android:textSize="24sp"
                 android:textStyle="bold" />
-
 
             <ListView
                 android:id="@+id/lstdepoana"
@@ -61,7 +61,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:orientation="vertical">
             <EditText
@@ -105,7 +105,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/listesatir1"
+            android:background="@color/zyonetim"
             android:orientation="horizontal"
             android:padding="2dp">
 
@@ -116,9 +116,9 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:padding="10dp"
-                android:text="ANA DEPO SEÇİNİZ"
+                android:text=""
                 android:textAlignment="center"
-                android:textColor="@android:color/holo_red_dark"
+                android:textColor="@android:color/white"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
@@ -135,9 +135,9 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:padding="10dp"
-                android:text="HEDEF DEPO SEÇİNİZ"
+                android:text=""
                 android:textAlignment="center"
-                android:textColor="@android:color/holo_red_dark"
+                android:textColor="@android:color/white"
                 android:textSize="18sp"
                 android:textStyle="bold" />
         </LinearLayout>

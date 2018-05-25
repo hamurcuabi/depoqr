@@ -123,6 +123,7 @@ public class Sarf extends AppCompatActivity {
                 intent.putExtra("secilenId", secilenId);
                 intent.putExtra("aciklama", secaciklama);
                 intent.putExtra("secilenTibi", secilenTibi);
+                finish();
                 startActivity(intent);
             }
         });

@@ -6,6 +6,7 @@ import android.app.ActivityOptions;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -212,8 +213,25 @@ public class PlasiyerList extends AppCompatActivity implements PopupMenu.OnMenuI
     public boolean onMenuItemClick(MenuItem menuItem) {
         switch (menuItem.getItemId()) {
             case R.id.menu_Sil:
-                DeleteChild deleteChild = new DeleteChild();
-                deleteChild.execute("");
+                android.support.v7.app.AlertDialog.Builder builder2 = new android.support.v7.app.AlertDialog.Builder(PlasiyerList.this);
+                builder2.setTitle("UYARI!");
+                builder2.setMessage("Satışı silmek istediğinizden emin misiniz?");
+                builder2.setNegativeButton("EVET", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        DeleteChild deleteChild = new DeleteChild();
+                        deleteChild.execute("");
+                    }
+                });
+
+                builder2.setPositiveButton("IPTAL", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+
+                    }
+                });
+
+                builder2.show();
+
+
                 return true;
             case R.id.menu_duzenle:
                 Intent intent = new Intent(PlasiyerList.this, PlasiyerProductView.class);

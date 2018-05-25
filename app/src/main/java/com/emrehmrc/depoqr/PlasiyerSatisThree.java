@@ -390,7 +390,7 @@ public class PlasiyerSatisThree extends AppCompatActivity {
                                 "FIRSTUNITNAME,SECONDUNITNAME,\n" +
                                 "SUM(WDIRECTION * FIRSTAMOUNT)  AS FIRSTAMOUNT, \n" +
                                 "SUM(WDIRECTION * SECONDAMOUNT) AS SECONDAMOUNT \n" +
-                                "from VW_WAREHOUSESTOCKMOVEMENT where  \n" +
+                                "from VW_WAREHOUSESTOCKMOVEMENT where (DESTINATIONWAREHOUSEID = '" + incomingDepoId + "' or SOURCEWAREHOUSEID = '" + incomingDepoId + "') and \n" +
                                 "PALETBARCODES = '" + secilenBarkod + "' and PRODUCTCODE ='"+secilenUrun+"' and COMPANIESID = '" + comid + "'\n" +
                                 "group by PRODUCTIONDATE,BARCODEID,BARCODENO,PALETBARCODES,PRODUCTNAME,PALETID,PRODUCTID," +
                                 "PRODUCTCODE," +
@@ -408,7 +408,7 @@ public class PlasiyerSatisThree extends AppCompatActivity {
                                 "FIRSTUNITNAME,SECONDUNITNAME,\n" +
                                 "SUM(WDIRECTION * FIRSTAMOUNT)  AS FIRSTAMOUNT, \n" +
                                 "SUM(WDIRECTION * SECONDAMOUNT) AS SECONDAMOUNT \n" +
-                                "from VW_WAREHOUSESTOCKMOVEMENT where PRODUCTCODE ='"+secilenUrun+"' and \n" +
+                                "from VW_WAREHOUSESTOCKMOVEMENT where (DESTINATIONWAREHOUSEID = '" + incomingDepoId + "' or SOURCEWAREHOUSEID = '" + incomingDepoId + "') and PRODUCTCODE ='"+secilenUrun+"' and \n" +
                                 "BARCODENO = '" + secilenBarkod + "' and COMPANIESID = '" + comid + "'\n" +
                                 "group by PRODUCTIONDATE,BARCODEID,BARCODENO,PALETBARCODES,PRODUCTNAME,PALETID,PRODUCTID," +
                                 "PRODUCTCODE," +
@@ -429,7 +429,7 @@ public class PlasiyerSatisThree extends AppCompatActivity {
                                 "FIRSTUNITNAME,SECONDUNITNAME,\n" +
                                 "SUM(WDIRECTION * FIRSTAMOUNT)  AS FIRSTAMOUNT, \n" +
                                 "SUM(WDIRECTION * SECONDAMOUNT) AS SECONDAMOUNT \n" +
-                                "from VW_WAREHOUSESTOCKMOVEMENT where PRODUCTCODE ='"+secilenUrun+"' and \n" +
+                                "from VW_WAREHOUSESTOCKMOVEMENT where (DESTINATIONWAREHOUSEID = '" + incomingDepoId + "' or SOURCEWAREHOUSEID = '" + incomingDepoId + "') and PRODUCTCODE ='"+secilenUrun+"' and \n" +
                                 "PALETBARCODES = '" + secilenBarkod + "' and COMPANIESID = '" + comid + "' \n" +
                                 "group by PRODUCTIONDATE,BARCODEID,BARCODENO,PALETBARCODES,PRODUCTNAME,PALETID,PRODUCTID," +
                                 "PRODUCTCODE," +
@@ -447,7 +447,7 @@ public class PlasiyerSatisThree extends AppCompatActivity {
                                 "FIRSTUNITNAME,SECONDUNITNAME,\n" +
                                 "SUM(WDIRECTION * FIRSTAMOUNT)  AS FIRSTAMOUNT, \n" +
                                 "SUM(WDIRECTION * SECONDAMOUNT) AS SECONDAMOUNT \n" +
-                                "from VW_WAREHOUSESTOCKMOVEMENT where PRODUCTCODE ='"+secilenUrun+"' and \n" +
+                                "from VW_WAREHOUSESTOCKMOVEMENT where (DESTINATIONWAREHOUSEID = '" + incomingDepoId + "' or SOURCEWAREHOUSEID = '" + incomingDepoId + "') and PRODUCTCODE ='"+secilenUrun+"' and \n" +
                                 "BARCODENO = '" + secilenBarkod + "' and COMPANIESID = '" + comid + "' \n" +
                                 "group by PRODUCTIONDATE,BARCODEID,BARCODENO,PALETBARCODES,PRODUCTNAME,PALETID,PRODUCTID," +
                                 "PRODUCTCODE," +
@@ -465,7 +465,7 @@ public class PlasiyerSatisThree extends AppCompatActivity {
                                 "FIRSTUNITNAME,SECONDUNITNAME,\n" +
                                 "SUM(WDIRECTION * FIRSTAMOUNT)  AS FIRSTAMOUNT, \n" +
                                 "SUM(WDIRECTION * SECONDAMOUNT) AS SECONDAMOUNT \n" +
-                                "from VW_WAREHOUSESTOCKMOVEMENT where PRODUCTCODE ='"+secilenUrun+"' and \n" +
+                                "from VW_WAREHOUSESTOCKMOVEMENT where (DESTINATIONWAREHOUSEID = '" + incomingDepoId + "' or SOURCEWAREHOUSEID = '" + incomingDepoId + "') and PRODUCTCODE ='"+secilenUrun+"' and \n" +
                                 "(PALETID='" + uuid + "' or BARCODEID='" + uuid + "') and COMPANIESID = '" + comid + "' \n" +
                                 "group by PRODUCTIONDATE,BARCODEID,BARCODENO,PALETBARCODES,PRODUCTNAME,PALETID,PRODUCTID," +
                                 "PRODUCTCODE," +
@@ -537,7 +537,7 @@ public class PlasiyerSatisThree extends AppCompatActivity {
             } else {
                 toneG.startTone(ToneGenerator.TONE_CDMA_CALL_SIGNAL_ISDN_PING_RING, 200);
                 Intent intent = new Intent(getBaseContext(), UyariBildirim.class);
-                intent.putExtra("UYARI", "BU BARKOD ÜRÜNE AIT DEGIL!");
+                intent.putExtra("UYARI", "BU BARKOD ÜRÜNE YADA DEPOYA AIT DEGIL!");
                 startActivity(intent);
             }
 
@@ -761,8 +761,8 @@ public class PlasiyerSatisThree extends AppCompatActivity {
                             if (datalist.get(i).isChecked()) {
                                 if (NotExistArray.contains(datalist.get(i).getBarcodeid())) {
                                     UUID uuıd = UUID.randomUUID();
-                                    String query = "insert into WAREHOUSEPLASIERDETAIL (ID,WAREHOUSEID,FIRSTAMOUNT,SECONDAMOUNT,ISKDV,KDVRATE,UNITPRICE,DATE,ISOKEY,BARCODEID,CODE,MEMBERID,RECODE)" +
-                                            "values('"+uuıd+"','"+incomingDepoId+"','"+firstAmount.get(i)+"','"+secondAmount.get(i)+"','"+kdvDahil+"','"+kdv+"','"+birimFiyat+"',GETDATE(),0,'"+datalist.get(i).getBarcodeid()+"','"+codelast+"','"+memberid+"','"+recode+"')";
+                                    String query = "insert into WAREHOUSEPLASIERDETAIL (ID,WAREHOUSEID,FIRSTAMOUNT,SECONDAMOUNT,ISKDV,KDVRATE,UNITPRICE,DATE,ISOKEY,BARCODEID,CODE,MEMBERID,RECODE,PALETID)" +
+                                            "values('"+uuıd+"','"+incomingDepoId+"','"+firstAmount.get(i)+"','"+secondAmount.get(i)+"','"+kdvDahil+"','"+kdv+"','"+birimFiyat+"',GETDATE(),0,'"+datalist.get(i).getBarcodeid()+"','"+codelast+"','"+memberid+"','"+recode+"','"+datalist.get(i).getPaletid()+"')";
 
                                     PreparedStatement preparedStatement = con.prepareStatement(query);
                                     preparedStatement.executeUpdate();
@@ -775,8 +775,8 @@ public class PlasiyerSatisThree extends AppCompatActivity {
                         for (int i = 0; i < datalist.size(); i++) {
                             if (datalist.get(i).isChecked()) {
                                     UUID uuıd = UUID.randomUUID();
-                                    String query = "insert into WAREHOUSEPLASIERDETAIL (ID,WAREHOUSEID,FIRSTAMOUNT,SECONDAMOUNT,ISKDV,KDVRATE,UNITPRICE,DATE,ISOKEY,BARCODEID,CODE,MEMBERID,RECODE)" +
-                                            "values('"+uuıd+"','"+incomingDepoId+"','"+firstAmount.get(i)+"','"+secondAmount.get(i)+"','"+kdvDahil+"','"+kdv+"','"+birimFiyat+"',GETDATE(),0,'"+datalist.get(i).getBarcodeid()+"','"+codelast+"','"+memberid+"','"+recode+"')";
+                                    String query = "insert into WAREHOUSEPLASIERDETAIL (ID,WAREHOUSEID,FIRSTAMOUNT,SECONDAMOUNT,ISKDV,KDVRATE,UNITPRICE,DATE,ISOKEY,BARCODEID,CODE,MEMBERID,RECODE,PALETID)" +
+                                            "values('"+uuıd+"','"+incomingDepoId+"','"+firstAmount.get(i)+"','"+secondAmount.get(i)+"','"+kdvDahil+"','"+kdv+"','"+birimFiyat+"',GETDATE(),0,'"+datalist.get(i).getBarcodeid()+"','"+codelast+"','"+memberid+"','"+recode+"','"+datalist.get(i).getPaletid()+"')";
                                     PreparedStatement preparedStatement = con.prepareStatement(query);
                                     preparedStatement.executeUpdate();
                                     deneme = false;

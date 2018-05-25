@@ -80,7 +80,7 @@ public class SarfListe extends AppCompatActivity implements PopupMenu.OnMenuItem
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(SarfListe.this, Sarf.class);
-                startActivity(intent);
+                startActivityForResult(intent,1);
             }
         });
         btn_tarih.setOnClickListener(new View.OnClickListener() {
@@ -115,6 +115,14 @@ public class SarfListe extends AppCompatActivity implements PopupMenu.OnMenuItem
                 }
             }
         };
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 1) {
+            FillList fillList = new FillList();
+            fillList.execute("");
+        }
     }
 
     public class FillList extends AsyncTask<String, String, String> {
@@ -273,7 +281,7 @@ public class SarfListe extends AppCompatActivity implements PopupMenu.OnMenuItem
             case R.id.menu_duzenle:
                 Intent intent = new Intent(SarfListe.this,SarfDuzenle.class);
                 intent.putExtra("secilenSarf",secilenSarf);
-                startActivity(intent);
+                startActivityForResult(intent,1);
                 return true;
             default:
                 return false;

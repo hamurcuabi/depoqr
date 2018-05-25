@@ -94,7 +94,8 @@
                 android:textColor="@android:color/holo_blue_dark"
                 android:textStyle="bold|italic"
                 android:textSize="18sp"
-                android:imeOptions="actionDone"/>
+                android:imeOptions="actionDone"
+                android:selectAllOnFocus="true"/>
             <TextView
                 android:id="@+id/txtfirst"
                 android:layout_width="0dp"
@@ -119,7 +120,8 @@
                 android:textColor="@android:color/holo_blue_dark"
                 android:textStyle="bold|italic"
                 android:textSize="18sp"
-                android:imeOptions="actionDone"/>
+                android:imeOptions="actionDone"
+                android:selectAllOnFocus="true"/>
             <TextView
                 android:id="@+id/txtsecond"
                 android:layout_width="0dp"

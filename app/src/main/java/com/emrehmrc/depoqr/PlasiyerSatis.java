@@ -177,7 +177,7 @@ public class PlasiyerSatis extends AppCompatActivity {
                 } else {
                     String query = "SELECT distinct WAREHOUSEID , NAME FROM " +
                             "VW_WAREHOUSEPERMISSION where MEMBERID='" + memberid + "' and ISACTIVE='1' and " +
-                            "ISSHOW='1'  and WAREHOUSEMENUID='" + 3 + "'  order by NAME";
+                            "ISSHOW='1'  and WAREHOUSEMENUID='" + 2 + "'  order by NAME";
                     PreparedStatement ps = con.prepareStatement(query);
                     ResultSet rs = ps.executeQuery();
 

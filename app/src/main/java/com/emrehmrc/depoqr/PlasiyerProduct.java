@@ -295,7 +295,7 @@ public class PlasiyerProduct extends AppCompatActivity implements PopupMenu.OnMe
                 if (con == null) {
                     w = "Error in connection with SQL server";
                 } else {
-                    String query = "select ISNULL(count(*),1) as COUNT from WAREHOUSEPLASIER where CURRENTID='"+incomingCariId+"'";
+                    String query = "select ISNULL(count(*),1) + 1 as COUNT from WAREHOUSEPLASIER where CURRENTID='"+incomingCariId+"'";
                     PreparedStatement ps = con.prepareStatement(query);
                     ResultSet rs = ps.executeQuery();
 

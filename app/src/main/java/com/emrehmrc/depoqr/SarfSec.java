@@ -360,10 +360,12 @@ public class SarfSec extends AppCompatActivity {
 
 
             if (!hata) {
-                datalist.clear();
+               /* datalist.clear();
                 recyclerView.setAdapter(null);
                 firstAmount.clear();
-                secondAmount.clear();
+                secondAmount.clear();*/
+                finish();
+                onBackPressed();
                 Toast.makeText(getApplicationContext(), "AKTARILDI!", Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(getApplicationContext(), "HATA!", Toast.LENGTH_SHORT).show();
@@ -384,12 +386,12 @@ public class SarfSec extends AppCompatActivity {
                             if (!(secilenCari==null)) {
                                 if (aciklama==null) {
                                     UUID uuıd = UUID.randomUUID();
-                                    String query = "insert into CONSUMPTION (ID,WAREHOUSEID,CURENTID,MEMBEREMPLOYEEID,BARCODEID,FIRSTAMOUNT,SECONDAMOUNT,DATE,CODE) values ('" + uuıd + "','" + secilenDepoId + "','" + secilenCari + "','" + memberid + "','" + datalist.get(i).getBarcodeid() + "','" + firstAmount.get(i) + "','" + secondAmount.get(i) + "',GETDATE(),'"+kodDevam+"')";
+                                    String query = "insert into CONSUMPTION (ID,WAREHOUSEID,CURENTID,MEMBEREMPLOYEEID,BARCODEID,FIRSTAMOUNT,SECONDAMOUNT,DATE,CODE,PALETID) values ('" + uuıd + "','" + secilenDepoId + "','" + secilenCari + "','" + memberid + "','" + datalist.get(i).getBarcodeid() + "','" + firstAmount.get(i) + "','" + secondAmount.get(i) + "',GETDATE(),'"+kodDevam+"','"+datalist.get(i).getPaletid()+"')";
                                     PreparedStatement preparedStatement = con.prepareStatement(query);
                                     preparedStatement.executeUpdate();
                                 } else {
                                     UUID uuıd = UUID.randomUUID();
-                                    String query = "insert into CONSUMPTION (ID,WAREHOUSEID,CURENTID,MEMBEREMPLOYEEID,BARCODEID,FIRSTAMOUNT,SECONDAMOUNT,DATE,DESCRIPTION,CODE) values ('" + uuıd + "','" + secilenDepoId + "','" + secilenCari + "','" + memberid + "','" + datalist.get(i).getBarcodeid() + "','" + firstAmount.get(i) + "','" + secondAmount.get(i) + "',GETDATE(),'" + aciklama + "','"+kodDevam+"')";
+                                    String query = "insert into CONSUMPTION (ID,WAREHOUSEID,CURENTID,MEMBEREMPLOYEEID,BARCODEID,FIRSTAMOUNT,SECONDAMOUNT,DATE,DESCRIPTION,CODE,PALETID) values ('" + uuıd + "','" + secilenDepoId + "','" + secilenCari + "','" + memberid + "','" + datalist.get(i).getBarcodeid() + "','" + firstAmount.get(i) + "','" + secondAmount.get(i) + "',GETDATE(),'" + aciklama + "','"+kodDevam+"','"+datalist.get(i).getPaletid()+"')";
                                     PreparedStatement preparedStatement = con.prepareStatement(query);
                                     preparedStatement.executeUpdate();
                                 }
@@ -397,12 +399,12 @@ public class SarfSec extends AppCompatActivity {
                            else if (!(secilenPersonel==null)) {
                                 if (aciklama==null) {
                                     UUID uuıd = UUID.randomUUID();
-                                    String query = "insert into CONSUMPTION (ID,WAREHOUSEID,MEMBERID,MEMBEREMPLOYEEID,BARCODEID,FIRSTAMOUNT,SECONDAMOUNT,DATE,CODE) values ('" + uuıd + "','" + secilenDepoId + "','" + secilenPersonel + "','" + memberid + "','" + datalist.get(i).getBarcodeid() + "','" + firstAmount.get(i) + "','" + secondAmount.get(i) + "',GETDATE(),'"+kodDevam+"')";
+                                    String query = "insert into CONSUMPTION (ID,WAREHOUSEID,MEMBERID,MEMBEREMPLOYEEID,BARCODEID,FIRSTAMOUNT,SECONDAMOUNT,DATE,CODE,PALETID) values ('" + uuıd + "','" + secilenDepoId + "','" + secilenPersonel + "','" + memberid + "','" + datalist.get(i).getBarcodeid() + "','" + firstAmount.get(i) + "','" + secondAmount.get(i) + "',GETDATE(),'"+kodDevam+"','"+datalist.get(i).getPaletid()+"')";
                                     PreparedStatement preparedStatement = con.prepareStatement(query);
                                     preparedStatement.executeUpdate();
                                 } else {
                                     UUID uuıd = UUID.randomUUID();
-                                    String query = "insert into CONSUMPTION (ID,WAREHOUSEID,MEMBERID,MEMBEREMPLOYEEID,BARCODEID,FIRSTAMOUNT,SECONDAMOUNT,DATE,DESCRIPTION,CODE) values ('" + uuıd + "','" + secilenDepoId + "','" + secilenPersonel + "','" + memberid + "','" + datalist.get(i).getBarcodeid() + "','" + firstAmount.get(i) + "','" + secondAmount.get(i) + "',GETDATE(),'" + aciklama + "','"+kodDevam+"')";
+                                    String query = "insert into CONSUMPTION (ID,WAREHOUSEID,MEMBERID,MEMBEREMPLOYEEID,BARCODEID,FIRSTAMOUNT,SECONDAMOUNT,DATE,DESCRIPTION,CODE,PALETID) values ('" + uuıd + "','" + secilenDepoId + "','" + secilenPersonel + "','" + memberid + "','" + datalist.get(i).getBarcodeid() + "','" + firstAmount.get(i) + "','" + secondAmount.get(i) + "',GETDATE(),'" + aciklama + "','"+kodDevam+"','"+datalist.get(i).getPaletid()+"')";
                                     PreparedStatement preparedStatement = con.prepareStatement(query);
                                     preparedStatement.executeUpdate();
                                 }
@@ -410,12 +412,12 @@ public class SarfSec extends AppCompatActivity {
                             }else{
                                 if (aciklama==null) {
                                     UUID uuıd = UUID.randomUUID();
-                                    String query = "insert into CONSUMPTION (ID,WAREHOUSEID,MEMBEREMPLOYEEID,BARCODEID,FIRSTAMOUNT,SECONDAMOUNT,DATE,CODE) values ('" + uuıd + "','" + secilenDepoId + "','" + memberid + "','" + datalist.get(i).getBarcodeid() + "','" + firstAmount.get(i) + "','" + secondAmount.get(i) + "',GETDATE(),'"+kodDevam+"')";
+                                    String query = "insert into CONSUMPTION (ID,WAREHOUSEID,MEMBEREMPLOYEEID,BARCODEID,FIRSTAMOUNT,SECONDAMOUNT,DATE,CODE,PALETID) values ('" + uuıd + "','" + secilenDepoId + "','" + memberid + "','" + datalist.get(i).getBarcodeid() + "','" + firstAmount.get(i) + "','" + secondAmount.get(i) + "',GETDATE(),'"+kodDevam+"','"+datalist.get(i).getPaletid()+"')";
                                     PreparedStatement preparedStatement = con.prepareStatement(query);
                                     preparedStatement.executeUpdate();
                                 } else {
                                     UUID uuıd = UUID.randomUUID();
-                                    String query = "insert into CONSUMPTION (ID,WAREHOUSEID,MEMBEREMPLOYEEID,BARCODEID,FIRSTAMOUNT,SECONDAMOUNT,DATE,DESCRIPTION,CODE) values ('" + uuıd + "','" + secilenDepoId + "','" + memberid + "','" + datalist.get(i).getBarcodeid() + "','" + firstAmount.get(i) + "','" + secondAmount.get(i) + "',GETDATE(),'" + aciklama + "','"+kodDevam+"')";
+                                    String query = "insert into CONSUMPTION (ID,WAREHOUSEID,MEMBEREMPLOYEEID,BARCODEID,FIRSTAMOUNT,SECONDAMOUNT,DATE,DESCRIPTION,CODE,PALETID) values ('" + uuıd + "','" + secilenDepoId + "','" + memberid + "','" + datalist.get(i).getBarcodeid() + "','" + firstAmount.get(i) + "','" + secondAmount.get(i) + "',GETDATE(),'" + aciklama + "','"+kodDevam+"','"+datalist.get(i).getPaletid()+"')";
                                     PreparedStatement preparedStatement = con.prepareStatement(query);
                                     preparedStatement.executeUpdate();
                                 }
