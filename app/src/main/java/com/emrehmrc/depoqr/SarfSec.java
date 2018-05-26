@@ -64,9 +64,10 @@ public class SarfSec extends AppCompatActivity {
     RecyclerView recyclerView;
     UUID uuid;
     CheckBox checkBoxall;
-    int kodDevam;
     ArrayList<Float> firstAmount=new ArrayList<>();
     ArrayList<Float> secondAmount=new ArrayList<>();
+    int recode,code,memberCount;
+    String codelast;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -225,7 +226,7 @@ public class SarfSec extends AppCompatActivity {
         });
         FillList fillList = new FillList();
         fillList.execute("");
-        SayiGetir sayiGetir = new SayiGetir();
+        CountGetir sayiGetir = new CountGetir();
         sayiGetir.execute("");
     }
 
@@ -294,51 +295,6 @@ public class SarfSec extends AppCompatActivity {
         }
 
     }
-
-    public class SayiGetir extends AsyncTask<String, String, String> {
-        String w = "";
-        boolean exist = false;
-
-        @Override
-        protected void onPreExecute() {
-            progressBar.setVisibility(View.VISIBLE);
-
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            progressBar.setVisibility(View.GONE);
-                kodDevam++;
-
-        }
-
-        @Override
-        protected String doInBackground(String... strings) {
-            try {
-                Connection con = connectionClass.CONN();
-                if (con == null) {
-                    w = "Error in connection with SQL server";
-                } else {
-                    String query = "select MAX(CONVERT(int,CODE)) as CODE from VW_CONSUMPTION";
-                    PreparedStatement ps = con.prepareStatement(query);
-                    ResultSet rs = ps.executeQuery();
-
-                    while (rs.next()) {
-                        String gecici = rs.getString("CODE");
-                        if (gecici == null) {
-                            kodDevam = 0;
-                        } else kodDevam = rs.getInt("CODE");
-                    }
-                    w = "Başarılı";
-                }
-            } catch (Exception ex) {
-                w = "Veri Çekme Hatası";
-
-            }
-            return w;
-        }
-    }
-
     @SuppressLint("NewApi")
     public class SendProducts extends AsyncTask<String, String, String> {
         String z = "";
@@ -386,12 +342,12 @@ public class SarfSec extends AppCompatActivity {
                             if (!(secilenCari==null)) {
                                 if (aciklama==null) {
                                     UUID uuıd = UUID.randomUUID();
-                                    String query = "insert into CONSUMPTION (ID,WAREHOUSEID,CURENTID,MEMBEREMPLOYEEID,BARCODEID,FIRSTAMOUNT,SECONDAMOUNT,DATE,CODE,PALETID) values ('" + uuıd + "','" + secilenDepoId + "','" + secilenCari + "','" + memberid + "','" + datalist.get(i).getBarcodeid() + "','" + firstAmount.get(i) + "','" + secondAmount.get(i) + "',GETDATE(),'"+kodDevam+"','"+datalist.get(i).getPaletid()+"')";
+                                    String query = "insert into CONSUMPTION (ID,WAREHOUSEID,CURENTID,MEMBEREMPLOYEEID,BARCODEID,FIRSTAMOUNT,SECONDAMOUNT,DATE,CODE,PALETID,RECODE) values ('" + uuıd + "','" + secilenDepoId + "','" + secilenCari + "','" + memberid + "','" + datalist.get(i).getBarcodeid() + "','" + firstAmount.get(i) + "','" + secondAmount.get(i) + "',GETDATE(),'"+codelast+"','"+datalist.get(i).getPaletid()+"','"+recode+"')";
                                     PreparedStatement preparedStatement = con.prepareStatement(query);
                                     preparedStatement.executeUpdate();
                                 } else {
                                     UUID uuıd = UUID.randomUUID();
-                                    String query = "insert into CONSUMPTION (ID,WAREHOUSEID,CURENTID,MEMBEREMPLOYEEID,BARCODEID,FIRSTAMOUNT,SECONDAMOUNT,DATE,DESCRIPTION,CODE,PALETID) values ('" + uuıd + "','" + secilenDepoId + "','" + secilenCari + "','" + memberid + "','" + datalist.get(i).getBarcodeid() + "','" + firstAmount.get(i) + "','" + secondAmount.get(i) + "',GETDATE(),'" + aciklama + "','"+kodDevam+"','"+datalist.get(i).getPaletid()+"')";
+                                    String query = "insert into CONSUMPTION (ID,WAREHOUSEID,CURENTID,MEMBEREMPLOYEEID,BARCODEID,FIRSTAMOUNT,SECONDAMOUNT,DATE,DESCRIPTION,CODE,PALETID,RECODE) values ('" + uuıd + "','" + secilenDepoId + "','" + secilenCari + "','" + memberid + "','" + datalist.get(i).getBarcodeid() + "','" + firstAmount.get(i) + "','" + secondAmount.get(i) + "',GETDATE(),'" + aciklama + "','"+codelast+"','"+datalist.get(i).getPaletid()+"','"+recode+"')";
                                     PreparedStatement preparedStatement = con.prepareStatement(query);
                                     preparedStatement.executeUpdate();
                                 }
@@ -399,12 +355,12 @@ public class SarfSec extends AppCompatActivity {
                            else if (!(secilenPersonel==null)) {
                                 if (aciklama==null) {
                                     UUID uuıd = UUID.randomUUID();
-                                    String query = "insert into CONSUMPTION (ID,WAREHOUSEID,MEMBERID,MEMBEREMPLOYEEID,BARCODEID,FIRSTAMOUNT,SECONDAMOUNT,DATE,CODE,PALETID) values ('" + uuıd + "','" + secilenDepoId + "','" + secilenPersonel + "','" + memberid + "','" + datalist.get(i).getBarcodeid() + "','" + firstAmount.get(i) + "','" + secondAmount.get(i) + "',GETDATE(),'"+kodDevam+"','"+datalist.get(i).getPaletid()+"')";
+                                    String query = "insert into CONSUMPTION (ID,WAREHOUSEID,MEMBERID,MEMBEREMPLOYEEID,BARCODEID,FIRSTAMOUNT,SECONDAMOUNT,DATE,CODE,PALETID,RECODE) values ('" + uuıd + "','" + secilenDepoId + "','" + secilenPersonel + "','" + memberid + "','" + datalist.get(i).getBarcodeid() + "','" + firstAmount.get(i) + "','" + secondAmount.get(i) + "',GETDATE(),'"+codelast+"','"+datalist.get(i).getPaletid()+"','"+recode+"')";
                                     PreparedStatement preparedStatement = con.prepareStatement(query);
                                     preparedStatement.executeUpdate();
                                 } else {
                                     UUID uuıd = UUID.randomUUID();
-                                    String query = "insert into CONSUMPTION (ID,WAREHOUSEID,MEMBERID,MEMBEREMPLOYEEID,BARCODEID,FIRSTAMOUNT,SECONDAMOUNT,DATE,DESCRIPTION,CODE,PALETID) values ('" + uuıd + "','" + secilenDepoId + "','" + secilenPersonel + "','" + memberid + "','" + datalist.get(i).getBarcodeid() + "','" + firstAmount.get(i) + "','" + secondAmount.get(i) + "',GETDATE(),'" + aciklama + "','"+kodDevam+"','"+datalist.get(i).getPaletid()+"')";
+                                    String query = "insert into CONSUMPTION (ID,WAREHOUSEID,MEMBERID,MEMBEREMPLOYEEID,BARCODEID,FIRSTAMOUNT,SECONDAMOUNT,DATE,DESCRIPTION,CODE,PALETID,RECODE) values ('" + uuıd + "','" + secilenDepoId + "','" + secilenPersonel + "','" + memberid + "','" + datalist.get(i).getBarcodeid() + "','" + firstAmount.get(i) + "','" + secondAmount.get(i) + "',GETDATE(),'" + aciklama + "','"+codelast+"','"+datalist.get(i).getPaletid()+"','"+recode+"')";
                                     PreparedStatement preparedStatement = con.prepareStatement(query);
                                     preparedStatement.executeUpdate();
                                 }
@@ -412,12 +368,12 @@ public class SarfSec extends AppCompatActivity {
                             }else{
                                 if (aciklama==null) {
                                     UUID uuıd = UUID.randomUUID();
-                                    String query = "insert into CONSUMPTION (ID,WAREHOUSEID,MEMBEREMPLOYEEID,BARCODEID,FIRSTAMOUNT,SECONDAMOUNT,DATE,CODE,PALETID) values ('" + uuıd + "','" + secilenDepoId + "','" + memberid + "','" + datalist.get(i).getBarcodeid() + "','" + firstAmount.get(i) + "','" + secondAmount.get(i) + "',GETDATE(),'"+kodDevam+"','"+datalist.get(i).getPaletid()+"')";
+                                    String query = "insert into CONSUMPTION (ID,WAREHOUSEID,MEMBEREMPLOYEEID,BARCODEID,FIRSTAMOUNT,SECONDAMOUNT,DATE,CODE,PALETID,RECODE) values ('" + uuıd + "','" + secilenDepoId + "','" + memberid + "','" + datalist.get(i).getBarcodeid() + "','" + firstAmount.get(i) + "','" + secondAmount.get(i) + "',GETDATE(),'"+codelast+"','"+datalist.get(i).getPaletid()+"','"+recode+"')";
                                     PreparedStatement preparedStatement = con.prepareStatement(query);
                                     preparedStatement.executeUpdate();
                                 } else {
                                     UUID uuıd = UUID.randomUUID();
-                                    String query = "insert into CONSUMPTION (ID,WAREHOUSEID,MEMBEREMPLOYEEID,BARCODEID,FIRSTAMOUNT,SECONDAMOUNT,DATE,DESCRIPTION,CODE,PALETID) values ('" + uuıd + "','" + secilenDepoId + "','" + memberid + "','" + datalist.get(i).getBarcodeid() + "','" + firstAmount.get(i) + "','" + secondAmount.get(i) + "',GETDATE(),'" + aciklama + "','"+kodDevam+"','"+datalist.get(i).getPaletid()+"')";
+                                    String query = "insert into CONSUMPTION (ID,WAREHOUSEID,MEMBEREMPLOYEEID,BARCODEID,FIRSTAMOUNT,SECONDAMOUNT,DATE,DESCRIPTION,CODE,PALETID,RECODE) values ('" + uuıd + "','" + secilenDepoId + "','" + memberid + "','" + datalist.get(i).getBarcodeid() + "','" + firstAmount.get(i) + "','" + secondAmount.get(i) + "',GETDATE(),'" + aciklama + "','"+codelast+"','"+datalist.get(i).getPaletid()+"','"+recode+"')";
                                     PreparedStatement preparedStatement = con.prepareStatement(query);
                                     preparedStatement.executeUpdate();
                                 }
@@ -812,6 +768,93 @@ public class SarfSec extends AppCompatActivity {
         }
         if (resultCode == Activity.RESULT_CANCELED) {
             //Write your code if there's no result
+        }
+    }
+
+    public class CountGetir extends AsyncTask<String, String, String> {
+        String w = "";
+        boolean exist = false;
+
+        @Override
+        protected void onPreExecute() {
+            progressBar.setVisibility(View.VISIBLE);
+
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            progressBar.setVisibility(View.GONE);
+            SayiGetir sayiGetir = new SayiGetir();
+            sayiGetir.execute("");
+        }
+
+        @Override
+        protected String doInBackground(String... strings) {
+            try {
+                Connection con = connectionClass.CONN();
+                if (con == null) {
+                    w = "Error in connection with SQL server";
+                } else {
+                    String query = "select BARKODCOUNT from MEMBER where ID = '"+memberid+"' ";
+                    PreparedStatement ps = con.prepareStatement(query);
+                    ResultSet rs = ps.executeQuery();
+
+                    if (rs.next()) {
+                        memberCount = rs.getInt("BARKODCOUNT");
+
+                    }
+                    w = "Başarılı";
+                }
+            } catch (Exception ex) {
+                w = "Veri Çekme Hatası";
+
+            }
+            return w;
+        }
+    }
+
+    public class SayiGetir extends AsyncTask<String, String, String> {
+        String w = "";
+        boolean exist = false;
+
+        @Override
+        protected void onPreExecute() {
+            progressBar.setVisibility(View.VISIBLE);
+            recode=0;
+            code =0;
+
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            progressBar.setVisibility(View.GONE);
+            recode = code;
+            codelast = memberCount +""+code;
+            //code = memberCount+code;
+        }
+
+        @Override
+        protected String doInBackground(String... strings) {
+            try {
+                Connection con = connectionClass.CONN();
+                if (con == null) {
+                    w = "Error in connection with SQL server";
+                } else {
+                    String query = "select ISNULL(MAX(CONVERT(int,RECODE)),1000)+1 as RECODE from WAREHOUSEPLASIERDETAIL";
+                    PreparedStatement ps = con.prepareStatement(query);
+                    ResultSet rs = ps.executeQuery();
+
+                    if (rs.next()) {
+                        code = rs.getInt("RECODE");
+
+                    }
+                    w = "Başarılı";
+                }
+            } catch (Exception ex) {
+                w = "Veri Çekme Hatası";
+
+            }
+            return w;
         }
     }
 }

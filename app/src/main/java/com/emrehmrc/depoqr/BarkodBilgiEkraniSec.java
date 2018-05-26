@@ -41,9 +41,10 @@ public class BarkodBilgiEkraniSec extends AppCompatActivity {
     SharedPreferences sharedPreferences;
     Vibrator vibrator;
     String memberid, comid;
-    ListView lst_sevkiyat, lst_transfer, lst_malkabul;
-    ProgressBar pbbarSevkiyat, pbbarTransfer, pbbarMalkabul;
-    LinearLayout transferError,sevkiyatError,malkabulError;
+    ListView lst_sevkiyat, lst_transfer, lst_malkabul, lst_plasiyer, lst_sarf;
+    ProgressBar pbbarSevkiyat, pbbarTransfer, pbbarMalkabul, pbbarPlasiyer, pbbarSarf;
+    LinearLayout transferError, sevkiyatError, malkabulError, plasiyerError, sarfError;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,12 +63,24 @@ public class BarkodBilgiEkraniSec extends AppCompatActivity {
         lst_sevkiyat = (ListView) findViewById(R.id.lst_sevkiyat);
         lst_transfer = (ListView) findViewById(R.id.lst_transfer);
         lst_malkabul = (ListView) findViewById(R.id.lst_malkabul);
+
+        lst_plasiyer = (ListView) findViewById(R.id.lst_plasiyer);
+        lst_sarf = (ListView) findViewById(R.id.lst_sarf);
+
+
         pbbarSevkiyat = (ProgressBar) findViewById(R.id.pbbarSevkiyat);
         pbbarTransfer = (ProgressBar) findViewById(R.id.pbbarTransfer);
         pbbarMalkabul = (ProgressBar) findViewById(R.id.pbbarMalkabul);
+
+        pbbarPlasiyer = (ProgressBar) findViewById(R.id.pbbarPlasiyer);
+        pbbarSarf = (ProgressBar) findViewById(R.id.pbbarSarf);
+
         transferError = (LinearLayout) findViewById(R.id.transferError);
         sevkiyatError = (LinearLayout) findViewById(R.id.sevkiyatError);
         malkabulError = (LinearLayout) findViewById(R.id.malkabulError);
+
+        plasiyerError = (LinearLayout) findViewById(R.id.plasiyerError);
+        sarfError = (LinearLayout) findViewById(R.id.sarfError);
 
         FillListMalKabul fillListMalKabul = new FillListMalKabul();
         fillListMalKabul.execute("");
@@ -111,6 +124,9 @@ public class BarkodBilgiEkraniSec extends AppCompatActivity {
             pbbarMalkabul.setVisibility(View.VISIBLE);
             pbbarSevkiyat.setVisibility(View.VISIBLE);
             pbbarTransfer.setVisibility(View.VISIBLE);
+            pbbarPlasiyer.setVisibility(View.VISIBLE);
+            pbbarSarf.setVisibility(View.VISIBLE);
+
         }
 
         @Override
@@ -123,8 +139,8 @@ public class BarkodBilgiEkraniSec extends AppCompatActivity {
                 lst_malkabul.setAdapter(ADA);
 
             } else {
-               lst_malkabul.setVisibility(View.GONE);
-               malkabulError.setVisibility(View.VISIBLE);
+                lst_malkabul.setVisibility(View.GONE);
+                malkabulError.setVisibility(View.VISIBLE);
             }
             FillListSevkiyat fillListSevkiyat = new FillListSevkiyat();
             fillListSevkiyat.execute("");
@@ -171,7 +187,6 @@ public class BarkodBilgiEkraniSec extends AppCompatActivity {
 
 
         protected void onPreExecute() {
-            pbbarSevkiyat.setVisibility(View.VISIBLE);
         }
 
         @Override
@@ -183,8 +198,8 @@ public class BarkodBilgiEkraniSec extends AppCompatActivity {
                 BaseAdapter ADA = new SpecialAdapter(BarkodBilgiEkraniSec.this, sevkiyatArraylist, R.layout.barkodview4elements, from, views);
                 lst_sevkiyat.setAdapter(ADA);
             } else {
-               lst_sevkiyat.setVisibility(View.GONE);
-               sevkiyatError.setVisibility(View.VISIBLE);
+                lst_sevkiyat.setVisibility(View.GONE);
+                sevkiyatError.setVisibility(View.VISIBLE);
             }
             FillListTransfer fillListTransfer = new FillListTransfer();
             fillListTransfer.execute("");
@@ -239,7 +254,8 @@ public class BarkodBilgiEkraniSec extends AppCompatActivity {
                 lst_transfer.setVisibility(View.GONE);
                 transferError.setVisibility(View.VISIBLE);
             }
-
+            FillPlasiyer fillPlasiyer = new FillPlasiyer();
+            fillPlasiyer.execute("");
 
         }
 
@@ -250,7 +266,7 @@ public class BarkodBilgiEkraniSec extends AppCompatActivity {
                 if (con == null) {
                     z = "Error in connection with SQL server";
                 } else {
-                    String query = " SELECT DATE, MEMBERNAME, SOURCEWAREHOUSENAME, DESTINATIONWAREHOUSENAME,CONVERT(NVARCHAR(10),DATE,104) as DATE1 from VW_WAREHOUSETRANSFER where COMPANIESID = '" + comid + "' and BARCODEID = '"+secilenProductId+"' order by DATE ";
+                    String query = " SELECT DATE, MEMBERNAME, SOURCEWAREHOUSENAME, DESTINATIONWAREHOUSENAME,CONVERT(NVARCHAR(10),DATE,104) as DATE1 from VW_WAREHOUSETRANSFER where COMPANIESID = '" + comid + "' and BARCODEID = '" + secilenProductId + "' order by DATE ";
                     PreparedStatement ps = con.prepareStatement(query);
                     ResultSet rs = ps.executeQuery();
 
@@ -273,4 +289,106 @@ public class BarkodBilgiEkraniSec extends AppCompatActivity {
         }
     }
 
+    @SuppressLint("NewApi")
+    public class FillPlasiyer extends AsyncTask<String, String, String> {
+        String z = "";
+        List<Map<String, String>> plasiyerArray = new ArrayList<Map<String, String>>();
+        Map<String, String> datanum;
+        boolean exist = false;
+
+        @Override
+        protected void onPostExecute(String s) {
+            pbbarPlasiyer.setVisibility(View.GONE);
+            if (exist) {
+                String[] from = {"A", "B", "C"};
+                int[] views = {R.id.view_tarih, R.id.view_cariadi, R.id.view_toplamtutar};
+                BaseAdapter ADA = new SpecialAdapter(BarkodBilgiEkraniSec.this, plasiyerArray, R.layout.barkodview3items, from, views);
+                lst_plasiyer.setAdapter(ADA);
+            } else {
+                lst_plasiyer.setVisibility(View.GONE);
+                plasiyerError.setVisibility(View.VISIBLE);
+            }
+            FillSarf fillSarf = new FillSarf();
+            fillSarf.execute("");
+
+        }
+
+        @Override
+        protected String doInBackground(String... strings) {
+            try {
+                Connection con = connectionClass.CONN();
+                if (con == null) {
+                    z = "Error in connection with SQL server";
+                } else {
+                    String query = " select whsm.DATE,whsm.MEMBERNAME,wp.CURRENTNAME,CONVERT(NVARCHAR(10),whsm.DATE,104) as DATE1 from VW_WAREHOUSESTOCKMOVEMENT as whsm INNER JOIN VW_WAREHOUSEPLASIER as wp ON wp.ID=whsm.PLASIERID WHERE MOVEID IN(2,12) AND whsm.COMPANIESID='"+comid+"' AND whsm.BARCODEID='"+secilenProductId+"' order by DATE";
+                    PreparedStatement ps = con.prepareStatement(query);
+                    ResultSet rs = ps.executeQuery();
+
+                    while (rs.next()) {
+                        datanum = new HashMap<>();
+                        datanum.put("A", rs.getString("DATE1"));
+                        datanum.put("B", rs.getString("MEMBERNAME"));
+                        datanum.put("C", rs.getString("CURRENTNAME"));
+                        plasiyerArray.add(datanum);
+                        exist = true;
+                    }
+                    z = "Başarılı";
+                }
+            } catch (Exception ex) {
+                z = "Veri Çekme Hatası";
+
+            }
+            return z;
+        }
+    }
+
+    @SuppressLint("NewApi")
+    public class FillSarf extends AsyncTask<String, String, String> {
+        String z = "";
+        List<Map<String, String>> sarfArray = new ArrayList<Map<String, String>>();
+        Map<String, String> datanum;
+        boolean exist = false;
+
+        @Override
+        protected void onPostExecute(String s) {
+            pbbarSarf.setVisibility(View.GONE);
+            if (exist) {
+                String[] from = {"A", "B", "C"};
+                int[] views = {R.id.view_tarih, R.id.view_cariadi, R.id.view_toplamtutar};
+                BaseAdapter ADA = new SpecialAdapter(BarkodBilgiEkraniSec.this, sarfArray, R.layout.barkodview3items, from, views);
+                lst_sarf.setAdapter(ADA);
+            } else {
+                lst_sarf.setVisibility(View.GONE);
+                sarfError.setVisibility(View.VISIBLE);
+            }
+        }
+
+        @Override
+        protected String doInBackground(String... strings) {
+            try {
+                Connection con = connectionClass.CONN();
+                if (con == null) {
+                    z = "Error in connection with SQL server";
+                } else {
+                    String query = "select whsm.DATE,whsm.MEMBERNAME,cp.MEMBERNAME+''+cp.CURRENTNAME as NAME,CONVERT(NVARCHAR(10),whsm.DATE,104) as DATE1 from VW_WAREHOUSESTOCKMOVEMENT as whsm INNER JOIN VW_CONSUMPTION as cp ON cp.ID=whsm.CONSUMPTIONID WHERE MOVEID IN(13,14) AND whsm.COMPANIESID='"+comid+"' AND whsm.BARCODEID='"+secilenProductId+"' order by DATE ";
+                    PreparedStatement ps = con.prepareStatement(query);
+                    ResultSet rs = ps.executeQuery();
+
+                    while (rs.next()) {
+                        datanum = new HashMap<>();
+                        datanum.put("A", rs.getString("DATE1"));
+                        datanum.put("B", rs.getString("MEMBERNAME"));
+                        datanum.put("C", rs.getString("NAME"));
+                        sarfArray.add(datanum);
+                        exist = true;
+                    }
+                    z = "Başarılı";
+                }
+            } catch (Exception ex) {
+                z = "Veri Çekme Hatası";
+
+            }
+            return z;
+        }
+    }
 }
