@@ -50,7 +50,7 @@ public class PlasiyerSatisSec extends AppCompatActivity {
     Bundle bundle;
     TextView tx_depono, tx_cariadi, tx_urunkodu, tx_iskdv, tx_typeName, tx_moneyType, tx_productCount, tx_toplam;
     EditText tx_price, tx_kdv;
-    String incomingKod, incomingAd, incomingDepo, memberid, comid, incomingDepoId, secilenUrun, incomingCariId, priceId;
+    String incomingKod, incomingAd, incomingDepo, memberid, comid, incomingDepoId, secilenUrun, incomingCariId, priceId, secilenUrunAdi;
     AutoCompleteTextView tx_urunadi;
     ImageView btn_drop;
     ArrayAdapter<ProductsP> adapter;
@@ -63,7 +63,9 @@ public class PlasiyerSatisSec extends AppCompatActivity {
     boolean check = true;
     float genelToplam;
     int productCount;
-    Button btn_satis;
+    Button btn_satis, btn_direkSatis;
+    String typeUnitId, secilenUrunId;
+    float birinciBirimFaktor, typeUnitFaktor;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -93,7 +95,7 @@ public class PlasiyerSatisSec extends AppCompatActivity {
         tx_productCount = (TextView) findViewById(R.id.tx_productCount);
         btn_gir = (Button) findViewById(R.id.btn_gir);
         btn_satis = (Button) findViewById(R.id.btn_satis);
-
+        btn_direkSatis = (Button) findViewById(R.id.btn_direkSatis);
         incomingAd = sharedPreferences.getString("plasiyerCariAd", null);
         incomingKod = sharedPreferences.getString("plasiyerCariKod", null);
         incomingCariId = sharedPreferences.getString("plasiyerCariId", null);
@@ -117,6 +119,8 @@ public class PlasiyerSatisSec extends AppCompatActivity {
                     if (productsP.getProductKod().equals(tx_urunkodu.getText().toString())) {
                         tx_urunadi.setText(productsP.getProductadi());
                         secilenUrun = productsP.getProductKod();
+                        secilenUrunAdi = productsP.getProductadi();
+                        secilenUrunId = productsP.getProductId();
                         check = false;
                         CountAndGetType countAndGetType = new CountAndGetType();
                         countAndGetType.execute("");
@@ -132,31 +136,72 @@ public class PlasiyerSatisSec extends AppCompatActivity {
             public void onClick(View v) {
 
                 float kdv, fiyat;
-                if (!tx_kdv.getText().toString().isEmpty()) {
-                    if (!tx_price.getText().toString().isEmpty()) {
-                        fiyat = Float.valueOf(tx_price.getText().toString());
-                        kdv = Float.valueOf(tx_kdv.getText().toString());
-                        if (fiyat >= 0 && kdv >= 0) {
-                            Intent intent = new Intent(PlasiyerSatisSec.this, PlasiyerSatisThree.class);
-                            intent.putExtra("BirimFiyat", tx_price.getText().toString());
-                            intent.putExtra("KDV", tx_kdv.getText().toString());
-                            intent.putExtra("secilenUrun", secilenUrun);
-                            if (tx_iskdv.getText().toString().equals("EVET")) {
-                                intent.putExtra("KDVDAHIL", "1");
-                            } else intent.putExtra("KDVDAHIL", "0");
-                            finish();
-                            startActivity(intent);
+                if (!tx_productCount.getText().toString().isEmpty()) {
+                    if (!tx_kdv.getText().toString().isEmpty()) {
+                        if (!tx_price.getText().toString().isEmpty()) {
+                            fiyat = Float.valueOf(tx_price.getText().toString());
+                            kdv = Float.valueOf(tx_kdv.getText().toString());
+                            if (fiyat >= 0 && kdv >= 0) {
+                                Intent intent = new Intent(PlasiyerSatisSec.this, PlasiyerSatisThree.class);
+                                intent.putExtra("BirimFiyat", tx_price.getText().toString());
+                                intent.putExtra("KDV", tx_kdv.getText().toString());
+                                intent.putExtra("secilenUrun", secilenUrun);
+                                intent.putExtra("secilenUrunAdi", secilenUrunAdi);
 
+
+                                if (tx_iskdv.getText().toString().equals("EVET")) {
+                                    intent.putExtra("KDVDAHIL", "1");
+                                } else intent.putExtra("KDVDAHIL", "0");
+                                finish();
+                                startActivity(intent);
+
+                            } else
+                                Toast.makeText(getApplicationContext(), "HATA, KDV VE BIRIM FIYAT SIFIRDAN BÜYÜK OLMALI! .", Toast.LENGTH_LONG).show();
                         } else
-                            Toast.makeText(getApplicationContext(), "HATA, KDV VE BIRIM FIYAT SIFIRDAN BÜYÜK OLMALI! .", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplicationContext(), "BIRIM FIYAT BOŞ GIRILEMEZ.", Toast.LENGTH_LONG).show();
                     } else
-                        Toast.makeText(getApplicationContext(), "BIRIM FIYAT BOŞ GIRILEMEZ.", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), "KDV BOŞ GIRILEMEZ.", Toast.LENGTH_LONG).show();
                 } else
-                    Toast.makeText(getApplicationContext(), "KDV BOŞ GIRILEMEZ.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), "LÜTFEN ÜRÜN SEÇINIZ.", Toast.LENGTH_LONG).show();
+
 
             }
         });
+        btn_direkSatis.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
+                float kdv, fiyat;
+                if (!tx_productCount.getText().toString().isEmpty()) {
+                    if (!tx_kdv.getText().toString().isEmpty()) {
+                        if (!tx_price.getText().toString().isEmpty()) {
+                            fiyat = Float.valueOf(tx_price.getText().toString());
+                            kdv = Float.valueOf(tx_kdv.getText().toString());
+                            if (fiyat >= 0 && kdv >= 0) {
+                                Intent intent = new Intent(PlasiyerSatisSec.this, PlasiyerSatisDirek.class);
+                                intent.putExtra("BirimFiyat", tx_price.getText().toString());
+                                intent.putExtra("KDV", tx_kdv.getText().toString());
+                                intent.putExtra("secilenUrun", secilenUrun);
+                                intent.putExtra("secilenUrunAdi", secilenUrunAdi);
+
+
+                                if (tx_iskdv.getText().toString().equals("EVET")) {
+                                    intent.putExtra("KDVDAHIL", "1");
+                                } else intent.putExtra("KDVDAHIL", "0");
+                                finish();
+                                startActivity(intent);
+
+                            } else
+                                Toast.makeText(getApplicationContext(), "HATA, KDV VE BIRIM FIYAT SIFIRDAN BÜYÜK OLMALI! .", Toast.LENGTH_LONG).show();
+                        } else
+                            Toast.makeText(getApplicationContext(), "BIRIM FIYAT BOŞ GIRILEMEZ.", Toast.LENGTH_LONG).show();
+                    } else
+                        Toast.makeText(getApplicationContext(), "KDV BOŞ GIRILEMEZ.", Toast.LENGTH_LONG).show();
+                } else
+                    Toast.makeText(getApplicationContext(), "LÜTFEN ÜRÜN SEÇINIZ.", Toast.LENGTH_LONG).show();
+
+            }
+        });
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -242,7 +287,7 @@ public class PlasiyerSatisSec extends AppCompatActivity {
                     PreparedStatement ps = con.prepareStatement(query);
                     ResultSet rs = ps.executeQuery();
                     while (rs.next()) {
-                        products.add(new ProductsP(rs.getString("PRODUCTNAME"), rs.getString("PRODUCTCODE")));
+                        products.add(new ProductsP(rs.getString("PRODUCTNAME"), rs.getString("PRODUCTCODE"), rs.getString("PRODUCTID")));
 
                     }
                     z = "Başarılı";
@@ -310,13 +355,15 @@ public class PlasiyerSatisSec extends AppCompatActivity {
     private class ProductsP {
         private String productadi;
         private String productKod;
+        private String productId;
 
-        public ProductsP() {
-        }
-
-        public ProductsP(String productadi, String productKod) {
+        public ProductsP(String productadi, String productKod, String productId) {
             this.productadi = productadi;
             this.productKod = productKod;
+            this.productId = productId;
+        }
+
+        public ProductsP() {
         }
 
         public String getProductadi() {
@@ -334,6 +381,14 @@ public class PlasiyerSatisSec extends AppCompatActivity {
 
         public void setProductKod(String productKod) {
             this.productKod = productKod;
+        }
+
+        public String getProductId() {
+            return productId;
+        }
+
+        public void setProductId(String productId) {
+            this.productId = productId;
         }
 
         @Override
@@ -410,7 +465,6 @@ public class PlasiyerSatisSec extends AppCompatActivity {
         @Override
         protected void onPostExecute(String r) {
             if (check) {
-                tx_price.setText(modelProductInfo.getProductPrice());
                 tx_kdv.setText(modelProductInfo.getProductKdv());
                 tx_iskdv.setText(modelProductInfo.getProductKdvC());
                 tx_iskdv.setOnClickListener(new View.OnClickListener() {
@@ -429,7 +483,7 @@ public class PlasiyerSatisSec extends AppCompatActivity {
                 MoneyType Type = new MoneyType();
                 Type.execute("");
             } else {
-              //  Toast.makeText(getApplicationContext(), "Hata.", Toast.LENGTH_SHORT).show();
+                //  Toast.makeText(getApplicationContext(), "Hata.", Toast.LENGTH_SHORT).show();
                 tx_iskdv.setText("EVET");
                 tx_iskdv.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -455,7 +509,7 @@ public class PlasiyerSatisSec extends AppCompatActivity {
                 if (con == null) {
                     z = "Error in connection with SQL server";
                 } else {
-                    String query = "select KDV , ISKDV , SALARY , NAME , MONEYUNITID from VW_PRICELISTPRODUCT where PRICELISTID ='" + priceId + "' and PRODUCTCODE='" + secilenUrun + "'";
+                    String query = "select KDV , ISKDV , SALARY , NAME , MONEYUNITID , TYPEUNITID from VW_PRICELISTPRODUCT where PRICELISTID ='" + priceId + "' and PRODUCTCODE='" + secilenUrun + "'";
                     PreparedStatement ps = con.prepareStatement(query);
                     ResultSet rs = ps.executeQuery();
                     if (rs.next()) {
@@ -463,9 +517,90 @@ public class PlasiyerSatisSec extends AppCompatActivity {
                         modelProductInfo.setProductKdvC(rs.getString("ISKDV"));
                         modelProductInfo.setProductPrice(rs.getString("SALARY"));
                         modelProductInfo.setMoneyUnitId(rs.getString("MONEYUNITID"));
+                        typeUnitId = rs.getString("TYPEUNITID");
                         check = true;
                     } else {
                         check = false;
+                    }
+                    z = "Başarılı";
+                }
+            } catch (Exception ex) {
+                z = "Veri Çekme Hatası";
+            }
+            return z;
+        }
+    }
+
+    public class UnitIdSec extends AsyncTask<String, String, String> {
+        String z = "";
+        String deneme;
+        float toplam, price;
+
+        @Override
+        protected void onPostExecute(String s) {
+            if (!modelProductInfo.getProductPrice().isEmpty() && typeUnitFaktor != 0.0f && birinciBirimFaktor != 0.0f) {
+                price = Float.parseFloat(modelProductInfo.getProductPrice());
+                if (price != 0) {
+                    toplam = (birinciBirimFaktor * price) / typeUnitFaktor;
+                    tx_price.setText(toplam + "");
+                } else tx_price.setText(modelProductInfo.getProductPrice());
+
+            } else tx_price.setText(modelProductInfo.getProductPrice());
+
+        }
+
+        @Override
+        protected String doInBackground(String... strings) {
+
+            try {
+                Connection con = connectionClass.CONN();
+                if (con == null) {
+                    z = "Error in connection with SQL server";
+                } else {
+                    String query = "select  FAKTOR from PRODUCTTYPEUNIT where TYPEUNITID = '" + typeUnitId + "' and  PRODUCTID ='" + secilenUrunId + "' ";
+                    PreparedStatement ps = con.prepareStatement(query);
+                    ResultSet rs = ps.executeQuery();
+                    if (rs.next()) {
+                        typeUnitFaktor = rs.getFloat("FAKTOR");
+
+                    } else {
+                        deneme = "Empty";
+                    }
+                    z = "Başarılı";
+                }
+            } catch (Exception ex) {
+                z = "Veri Çekme Hatası";
+            }
+            return z;
+        }
+    }
+
+    public class UnitId extends AsyncTask<String, String, String> {
+        String z = "";
+        String deneme;
+
+        @Override
+        protected void onPostExecute(String s) {
+            UnitIdSec unitIdSec = new UnitIdSec();
+            unitIdSec.execute("");
+        }
+
+        @Override
+        protected String doInBackground(String... strings) {
+
+            try {
+                Connection con = connectionClass.CONN();
+                if (con == null) {
+                    z = "Error in connection with SQL server";
+                } else {
+                    String query = "select  FAKTOR from PRODUCTTYPEUNIT where PRODUCTID ='" + secilenUrunId + "' and ISFIRST = '1' ";
+                    PreparedStatement ps = con.prepareStatement(query);
+                    ResultSet rs = ps.executeQuery();
+                    if (rs.next()) {
+                        birinciBirimFaktor = rs.getFloat("FAKTOR");
+
+                    } else {
+                        deneme = "Empty";
                     }
                     z = "Başarılı";
                 }
@@ -485,6 +620,9 @@ public class PlasiyerSatisSec extends AppCompatActivity {
             if (modelProductInfo.getMoneyunit().isEmpty()) {
                 tx_moneyType.setText("TL");
             } else tx_moneyType.setText(modelProductInfo.getMoneyunit());
+
+            UnitId unitId = new UnitId();
+            unitId.execute("");
         }
 
         @Override
@@ -500,7 +638,6 @@ public class PlasiyerSatisSec extends AppCompatActivity {
                     ResultSet rs = ps.executeQuery();
                     if (rs.next()) {
                         modelProductInfo.setMoneyunit(rs.getString("NAME"));
-
                     } else {
                         deneme = "Empty";
                     }

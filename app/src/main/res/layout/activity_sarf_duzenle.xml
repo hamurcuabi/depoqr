@@ -120,7 +120,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:padding="5dp"
-                android:text="BARKOD SATISI"
+                android:text="BARKOD SAYISI"
                 android:textAlignment="center"
                 android:textColor="#ffffff"
                 android:textSize="15sp"

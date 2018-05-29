@@ -35,19 +35,25 @@
             android:layout_height="1dp"
             android:background="@android:color/black" />
 
-        <Button
+        <EditText
             android:id="@+id/aciklama"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_margin="5dp"
-            android:background="@drawable/deneme3"
-            android:drawableEnd="@drawable/pen"
-            android:drawableRight="@drawable/pen"
             android:padding="5dp"
-            android:text="Açıklama yazınız.."
+            android:hint="Açıklama yazınız.."
             android:textSize="14sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:textColorHint="@color/error"
+            android:textColor="@color/error"
+            android:clickable="true"
+            android:focusable="false"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:ems="10"
+            android:background="@drawable/rounded_border_edittext"
+            android:gravity="center" />
 
     </LinearLayout>
 
@@ -155,7 +161,7 @@
                         android:layout_weight="1"
                         android:paddingLeft="5dp"
                         android:paddingStart="5dp"
-                        android:text="Adı"
+                        android:text="Kodu"
                         android:textAlignment="center"
                         android:textColor="#ffffff"
                         android:textSize="14sp"
@@ -176,7 +182,7 @@
                         android:layout_weight="1"
                         android:paddingLeft="5dp"
                         android:paddingStart="5dp"
-                        android:text="Kodu"
+                        android:text="Ad Soyad"
                         android:textAlignment="center"
                         android:textColor="#ffffff"
                         android:textSize="14sp"

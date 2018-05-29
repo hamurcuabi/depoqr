@@ -41,7 +41,8 @@
                     android:textColor="#000000"
                     android:textColorHint="@android:color/holo_red_dark"
                     android:textSize="14sp"
-                    android:textStyle="bold|italic" />
+                    android:textStyle="bold|italic"
+                    android:selectAllOnFocus="true"/>
 
                 <ImageView
                     android:id="@+id/btn_drop2"
@@ -101,7 +102,29 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/appbackcolor"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:id="@+id/aciklamaBas"
+                android:clickable="false">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/appbackcolor"
+                    android:orientation="horizontal"
+                    android:layout_weight="1">
+                <TextView
+                    android:id="@+id/aciklamatest"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Açıklama"
+                    android:textColor="@color/black_overlay"
+                    android:layout_gravity="center"/>
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:src="@drawable/aciklama"/>
+                </LinearLayout>
                 <TextView
                     android:id="@+id/sevkiyetPlaka"
                     android:layout_width="match_parent"

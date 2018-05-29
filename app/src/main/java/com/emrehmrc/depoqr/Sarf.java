@@ -27,12 +27,12 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -50,10 +50,10 @@ public class Sarf extends AppCompatActivity {
     String memberid, comid;
     Spinner depo,spnPB;
     String secilendepoId,secilenad,secilenId,secaciklama,secilenTibi ="else";
-    EditText carisec;
+    EditText carisec,aciklama;
     private CariAdapter adapter;
     private PersonalsAdapter adapter2;
-    Button moveto2,aciklama;
+    Button moveto2;
     ListView newlist;
     TextView secilen2,fkod,fadi;
     View line;
@@ -81,14 +81,15 @@ public class Sarf extends AppCompatActivity {
         line = (View) findViewById(R.id.line);
         fadi = (TextView) findViewById(R.id.fadi);
         moveto2 = (Button) findViewById(R.id.moveto2);
-        aciklama = (Button) findViewById(R.id.aciklama);
+        aciklama = (EditText) findViewById(R.id.aciklama);
+
         spnPB.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 switch (position) {
                     case 0:
                         carisec.setHint("CARI ARA...");
-                        fkod.setVisibility(View.VISIBLE);
+                        fadi.setVisibility(View.VISIBLE);
                         line.setVisibility(View.VISIBLE);
                         FillCari fillCari = new FillCari();
                         fillCari.execute("");
@@ -96,7 +97,7 @@ public class Sarf extends AppCompatActivity {
                         break;
                     case 1:
                         carisec.setHint("PEROSONAL ARA...");
-                        fkod.setVisibility(View.GONE);
+                        fadi.setVisibility(View.GONE);
                         line.setVisibility(View.GONE);
                         FillPersonel fillPersonel = new FillPersonel();
                         fillPersonel.execute("");
@@ -328,13 +329,13 @@ public class Sarf extends AppCompatActivity {
                 if (con == null) {
                     w = "Error in connection with SQL server";
                 } else {
-                    String query = "SELECT NAME , ID from MEMBER where COMPANIESID = '"+comid+"' and ISACTIVE = '1' and ISDELETE = '0'";
+                    String query = "SELECT NAME ,SURNAME, ID from MEMBER where COMPANIESID = '"+comid+"' and ISACTIVE = '1' and ISDELETE = '0'";
                     PreparedStatement ps = con.prepareStatement(query);
                     ResultSet rs = ps.executeQuery();
 
                     while (rs.next()) {
                         personalsArrayList.add(new ModelPersonals(rs.getString
-                                ("ID"), rs.getString("NAME")));
+                                ("ID"), rs.getString("NAME")+"  "+rs.getString("SURNAME")));
                     }
                     w = "Başarılı";
                 }
@@ -361,13 +362,13 @@ public class Sarf extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int which) {
                 if(!subEditText.getText().toString().isEmpty()){
                     secaciklama=subEditText.getText().toString();
-                    aciklama.setText("YAZILDI");
-                    aciklama.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.yes, 0);
-                    aciklama.setBackgroundResource(R.drawable.deneme);
+                    aciklama.setText(secaciklama);
+                   // aciklama.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.yes, 0);
+                  //  aciklama.setBackgroundResource(R.drawable.deneme);
                 }else{
                     aciklama.setText("Açıklama yazınız..");
-                    aciklama.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.pen, 0);
-                    aciklama.setBackgroundResource(R.drawable.deneme3);
+                   // aciklama.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.pen, 0);
+                   // aciklama.setBackgroundResource(R.drawable.deneme3);
                 }
 
             }

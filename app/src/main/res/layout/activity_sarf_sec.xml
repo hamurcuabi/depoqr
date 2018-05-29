@@ -128,6 +128,73 @@
             </LinearLayout>
 
         </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="6">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="1.B:"
+                android:textColor="#000000"
+                android:textSize="15sp" />
+            <TextView
+                android:id="@+id/tx_birinciBirim"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textColor="@color/error"
+                android:textSize="15sp" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Y.Mıktarı:"
+                android:textColor="#000000"
+                android:textSize="15sp"
+                android:visibility="gone"/>
+            <TextView
+                android:id="@+id/tx_yuklenen"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textColor="@color/error"
+                android:textSize="15sp"
+                android:visibility="gone"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="2.B:"
+                android:textColor="#000000"
+                android:textSize="15sp" />
+            <TextView
+                android:id="@+id/tx_ikinciBirim"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:textColor="@color/error"
+                android:textSize="15sp" />
+            <ImageView
+                android:id="@+id/btn_calculate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_action_calculate"
+                android:layout_weight="1"
+                android:clickable="true"/>
+            <TextView
+                android:id="@+id/tx_barkodSayisi"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:textColor="@color/error"
+                android:textSize="15sp"
+                android:textAlignment="center"/>
+
+        </LinearLayout>
 
         <LinearLayout
             android:id="@+id/header"

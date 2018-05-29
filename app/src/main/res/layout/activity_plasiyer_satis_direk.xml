@@ -1,9 +1,284 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".PlasiyerSatisDirek">
+    android:background="@color/lightgray"
+    android:orientation="vertical">
 
-</android.support.constraint.ConstraintLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/lastGG"
+        android:orientation="vertical">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:baselineAligned="false"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="#1c55ca"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/gelenad2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#1c55ca"
+                    android:paddingLeft="10dp"
+                    android:paddingStart="10dp"
+                    android:textColor="@color/zyonetim"
+                    tools:ignore="RtlSymmetry" />
+
+                <TextView
+                    android:id="@+id/gelendepo2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#1c55ca"
+                    android:paddingLeft="10dp"
+                    android:paddingStart="10dp"
+                    android:textColor="@color/zyonetim"
+                    tools:ignore="RtlSymmetry" />
+                <TextView
+                    android:id="@+id/tx_urunAdi"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#1c55ca"
+                    android:paddingLeft="10dp"
+                    android:paddingStart="10dp"
+                    android:textColor="@color/zyonetim"
+                    tools:ignore="RtlSymmetry" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/cardsp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginTop="5dp"
+            android:background="@color/appbackcolor">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/appbackcolor"
+                android:orientation="vertical">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="6"
+                    android:layout_margin="5dp">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="1.B:"
+                        android:textColor="#000000"
+                        android:textSize="15sp" />
+                    <TextView
+                        android:id="@+id/tx_birinciBirim"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textColor="@color/error"
+                        android:textSize="15sp" />
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Y.Mıktarı:"
+                        android:textColor="#000000"
+                        android:textSize="15sp"
+                        android:visibility="gone"/>
+                    <TextView
+                        android:id="@+id/tx_yuklenen"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textColor="@color/error"
+                        android:textSize="15sp"
+                        android:visibility="gone"/>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="2.B:"
+                        android:textColor="#000000"
+                        android:textSize="15sp" />
+                    <TextView
+                        android:id="@+id/tx_ikinciBirim"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textColor="@color/error"
+                        android:textSize="15sp" />
+                    <ImageView
+                        android:id="@+id/btn_calculate"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_action_calculate"
+                        android:layout_weight="1"
+                        android:clickable="true"/>
+                    <TextView
+                        android:id="@+id/tx_barkodSayisi"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:textColor="@color/error"
+                        android:textSize="15sp"
+                        android:textAlignment="center"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
+        <LinearLayout
+            android:id="@+id/header"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:background="@color/colorPrimary"
+            android:orientation="horizontal"
+            android:layout_margin="10dp">
+
+            <CheckBox
+                android:id="@+id/checkBoxall"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="9"
+                android:buttonTint="@color/white"
+                android:checked="true" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:paddingLeft="5dp"
+                    android:paddingStart="5dp"
+                    android:text="TARIH"
+                    android:textAlignment="center"
+                    android:textColor="#ffffff"
+                    android:textSize="14sp"
+                    android:typeface="sans"
+                    tools:ignore="RtlSymmetry" />
+
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="fill_parent"
+                    android:background="#ffffff" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:paddingLeft="5dp"
+                    android:paddingStart="5dp"
+                    android:text="BARKOD"
+                    android:textAlignment="center"
+                    android:textColor="#ffffff"
+                    android:textSize="14sp"
+                    android:typeface="sans"
+                    tools:ignore="RtlSymmetry" />
+
+
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="5dp"
+            android:weightSum="2">
+
+            <ProgressBar
+                android:id="@+id/pbbarS"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:textColor="#ffffff"
+                android:visibility="gone" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recyclerview"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+            </android.support.v7.widget.RecyclerView>
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/lastGG"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:orientation="vertical"
+        android:weightSum="2">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_weight="1"
+            android:weightSum="2">
+
+
+            <Button
+                android:id="@+id/btn_direkSatis"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_weight="1"
+                android:background="@drawable/deneme"
+                android:drawableEnd="@drawable/ic_action_last"
+                android:drawableRight="@drawable/ic_action_last"
+                android:padding="10dp"
+                android:text="Direk Satış"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:visibility="gone"/>
+
+            <Button
+                android:id="@+id/btnsend"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="5dp"
+                android:layout_marginStart="5dp"
+                android:layout_weight="1"
+                android:background="@drawable/deneme"
+                android:drawableRight="@drawable/send"
+                android:padding="10dp"
+                android:text="ONAY"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:layout_margin="5dp"/>
+
+        </LinearLayout>
+    </LinearLayout>
+</RelativeLayout>

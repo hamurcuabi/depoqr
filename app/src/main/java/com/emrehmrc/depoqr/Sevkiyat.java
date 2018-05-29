@@ -17,6 +17,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -30,6 +31,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
@@ -48,7 +50,7 @@ import static com.emrehmrc.depoqr.AnaSayfa.MyPREFERENCES;
 
 public class Sevkiyat extends AppCompatActivity {
 
-    Button bntsevkiyat, btnstart, tamamla,btnstart2;
+    Button bntsevkiyat, btnstart, tamamla, btnstart2;
     Spinner spndepo;
     ActionBar ab;
     ConnectionClass connectionClass;
@@ -63,10 +65,12 @@ public class Sevkiyat extends AppCompatActivity {
     String compId;
     AutoCompleteTextView sevkiyetNo;
     ImageView dropDown;
-    TextView sevkiyetPlaka,sevkiyetCari;
+    TextView sevkiyetPlaka, sevkiyetCari, aciklamatest;
     ArrayList<Depolar> depolars = new ArrayList<>();
     ArrayList<String> maxArray = new ArrayList<>();
-     ProgressBar pbbar;
+    ProgressBar pbbar;
+    LinearLayout aciklamaBas;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -90,9 +94,11 @@ public class Sevkiyat extends AppCompatActivity {
         btnstart2 = (Button) findViewById(R.id.btnstart2);
         sevkiyetPlaka = (TextView) findViewById(R.id.sevkiyetPlaka);
         sevkiyetCari = (TextView) findViewById(R.id.sevkiyetCari);
+        aciklamatest = (TextView) findViewById(R.id.aciklamatest);
         sevkiyetNo = (AutoCompleteTextView) findViewById(R.id.edtsevkiyatno2);
         pbbar = (ProgressBar) findViewById(R.id.pbbar);
         dropDown = (ImageView) findViewById(R.id.btn_drop2);
+        aciklamaBas = (LinearLayout) findViewById(R.id.aciklamaBas);
         SevkiyetList sevkiyetList = new SevkiyetList();
         sevkiyetList.execute("");
         btnstart.setOnClickListener(new View.OnClickListener() {
@@ -243,7 +249,7 @@ public class Sevkiyat extends AppCompatActivity {
                     ((TextView) parent.getChildAt(0)).setGravity(Gravity.CENTER);
                     SharedPreferences.Editor editor = sharedpreferences.edit();
                     editor.putString("SevkiyatDepoID", depolar.getDepono());
-                    editor.putString("SevkiyatDepoAdi",depolar.getDepoadi());
+                    editor.putString("SevkiyatDepoAdi", depolar.getDepoadi());
                     editor.commit();
                     bntsevkiyat.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.yes, 0);
                     depook = true;
@@ -317,6 +323,7 @@ public class Sevkiyat extends AppCompatActivity {
                 fillMiktar.execute();
                 FillPlaka fillPlaka = new FillPlaka();
                 fillPlaka.execute("");
+
             } else {
                 bntsevkiyat.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.action_search, 0);
                 btnstart.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
@@ -362,6 +369,7 @@ public class Sevkiyat extends AppCompatActivity {
             return z;
         }
     }
+
 
     private class Depolar {
         private String depoadi;
@@ -662,7 +670,7 @@ public class Sevkiyat extends AppCompatActivity {
 
     public class FillPlaka extends AsyncTask<String, String, String> {
         String z = "";
-        String palaka,cari;
+        String palaka, cari, aciklama;
 
         @Override
         protected void onPreExecute() {
@@ -673,8 +681,39 @@ public class Sevkiyat extends AppCompatActivity {
         @Override
         protected void onPostExecute(String r) {
             pbbar.setVisibility(View.GONE);
-            sevkiyetPlaka.setText("P: " + palaka);
-            sevkiyetCari.setText("C: "+ cari);
+            if (palaka == null) sevkiyetPlaka.setText("P: PLAKA YOK");
+            else sevkiyetPlaka.setText("P: " + palaka);
+            if (cari == null) sevkiyetCari.setText("C: CARI YOK");
+            else sevkiyetCari.setText("C: " + cari);
+
+            if (aciklama != null) {
+                aciklamaBas.setClickable(true);
+                aciklamaBas.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        LayoutInflater inflater = LayoutInflater.from(Sevkiyat.this);
+                        View subView = inflater.inflate(R.layout.dialog_sarf, null);
+                        final EditText subEditText = (EditText) subView.findViewById(R.id.et2);
+                        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(Sevkiyat.this);
+                        builder.setTitle("AÇIKLAMA");
+                        subEditText.setText(aciklama);
+                        subEditText.setFocusable(false);
+                        builder.setView(subView);
+                        android.app.AlertDialog alertDialog = builder.create();
+                        builder.setPositiveButton("Geri", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                        builder.show();
+                    }
+                });
+            } else {
+                aciklamatest.setText("Açıklama YOKTUR");
+                aciklamaBas.setClickable(false);
+            }
+
         }
 
         @Override
@@ -686,10 +725,11 @@ public class Sevkiyat extends AppCompatActivity {
                 if (con == null) {
                     z = "Error in connection with SQL server";
                 } else {
-                    String query = "SELECT CURRENTNAME, PLAKA from VW_FORWARDINGPLAN where ISSAVE='TRUE' and ISDELETE ='FALSE' and COMPANIESID='" + companiesid + "' and ID = '" + fordid + "'";
+                    String query = "SELECT CURRENTNAME, PLAKA,DESCRIPTION from VW_FORWARDINGPLAN where ISSAVE='TRUE' and ISDELETE ='FALSE' and COMPANIESID='" + companiesid + "' and ID = '" + fordid + "'";
                     PreparedStatement ps = con.prepareStatement(query);
                     ResultSet rs = ps.executeQuery();
                     while (rs.next()) {
+                        aciklama = rs.getString("DESCRIPTION");
                         palaka = rs.getString("PLAKA");
                         cari = rs.getString("CURRENTNAME");
                     }

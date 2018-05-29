@@ -292,10 +292,8 @@
                 android:layout_marginStart="5dp"
                 android:layout_weight="1"
                 android:background="@drawable/deneme"
-                android:drawableEnd="@drawable/ic_action_name"
-                android:drawableRight="@drawable/ic_action_name"
                 android:padding="10dp"
-                android:text="Barkod Satış"
+                android:text="Satış Ekle"
                 android:textSize="15sp"
                 android:textStyle="bold" />
         </LinearLayout>

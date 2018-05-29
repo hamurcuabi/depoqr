@@ -53,7 +53,7 @@ public class PlasiyerSatisThree extends AppCompatActivity {
     ConnectionClass connectionClass;
     SharedPreferences sharedPreferences;
     Bundle bundle;
-    String incomingKod, incomingAd, incomingDepo, memberid, comid, incomingDepoId, incomingCariId, incomingReader;
+    String incomingKod, incomingAd, incomingDepo, memberid, comid, incomingDepoId, incomingCariId;
     Vibrator vibrator;
     TextView gelenad, gelendepo;
     Button btnentercode, btnqrread, btnsend;
@@ -246,8 +246,10 @@ public class PlasiyerSatisThree extends AppCompatActivity {
                 ikinciBirim = 0;
                 tx_barkodSayisi.setText(datalist.size()+"");
                 for (int i = 0; i < datalist.size(); i++) {
-                    birinciBirim = birinciBirim+ datalist.get(i).getFirstamount();
-                    ikinciBirim = ikinciBirim + datalist.get(i).getSecondamount();
+                    if(datalist.get(i).isChecked()){
+                        birinciBirim = birinciBirim+ firstAmount.get(i);
+                        ikinciBirim = ikinciBirim + secondAmount.get(i);
+                    }
                 }
                 tx_birinciBirim.setText(birinciBirim+"");
                 tx_ikinciBirim.setText(ikinciBirim+"");
@@ -681,6 +683,8 @@ public class PlasiyerSatisThree extends AppCompatActivity {
             pbbarS.setVisibility(View.GONE);
             if (isSuccess) {
                 datalist.clear();
+                firstAmount.clear();
+                secondAmount.clear();
                 emreAdaptor = new SevkiyetTarihAdapter(getApplicationContext(), datalist, firstAmount, secondAmount);
                 recyclerview.setAdapter(null);
 

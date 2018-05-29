@@ -31,6 +31,7 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.sql.Connection;
@@ -53,7 +54,7 @@ public class SarfSec extends AppCompatActivity {
     ArrayList<ProductsP> products = new ArrayList<>();
     ArrayAdapter<ProductsP> adapter;
     AutoCompleteTextView tx_urunadi;
-    Button btn_gir, btnsend;
+    Button btn_gir, btnsend,btnqrread;
     EditText tx_barkodNo;
     ImageView btn_drop2;
     String secilenUrunKodu, secilenUrunBarkodu;
@@ -68,6 +69,9 @@ public class SarfSec extends AppCompatActivity {
     ArrayList<Float> secondAmount=new ArrayList<>();
     int recode,code,memberCount;
     String codelast;
+    TextView tx_birinciBirim,tx_ikinciBirim,tx_barkodSayisi;
+    float birinciBirim,ikinciBirim;
+    ImageView btn_calculate;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -97,7 +101,12 @@ public class SarfSec extends AppCompatActivity {
         btn_drop2 = (ImageView) findViewById(R.id.btn_drop2);
         progressBar = (ProgressBar) findViewById(R.id.pbbarS);
         recyclerView = (RecyclerView) findViewById(R.id.recyclerview);
+        btnqrread = (Button) findViewById(R.id.btnqrread);
         checkBoxall = (CheckBox) findViewById(R.id.checkBoxall);
+        btn_calculate = (ImageView) findViewById(R.id.btn_calculate);
+        tx_birinciBirim = (TextView) findViewById(R.id.tx_birinciBirim);
+        tx_ikinciBirim = (TextView) findViewById(R.id.tx_ikinciBirim);
+        tx_barkodSayisi = (TextView) findViewById(R.id.tx_barkodSayisi);
         datalist = new ArrayList<SevkiyatÜrünleriRecyclerView>();
         btnsend = (Button) findViewById(R.id.btnsend);
         btn_gir.setOnClickListener(new View.OnClickListener() {
@@ -222,6 +231,29 @@ public class SarfSec extends AppCompatActivity {
                     sendProducts.execute("");
 
                 }
+            }
+        });
+        btnqrread.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(SarfSec.this, CodeReaderForSevkiyat.class);
+                startActivityForResult(i, 1);
+            }
+        });
+        btn_calculate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                birinciBirim = 0;
+                ikinciBirim = 0;
+                tx_barkodSayisi.setText(datalist.size()+"");
+                for (int i = 0; i < datalist.size(); i++) {
+                    if(datalist.get(i).isChecked()){
+                        birinciBirim = birinciBirim+ firstAmount.get(i);
+                        ikinciBirim = ikinciBirim + secondAmount.get(i);
+                    }
+                }
+                tx_birinciBirim.setText(birinciBirim+"");
+                tx_ikinciBirim.setText(ikinciBirim+"");
             }
         });
         FillList fillList = new FillList();
