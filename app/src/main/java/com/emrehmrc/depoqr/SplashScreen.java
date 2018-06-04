@@ -1,5 +1,7 @@
 package com.emrehmrc.depoqr;
 
+import android.app.ActivityManager;
+import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -15,6 +17,10 @@ public class SplashScreen extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
+        if(!IsServiceWorking()){
+            Intent intent = new Intent(getApplicationContext(),NotificationService.class);
+            startService(intent);//Servisi başlatır
+        }
 
          ımageView=(ImageView) findViewById(R.id.imagsplash);
          animation= AnimationUtils.loadAnimation(getApplicationContext(),R.anim.splash);
@@ -43,5 +49,15 @@ public class SplashScreen extends AppCompatActivity {
 
 
 
+    }
+    public boolean IsServiceWorking(){//Servis Çalışıyor mu kontrol eden fonksiyon
+
+        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if ( NotificationService.class.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
     }
 }

@@ -1,8 +1,6 @@
-package com.emrehmrc.depoqr;
+package com.emrehmrc.depoqr.adapter;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -14,6 +12,9 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.emrehmrc.depoqr.R;
+import com.emrehmrc.depoqr.model.SevkiyatÜrünleriRecyclerView;
 
 import java.util.ArrayList;
 

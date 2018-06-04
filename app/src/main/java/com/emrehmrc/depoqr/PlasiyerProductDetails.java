@@ -24,6 +24,9 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.emrehmrc.depoqr.adapter.PlasiyerProductDetailsAdapter;
+import com.emrehmrc.depoqr.connection.ConnectionClass;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

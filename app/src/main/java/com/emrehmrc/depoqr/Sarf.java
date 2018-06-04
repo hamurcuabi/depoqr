@@ -27,12 +27,17 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
-import android.widget.Switch;
 import android.widget.TextView;
+
+import com.emrehmrc.depoqr.adapter.CariAdapter;
+import com.emrehmrc.depoqr.adapter.PersonalsAdapter;
+import com.emrehmrc.depoqr.connection.ConnectionClass;
+import com.emrehmrc.depoqr.model.ModelCari;
+import com.emrehmrc.depoqr.model.ModelPersonals;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

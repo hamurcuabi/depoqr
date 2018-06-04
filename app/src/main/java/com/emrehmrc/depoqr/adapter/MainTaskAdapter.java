@@ -1,4 +1,4 @@
-package com.emrehmrc.depoqr;
+package com.emrehmrc.depoqr.adapter;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -10,6 +10,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
+
+import com.emrehmrc.depoqr.R;
+import com.emrehmrc.depoqr.popup.TaskManPopUp;
+import com.emrehmrc.depoqr.model.MainTaskModel;
 
 import java.util.ArrayList;
 

@@ -1,4 +1,4 @@
-package com.emrehmrc.depoqr;
+package com.emrehmrc.depoqr.model;
 
 public class MainTaskModel {
 
@@ -25,7 +25,7 @@ public class MainTaskModel {
         this.taskCountMan = taskCountMan;
     }
 
-    MainTaskModel() {
+    public MainTaskModel() {
     }
 
     public String getTaskDate() {

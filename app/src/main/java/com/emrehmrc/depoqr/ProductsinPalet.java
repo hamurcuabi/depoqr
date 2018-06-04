@@ -15,6 +15,9 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 
+import com.emrehmrc.depoqr.adapter.SpecialAdapter;
+import com.emrehmrc.depoqr.connection.ConnectionClass;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

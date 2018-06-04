@@ -1,4 +1,4 @@
-package com.emrehmrc.depoqr;
+package com.emrehmrc.depoqr.model;
 
 public class ModelPersonals {
     private String personalId;

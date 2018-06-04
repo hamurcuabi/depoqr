@@ -1,4 +1,4 @@
-package com.emrehmrc.depoqr;
+package com.emrehmrc.depoqr.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -10,18 +10,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.emrehmrc.depoqr.R;
+import com.emrehmrc.depoqr.model.SevkiyatÜrünleriRecyclerView;
 
 import java.util.ArrayList;
 
-public class SevkiyetTarihAdapter extends RecyclerView.Adapter<SevkiyetTarihAdapter.MyViewHolder> {
+public class DepoTransferUrunAdapter extends RecyclerView.Adapter<DepoTransferUrunAdapter.MyViewHolder> {
 
     ArrayList<SevkiyatÜrünleriRecyclerView> datalist;
     LayoutInflater layoutInflater;
     ArrayList<Float> firstAmount;
     ArrayList<Float> secondAmount;
-    public SevkiyetTarihAdapter(Context context, ArrayList<SevkiyatÜrünleriRecyclerView> data,ArrayList<Float> firstAmount, ArrayList<Float> secondAmount) {
+    public DepoTransferUrunAdapter(Context context, ArrayList<SevkiyatÜrünleriRecyclerView> data,ArrayList<Float> firstAmount, ArrayList<Float> secondAmount) {
         layoutInflater = LayoutInflater.from(context);
         this.datalist = data;
         this.firstAmount=firstAmount;
@@ -32,6 +34,7 @@ public class SevkiyetTarihAdapter extends RecyclerView.Adapter<SevkiyetTarihAdap
         }
         setHasStableIds(true);
     }
+
     @Override
     public long getItemId(int position) {
         return position;
@@ -41,7 +44,6 @@ public class SevkiyetTarihAdapter extends RecyclerView.Adapter<SevkiyetTarihAdap
     public int getItemViewType(int position) {
         return position;
     }
-
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
@@ -178,7 +180,6 @@ public class SevkiyetTarihAdapter extends RecyclerView.Adapter<SevkiyetTarihAdap
     }
 
 
-
     class MyViewHolder extends RecyclerView.ViewHolder {
 
         CheckBox checkBox;
@@ -229,10 +230,10 @@ public class SevkiyetTarihAdapter extends RecyclerView.Adapter<SevkiyetTarihAdap
             this.uniqcode.setText(clicked.getUniqCode());
             this.firstunit.setText(clicked.getFirstUnit());
             this.firstamount.setText(clicked.getFirstamount() + "");
-            this.secondunit.setText(clicked.getSecondUnit());
             this.secondamount.setText(clicked.getSecondamount() + "");
             this.edtfirstamount.setText(firstAmount.get(position) + "");
             this.edtsecondamount.setText(secondAmount.get(position) + "");
+            this.secondunit.setText(clicked.getSecondUnit());
             this.txtfirst.setText(clicked.getFirstUnit());
             this.txtsecond.setText(clicked.getSecondUnit());
             this.uyari1.setText(clicked.getUyari1());

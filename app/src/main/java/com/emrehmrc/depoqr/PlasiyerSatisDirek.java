@@ -31,6 +31,11 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.emrehmrc.depoqr.adapter.SevkiyetTarihAdapter;
+import com.emrehmrc.depoqr.connection.ConnectionClass;
+import com.emrehmrc.depoqr.model.SevkiyatÜrünleriRecyclerView;
+import com.emrehmrc.depoqr.popup.UyariBildirim;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

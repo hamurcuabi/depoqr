@@ -29,6 +29,10 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 
+import com.emrehmrc.depoqr.adapter.CariAdapter;
+import com.emrehmrc.depoqr.connection.ConnectionClass;
+import com.emrehmrc.depoqr.model.ModelCari;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

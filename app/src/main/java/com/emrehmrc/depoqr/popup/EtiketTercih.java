@@ -1,4 +1,4 @@
-package com.emrehmrc.depoqr;
+package com.emrehmrc.depoqr.popup;
 
 import android.app.Activity;
 import android.content.Context;
@@ -9,6 +9,8 @@ import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
+
+import com.emrehmrc.depoqr.R;
 
 import static com.emrehmrc.depoqr.AnaSayfa.MyPREFERENCES;
 

@@ -1,4 +1,4 @@
-package com.emrehmrc.depoqr;
+package com.emrehmrc.depoqr.model;
 
 /**
  * Created by cenah on 2/23/2018.

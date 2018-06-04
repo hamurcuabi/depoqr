@@ -26,8 +26,11 @@ import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.emrehmrc.depoqr.adapter.ExpAdapter;
+import com.emrehmrc.depoqr.adapter.MainTaskAdapter;
+import com.emrehmrc.depoqr.connection.ConnectionClass;
+import com.emrehmrc.depoqr.model.MainTaskModel;
 import com.github.sundeepk.compactcalendarview.CompactCalendarView;
 import com.github.sundeepk.compactcalendarview.domain.Event;
 import com.squareup.picasso.Picasso;
@@ -38,7 +41,6 @@ import java.sql.Statement;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -46,6 +48,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
+
+import static com.emrehmrc.depoqr.AnaSayfa.MyPREFERENCES;
 
 public class ExpMenuMain extends AppCompatActivity {
 
@@ -82,6 +86,8 @@ public class ExpMenuMain extends AppCompatActivity {
     private List<String> lstTitle;
     private Map<String, List<String>> lstChild;
     private ExpNavigationManage navigationManage;
+    SharedPreferences sharedpreferences;
+    String memberid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,6 +101,8 @@ public class ExpMenuMain extends AppCompatActivity {
 //Reccle Deneme
         recyclerView = (RecyclerView) findViewById(R.id.recyclerview);
         datalist = new ArrayList<>();
+        sharedpreferences = getApplicationContext().getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
+         memberid = sharedpreferences.getString("ID", null);
 
        /* datalist = MainTaskModel.getData();
         mainTaskAdapter = new MainTaskAdapter(getApplicationContext(), datalist);
@@ -301,13 +309,17 @@ public class ExpMenuMain extends AppCompatActivity {
 
 */
         MainTasks mainTasks = new MainTasks();
-        String query = "select * from VW_MAINTASKLIST";
+        String query = "select  * from VW_MAINTASKLIST where ID in\n" +
+                "(select ID from VW_TASKMEMBER where  (PUBLISHERID='"+memberid+"' or " +
+                "MEMBERID='"+memberid+"') and ISFINISH='0') order by (ID)";
         mainTasks.execute(query);
         txtCountTask.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 MainTasks mainTasks = new MainTasks();
-                String query = "select * from VW_MAINTASKLIST";
+                String query = "select  * from VW_MAINTASKLIST where ID in\n" +
+                        "(select ID from VW_TASKMEMBER where  (PUBLISHERID='"+memberid+"' or " +
+                        "MEMBERID='"+memberid+"') and ISFINISH='0') order by (ID)";
                 mainTasks.execute(query);
             }
         });
@@ -382,6 +394,13 @@ public class ExpMenuMain extends AppCompatActivity {
                 long oneday=86400000l;
 
                 MainTasks mainTasks = new MainTasks();
+                String query = "select  * from VW_MAINTASKLIST where ID in\n" +
+                        "(select ID from VW_TASKMEMBER where  (PUBLISHERID='"+memberid+"' or " +
+                        "MEMBERID='"+memberid+"') and ISFINISH='0') order by (ID) and CREATINGDATE  >=  '\"+sdf.format(new\n" +
+                        "                        Date(dateClicked.getTime()))+\"' and \" +\n" +
+                        "                        \"CREATINGDATE  <  '\"+sdf.format(new Date(dateClicked.getTime()+oneday))\n" +
+                        "                        +\"'";
+
                 String q="select * from VW_MAINTASKLIST where CREATINGDATE  >=  '"+sdf.format(new
                         Date(dateClicked.getTime()))+"' and " +
                         "CREATINGDATE  <  '"+sdf.format(new Date(dateClicked.getTime()+oneday))

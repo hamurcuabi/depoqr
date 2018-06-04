@@ -1,4 +1,4 @@
-package com.emrehmrc.depoqr;
+package com.emrehmrc.depoqr.adapter;
 
 /**
  * Created by Emre Hmrc on 6.02.2018.
@@ -10,10 +10,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.CheckBox;
 
-import java.util.List;
-import java.util.Map;
+import com.emrehmrc.depoqr.R;
+import com.emrehmrc.depoqr.model.Model;
 
 public class CustomAdaptor extends ArrayAdapter {
     Model[] modelItems = null;

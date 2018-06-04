@@ -20,7 +20,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
@@ -29,6 +28,9 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
+
+import com.emrehmrc.depoqr.adapter.SpecialAdapter;
+import com.emrehmrc.depoqr.connection.ConnectionClass;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

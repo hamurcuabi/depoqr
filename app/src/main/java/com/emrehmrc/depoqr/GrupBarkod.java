@@ -28,16 +28,20 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.emrehmrc.depoqr.adapter.DependedBarcodesAdaptor;
+import com.emrehmrc.depoqr.codereader.CodeReaderGrupBarcode;
+import com.emrehmrc.depoqr.connection.ConnectionClass;
+import com.emrehmrc.depoqr.model.DependedBarcodes;
+import com.emrehmrc.depoqr.popup.UyariBildirim;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

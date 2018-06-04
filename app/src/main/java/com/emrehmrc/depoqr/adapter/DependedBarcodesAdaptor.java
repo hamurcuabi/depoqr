@@ -1,4 +1,4 @@
-package com.emrehmrc.depoqr;
+package com.emrehmrc.depoqr.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -8,6 +8,9 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import com.emrehmrc.depoqr.R;
+import com.emrehmrc.depoqr.model.DependedBarcodes;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;

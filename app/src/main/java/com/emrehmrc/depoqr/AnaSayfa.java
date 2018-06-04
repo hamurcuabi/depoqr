@@ -3,6 +3,7 @@ package com.emrehmrc.depoqr;
 
 import android.Manifest;
 import android.annotation.TargetApi;
+import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -26,6 +27,8 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
+
+import com.emrehmrc.depoqr.connection.ConnectionClass;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -70,7 +73,7 @@ public class AnaSayfa extends AppCompatActivity {
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)  {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ana_sayfa);
         layout = (LinearLayout) findViewById(R.id.layout);
@@ -83,6 +86,11 @@ public class AnaSayfa extends AppCompatActivity {
         loginPreferences = getSharedPreferences("loginPrefs", MODE_PRIVATE);
         loginPrefsEditor = loginPreferences.edit();
         saveLogin = loginPreferences.getBoolean("saveLogin", false);
+
+        if(!IsServiceWorking()){
+            Intent intent = new Intent(getApplicationContext(),NotificationService.class);
+            startService(intent);//Servisi başlatır
+        }
 
         ab = getSupportActionBar();
         ab.setTitle("ANASAYFA");
@@ -230,7 +238,16 @@ public class AnaSayfa extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+    public boolean IsServiceWorking(){//Servis Çalışıyor mu kontrol eden fonksiyon
 
+        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if ( NotificationService.class.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
+    }
     @RequiresApi(api = Build.VERSION_CODES.CUPCAKE)
     public class DoLogin extends AsyncTask<String, String, String> {
         String z = "";

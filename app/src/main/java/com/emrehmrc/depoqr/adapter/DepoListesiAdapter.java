@@ -1,4 +1,4 @@
-package com.emrehmrc.depoqr;
+package com.emrehmrc.depoqr.adapter;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -9,6 +9,9 @@ import android.widget.BaseAdapter;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.TextView;
+
+import com.emrehmrc.depoqr.R;
+import com.emrehmrc.depoqr.model.DepoListesiModel;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;

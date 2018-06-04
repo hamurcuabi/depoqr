@@ -1,6 +1,5 @@
 package com.emrehmrc.depoqr;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -9,7 +8,6 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
-import android.text.Layout;
 import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -25,6 +23,9 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.emrehmrc.depoqr.adapter.SpecialAdapter;
+import com.emrehmrc.depoqr.connection.ConnectionClass;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

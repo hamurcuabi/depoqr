@@ -32,6 +32,13 @@ import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.emrehmrc.depoqr.adapter.DependedBarcodesAdaptor;
+import com.emrehmrc.depoqr.adapter.SpecialAdapter;
+import com.emrehmrc.depoqr.codereader.CodeReaderGrupBarcode;
+import com.emrehmrc.depoqr.connection.ConnectionClass;
+import com.emrehmrc.depoqr.model.DependedBarcodes;
+import com.emrehmrc.depoqr.popup.UyariBildirim;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

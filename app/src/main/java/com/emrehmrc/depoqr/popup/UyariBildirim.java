@@ -1,5 +1,5 @@
 
-package com.emrehmrc.depoqr;
+package com.emrehmrc.depoqr.popup;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -21,6 +21,8 @@ import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.emrehmrc.depoqr.R;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

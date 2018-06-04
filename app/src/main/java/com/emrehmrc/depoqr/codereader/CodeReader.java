@@ -1,7 +1,6 @@
-package com.emrehmrc.depoqr;
+package com.emrehmrc.depoqr.codereader;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.media.AudioManager;
 import android.media.ToneGenerator;
@@ -13,6 +12,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.emrehmrc.depoqr.MalKabulOku;
+import com.emrehmrc.depoqr.R;
+import com.emrehmrc.depoqr.SliderMenu;
 import com.google.zxing.Result;
 
 import me.dm7.barcodescanner.zxing.ZXingScannerView;

@@ -26,6 +26,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.emrehmrc.depoqr.popup.EtiketTercih;
+
 public class SliderMenu extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
 

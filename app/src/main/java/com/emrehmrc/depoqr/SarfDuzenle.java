@@ -12,7 +12,6 @@ import android.support.annotation.RequiresApi;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.RecyclerView;
 import android.view.ContextThemeWrapper;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -25,6 +24,9 @@ import android.widget.PopupMenu;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.emrehmrc.depoqr.adapter.SarfDuzenleAdapter;
+import com.emrehmrc.depoqr.connection.ConnectionClass;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

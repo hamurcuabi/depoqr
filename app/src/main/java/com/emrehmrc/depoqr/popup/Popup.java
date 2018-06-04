@@ -1,4 +1,4 @@
-package com.emrehmrc.depoqr;
+package com.emrehmrc.depoqr.popup;
 
 import android.app.Activity;
 import android.content.Context;
@@ -12,6 +12,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import com.emrehmrc.depoqr.AnaSayfa;
+import com.emrehmrc.depoqr.connection.ConnectionClass;
+import com.emrehmrc.depoqr.R;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

@@ -1,4 +1,4 @@
-package com.emrehmrc.depoqr;
+package com.emrehmrc.depoqr.popup;
 
 import android.annotation.TargetApi;
 import android.content.Intent;
@@ -11,11 +11,14 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
 
+import com.emrehmrc.depoqr.R;
+import com.emrehmrc.depoqr.adapter.TaskManPopUpAdapter;
+import com.emrehmrc.depoqr.connection.ConnectionClass;
+
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.HashSet;
 
 public class TaskManPopUp extends AppCompatActivity {
 
